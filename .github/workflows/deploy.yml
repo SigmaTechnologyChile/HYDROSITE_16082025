@@ -1,0 +1,46 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches: [ restauracion-28-28jul, master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql
+        
+    - name: Install dependencies
+      run: composer install --optimize-autoloader --no-dev
+      
+    - name: Create deployment package
+      run: |
+        tar -czf deployment.tar.gz \
+          --exclude='.git' \
+          --exclude='node_modules' \
+          --exclude='.env' \
+          --exclude='storage/logs/*' \
+          .
+          
+    - name: Deploy to cPanel via FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.3
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./
+        server-dir: /public_html/
+        exclude: |
+          .git/**
+          node_modules/**
+          .env
+          storage/logs/**
