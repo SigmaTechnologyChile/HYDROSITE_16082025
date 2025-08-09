@@ -925,7 +925,7 @@
             }
         }
 
-        // --- NUEVA FUNCIÓN: Cargar servicios dinámicamente desde el backend ---
+        // --- NUEVA FUNCIÓN: Cargar servicios dinámicamente desde el backend con orden de rutas ---
         async function cargarServicios() {
             const sectorId = sectorSelect.value;
             serviceSelect.innerHTML = '<option value="">Seleccione servicio</option>';
@@ -938,7 +938,8 @@
                 loadingOption.selected = true;
                 serviceSelect.appendChild(loadingOption);
                 try {
-                    const response = await fetch(`/servicios-por-sector/${sectorId}`);
+                    // Usar la nueva ruta que incluye orden de rutas
+                    const response = await fetch(`/org/{{ $orgId }}/servicios-por-sector/${sectorId}`);
                     if (!response.ok) throw new Error('Error al obtener servicios');
                     const servicios = await response.json();
                     serviceSelect.innerHTML = '<option value="">Seleccione servicio</option>';
@@ -950,12 +951,23 @@
                         serviceSelect.disabled = true;
                         return;
                     }
+                    console.log('📋 Servicios cargados con orden de rutas:', servicios);
                     servicios.forEach(servicio => {
                         const option = document.createElement('option');
                         option.value = `${servicio.numero}|${servicio.rut}|${servicio.full_name}`;
-                        option.textContent = `${String(servicio.numero).padStart(4, '0')} - ${servicio.full_name}`;
+                        // Mostrar indicador de orden si existe
+                        const ordenIndicator = servicio.orden ? ` [📍${servicio.orden}]` : '';
+                        option.textContent = `${String(servicio.numero).padStart(4, '0')} - ${servicio.full_name}${ordenIndicator}`;
                         serviceSelect.appendChild(option);
                     });
+                    
+                    // Mostrar mensaje informativo sobre el orden
+                    const serviciosConOrden = servicios.filter(s => s.orden).length;
+                    const serviciosSinOrden = servicios.length - serviciosConOrden;
+                    if (serviciosConOrden > 0) {
+                        console.log(`🎯 ${serviciosConOrden} servicios ordenados según rutas, ${serviciosSinOrden} sin orden específico`);
+                    }
+                    
                     resetSelectOnIOS();
                     serviceSelect.disabled = false;
                 } catch (e) {

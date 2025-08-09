@@ -14,6 +14,8 @@ use App\Models\Member;
 
 use App\Models\Service;
 
+use App\Models\Ruta;
+
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Support\Facades\DB;
@@ -161,37 +163,122 @@ class OperatorController extends Controller
                 return response()->json(['error' => 'Parámetro inválido'], 400);
             }
             
-            // Obtener servicios con información del miembro y sector
+            // Obtener servicios con información del miembro y orden de rutas (sin filtro de org)
             $servicios = Service::join('members', 'services.member_id', '=', 'members.id')
                 ->join('locations', 'services.locality_id', '=', 'locations.id')
+                ->leftJoin('rutas', function($join) use ($sectorId) {
+                    $join->on('services.id', '=', 'rutas.service_id')
+                         ->where('rutas.location_id', '=', $sectorId);
+                })
                 ->where('services.locality_id', $sectorId)
                 ->select(
                     'services.id as service_id',
                     'services.nro as numero',
                     'members.rut',
                     'members.first_name',
-                    'members.last_name'
+                    'members.last_name',
+                    'rutas.orden'
                 )
-                ->orderBy('services.nro')
-                ->orderBy('members.first_name')
-                ->orderBy('members.last_name')
+                ->orderByRaw('CASE WHEN rutas.orden IS NULL THEN 1 ELSE 0 END') // Servicios con orden primero
+                ->orderBy('rutas.orden', 'ASC')  // Primero por orden de rutas
+                ->orderBy('services.nro', 'ASC') // Luego por número de servicio (fallback)
+                ->orderBy('members.first_name', 'ASC')
+                ->orderBy('members.last_name', 'ASC')
                 ->get();
 
             Log::info("Servicios encontrados: " . $servicios->count());
+            Log::info("Query SQL con orden de rutas ejecutada");
 
             $result = $servicios->map(function($servicio) {
                 return [
                     'numero' => $servicio->numero,
                     'rut' => $servicio->rut,
-                    'full_name' => trim($servicio->first_name . ' ' . $servicio->last_name)
+                    'full_name' => trim($servicio->first_name . ' ' . $servicio->last_name),
+                    'orden' => $servicio->orden // Incluir el orden para debugging
                 ];
             });
+
+            // Log para debugging del orden
+            Log::info("=== ORDEN DE SERVICIOS ===");
+            foreach ($result as $index => $servicio) {
+                Log::info("Posición {$index}: Servicio {$servicio['numero']} - {$servicio['full_name']} (Orden: {$servicio['orden']})");
+            }
 
             Log::info("=== FIN getServicesBySector ===");
             return response()->json($result);
         } catch (\Exception $e) {
             Log::error("=== ERROR en getServicesBySector ===");
             Log::error("Mensaje: " . $e->getMessage());
+            Log::error("Archivo: " . $e->getFile() . ':' . $e->getLine());
+            Log::error("=== FIN ERROR ===");
+            return response()->json(['error' => 'Error al cargar servicios: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function getServicesBySectorWithOrder($orgId, $sectorId)
+    {
+        try {
+            Log::info("=== INICIO getServicesBySectorWithOrder ===");
+            Log::info("Buscando servicios para orgId: {$orgId}, sectorId: {$sectorId}");
+            
+            // Verificar que los parámetros sean numéricos
+            if (!is_numeric($orgId) || !is_numeric($sectorId)) {
+                Log::error("Parámetros no numéricos: orgId={$orgId}, sectorId={$sectorId}");
+                return response()->json(['error' => 'Parámetros inválidos'], 400);
+            }
+            
+            // Obtener servicios con información del miembro y orden de rutas
+            $servicios = Service::join('members', 'services.member_id', '=', 'members.id')
+                ->join('locations', 'services.locality_id', '=', 'locations.id')
+                ->leftJoin('rutas', function($join) use ($orgId, $sectorId) {
+                    $join->on('services.id', '=', 'rutas.service_id')
+                         ->where('rutas.org_id', '=', $orgId)
+                         ->where('rutas.location_id', '=', $sectorId);
+                })
+                ->where('services.locality_id', $sectorId)
+                ->where('services.org_id', $orgId) // Filtrar por organización
+                ->select(
+                    'services.id as service_id',
+                    'services.nro as numero',
+                    'members.rut',
+                    'members.first_name',
+                    'members.last_name',
+                    'rutas.orden'
+                )
+                ->orderByRaw('CASE WHEN rutas.orden IS NULL THEN 1 ELSE 0 END') // Servicios con orden primero
+                ->orderBy('rutas.orden', 'ASC')  // Orden de rutas
+                ->orderBy('services.nro', 'ASC') // Fallback por número de servicio
+                ->orderBy('members.first_name', 'ASC')
+                ->orderBy('members.last_name', 'ASC')
+                ->get();
+
+            Log::info("Servicios encontrados: " . $servicios->count());
+            Log::info("Query SQL con orden de rutas ejecutada para org: {$orgId}");
+
+            $result = $servicios->map(function($servicio) {
+                return [
+                    'numero' => $servicio->numero,
+                    'rut' => $servicio->rut,
+                    'full_name' => trim($servicio->first_name . ' ' . $servicio->last_name),
+                    'orden' => $servicio->orden, // Incluir el orden para debugging
+                    'service_id' => $servicio->service_id
+                ];
+            });
+
+            // Log para debugging del orden
+            Log::info("=== ORDEN DE SERVICIOS CON RUTAS ===");
+            foreach ($result as $index => $servicio) {
+                $ordenText = $servicio['orden'] ? "Orden: {$servicio['orden']}" : "Sin orden";
+                Log::info("Posición {$index}: Servicio {$servicio['numero']} - {$servicio['full_name']} ({$ordenText})");
+            }
+
+            Log::info("=== FIN getServicesBySectorWithOrder ===");
+            return response()->json($result);
+        } catch (\Exception $e) {
+            Log::error("=== ERROR en getServicesBySectorWithOrder ===");
+            Log::error("Mensaje: " . $e->getMessage());
+            Log::error("Archivo: " . $e->getFile() . ':' . $e->getLine());
+            Log::error("Stack trace: " . $e->getTraceAsString());
             Log::error("=== FIN ERROR ===");
             return response()->json(['error' => 'Error al cargar servicios: ' . $e->getMessage()], 500);
         }

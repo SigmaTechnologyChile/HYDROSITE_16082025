@@ -51,7 +51,7 @@ Route::get('auditoria-cuentas', [AuditoriaCuentaController::class, 'index'])->na
 Route::get('auditoria-cuentas/{id}', [AuditoriaCuentaController::class, 'show'])->name('auditoria-cuentas.show');
 
 // Endpoint AJAX para obtener clientes por sector (location_id)
-Route::get('/clientes-por-sector/{locationId}', [LocationController::class, 'clientesPorSector']);
+// Route::get('/clientes-por-sector/{locationId}', [LocationController::class, 'clientesPorSector']); // Movida al grupo ajax
 // Ruta para guardar lecturas masivas desde el frontend (AJAX)
 Route::post('/guardar-lecturas', [ReadingController::class, 'store'])->name('guardar-lecturas');
 // Endpoint para obtener servicios y miembros por sector (AJAX)
@@ -186,7 +186,12 @@ Route::get('/paquetes/nuevo', [App\Http\Controllers\PackageController::class, 'c
 
 Route::get('/paquetes', [App\Http\Controllers\PackageController::class, 'index'])->name('packages.index');
 
-// Ruta para servicios por sector (fuera del grupo org)
+// Ruta para servicios por sector (fuera del grupo org) - con orden de rutas
+Route::get('/org/{orgId}/servicios-por-sector/{sectorId}', [App\Http\Controllers\Org\OperatorController::class, 'getServicesBySectorWithOrder'])
+    ->name('services.by.sector.ordered')
+    ->where(['orgId' => '[0-9]+', 'sectorId' => '[0-9]+']);
+
+// Ruta para servicios por sector (fuera del grupo org) - versión anterior sin orden
 Route::get('/servicios-por-sector/{sectorId}', [App\Http\Controllers\Org\OperatorController::class, 'getServicesBySector'])
     ->name('services.by.sector')
     ->where(['sectorId' => '[0-9]+']);
@@ -200,6 +205,14 @@ Route::get('org/{id}/balance', [App\Http\Controllers\Org\ContableController::cla
 Route::get('org/{id}/conciliacion-bancaria', [App\Http\Controllers\Org\ContableController::class, 'conciliacionBancaria'])->name('conciliacion_bancaria.show');
 Route::get('org/{id}/informe-rubro', [App\Http\Controllers\Org\ContableController::class, 'informePorRubro'])->name('informe_rubro.show');
 Route::get('org/{id}/movimientos', [App\Http\Controllers\Org\ContableController::class, 'movimientos'])->name('movimientos.show');
+
+// Ruta AJAX para obtener servicios por sector
+Route::get('org/{id}/ajax/clientes-por-sector/{locationId}', [App\Http\Controllers\Org\LocationController::class, 'clientesPorSector'])->name('ajax.clientes-por-sector');
+
+// Ruta de prueba simple
+Route::get('test-ajax', function() {
+    return response()->json(['test' => 'OK', 'time' => now()]);
+});
 
 // Organizationes routes
 
@@ -394,6 +407,11 @@ Route::prefix('org')->name('orgs.')->group(function () {
 
     Route::get('{id}/sectores', [App\Http\Controllers\Org\LocationController::class, 'index'])->name('locations.index');
     Route::get('{id}/panel-control-rutas', [App\Http\Controllers\Org\LocationController::class, 'panelControlRutas'])->name('locations.panelcontrolrutas');
+    
+    // Rutas para el control de orden de rutas
+    Route::post('{id}/sectores/{locationId}/guardar-orden', [App\Http\Controllers\Org\LocationController::class, 'guardarOrdenRuta'])->name('locations.guardar-orden');
+    Route::get('{id}/sectores/{locationId}/servicios-con-orden', [App\Http\Controllers\Org\LocationController::class, 'obtenerServiciosConOrden'])->name('locations.servicios-con-orden');
+    
     Route::get('{id}/sectores/nuevo', [App\Http\Controllers\Org\LocationController::class, 'create'])->name('locations.create');
     Route::post('{id}/sectores', [App\Http\Controllers\Org\LocationController::class, 'store'])->name('locations.store');
     Route::get('{id}/sectores/{locationId}/editar', [App\Http\Controllers\Org\LocationController::class, 'edit'])->name('locations.edit');
@@ -591,7 +609,8 @@ Route::prefix('kron')->name('kron.')->group(function () {
 
 Route::prefix('ajax')->name('ajax.')->group(function () {
 
-
+    // Endpoint para obtener clientes por sector (location_id)
+    Route::get('clientes-por-sector/{locationId}', [App\Http\Controllers\Org\LocationController::class, 'clientesPorSector']);
 
     Route::get('regiones', [App\Http\Controllers\AjaxController::class, 'state']);
 

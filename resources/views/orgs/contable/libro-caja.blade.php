@@ -1,53 +1,26 @@
 @extends('layouts.app')
-@php($title = 'Libro de Caja')
-@php($active = '')
 
 @section('content')
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Libro de Caja - Sistema Financiero</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="{{ asset('css/contable/style.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    
-@extends('layouts.app')
-@php($title = 'Libro de Caja')
-@php($active = '')
+@include('orgs.contable.partials.contable-styles')
 
-@section('content')
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Libro de Caja - Sistema Financiero</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="{{ asset('css/contable/style.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    
-    {{-- Incluir estilos modernos del módulo contable --}}
-    @include('orgs.contable.partials.contable-styles')
-    
-    <style>
-        /* Estilos específicos para Libro de Caja */
-        .libro-caja-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: var(--spacing-xl);
-        }
-        
-        .libro-caja-header {
-            background: linear-gradient(135deg, var(--success-color) 0%, #20c997 100%);
-            color: white;
-            padding: var(--spacing-xl);
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-            margin: calc(-1 * var(--spacing-xl)) calc(-1 * var(--spacing-xl)) var(--spacing-xl) calc(-1 * var(--spacing-xl));
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+<style>
+/* Estilos específicos para Libro de Caja */
+.libro-caja-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.libro-caja-header {
+    background: linear-gradient(135deg, var(--success-color) 0%, #20c997 100%);
+    color: white;
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    margin: calc(-1 * var(--spacing-xl)) calc(-1 * var(--spacing-xl)) var(--spacing-xl) calc(-1 * var(--spacing-xl));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
             position: relative;
             overflow: hidden;
         }
@@ -533,18 +506,23 @@
     </style>
 </head>
 
-<body>
-    <div id="notification" class="notification"></div>
+<div class="contable-page">
+    <div id="notification" class="contable-notification"></div>
 
-    <div class="container">
-        <!-- Navegación -->
-        <div class="nav-breadcrumb">
-            <a href="/">
-                <i class="bi bi-house"></i> Dashboard
-            </a>
-            <span> / </span>
-            <span>Libro de Caja</span>
+    <div class="contable-header">
+        <div class="contable-header-content">
+            <div class="contable-header-info">
+                <h1 class="contable-title">
+                    <i class="bi bi-journal-text"></i>
+                    Libro de Caja
+                </h1>
+                <p class="contable-subtitle">Registro de ingresos y egresos financieros</p>
+            </div>
         </div>
+    </div>
+
+    <div class="contable-content">
+        <div class="contable-card">
 
         <div class="card">
             <div class="card-header">
@@ -769,8 +747,8 @@
             </div>
         </div>
     </div>
+        </div>
+    </div>
+</div>
 
-    <!-- El JS de localStorage y sincronización ha sido eliminado. Los datos ahora se obtienen solo desde el backend (base de datos). -->
-</body>
-</html>
 @endsection

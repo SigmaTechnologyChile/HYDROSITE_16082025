@@ -9,6 +9,7 @@ use App\Models\Service;
 use App\Models\State;
 use App\Models\Province;
 use App\Models\City;
+use App\Models\Ruta;
 use App\Exports\LocationsExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
@@ -21,14 +22,34 @@ class LocationController extends Controller
         // No accedas a Route::current() aquí
     }
 
-    // Endpoint para obtener clientes por sector (location_id)
+    // Endpoint para obtener clientes por sector (locality_id)
     public function clientesPorSector($locationId)
     {
-        $clientes = DB::table('services')
-            ->where('location_id', $locationId)
-            ->orderBy('order_by', 'asc')
-            ->get(['id', 'numero as numero_servicio', 'nombre as name', 'telefono as phone', 'order_by as order']);
-        return response()->json($clientes);
+        try {
+            \Log::info("Buscando services para locality_id: " . $locationId);
+            
+            // Simplemente traer todos los services.id donde locality_id = locationId
+            $servicios = DB::table('services')
+                ->where('locality_id', $locationId)
+                ->select('id as service_id')
+                ->orderBy('id')
+                ->get();
+            
+            \Log::info("Services encontrados: " . $servicios->count());
+            
+            return response()->json([
+                'success' => true,
+                'data' => $servicios,
+                'total' => $servicios->count()
+            ]);
+            
+        } catch (\Exception $e) {
+            \Log::error("Error en clientesPorSector: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function index($id)
@@ -140,6 +161,96 @@ class LocationController extends Controller
             ->orderBy('order_by', 'asc')
             ->get();
 
-        return view('orgs.locations.panelcontrolrutas', compact('org', 'locations'));
+        return view('orgs.locations.panelcontrolrutas_simple', compact('org', 'locations'));
+    }
+
+    // Método para guardar el orden de la ruta
+    public function guardarOrdenRuta(Request $request, $orgId, $locationId)
+    {
+        try {
+            $org = Org::findOrFail($orgId);
+            $location = Location::findOrFail($locationId);
+            
+            $ordenData = $request->json()->all();
+            
+            if (!isset($ordenData['servicios']) || !is_array($ordenData['servicios'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Datos de servicios inválidos'
+                ], 400);
+            }
+            
+            // Eliminar registros existentes para este sector
+            Ruta::where('org_id', $orgId)
+                 ->where('location_id', $locationId)
+                 ->delete();
+            
+            // Insertar nuevo orden
+            $rutasData = [];
+            foreach ($ordenData['servicios'] as $servicio) {
+                $rutasData[] = [
+                    'org_id' => $orgId,
+                    'location_id' => $locationId,
+                    'service_id' => $servicio['service_id'],
+                    'orden' => $servicio['orden'],
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+            }
+            
+            if (!empty($rutasData)) {
+                Ruta::insert($rutasData);
+            }
+            
+            \Log::info("Orden de ruta guardado para sector {$locationId}", $rutasData);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Orden guardado correctamente',
+                'total_servicios' => count($rutasData),
+                'sector' => $location->name
+            ]);
+            
+        } catch (\Exception $e) {
+            \Log::error("Error al guardar orden de ruta: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Método para obtener servicios con orden guardado
+    public function obtenerServiciosConOrden($orgId, $locationId)
+    {
+        try {
+            // Obtener servicios del sector con orden guardado
+            $serviciosConOrden = DB::table('services')
+                ->join('members', 'services.rut', '=', 'members.rut')
+                ->leftJoin('rutas', function($join) use ($orgId, $locationId) {
+                    $join->on('services.id', '=', 'rutas.service_id')
+                         ->where('rutas.org_id', '=', $orgId)
+                         ->where('rutas.location_id', '=', $locationId);
+                })
+                ->where('services.locality_id', $locationId)
+                ->select(
+                    'services.id as numero',
+                    'services.rut',
+                    DB::raw("CONCAT(members.first_name, ' ', members.last_name) as full_name"),
+                    'rutas.orden'
+                )
+                ->orderBy('rutas.orden', 'ASC')
+                ->orderBy('services.id', 'ASC') // Fallback para servicios sin orden
+                ->get();
+
+            return response()->json($serviciosConOrden);
+            
+        } catch (\Exception $e) {
+            \Log::error("Error al obtener servicios con orden: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🧪 Prueba de Integración: Rutas + Operador</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .card { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .success { border-left: 4px solid #28a745; }
+        .info { border-left: 4px solid #17a2b8; }
+        .warning { border-left: 4px solid #ffc107; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        .test-btn { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        .test-btn:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Prueba de Integración: Sistema de Rutas + Operador</h1>
+    
+    <div class="card info">
+        <h3>📋 Sistema Integrado</h3>
+        <p>Ahora el <strong>sistema de operador</strong> (registro de lecturas) usa el <strong>orden de rutas</strong> establecido en el panel de control.</p>
+        <ul>
+            <li>✅ Los servicios aparecen en el orden definido en la tabla <code>rutas</code></li>
+            <li>✅ Se mantiene compatibilidad con sectores sin orden personalizado</li>
+            <li>✅ Se incluye indicador visual del orden en el dropdown</li>
+        </ul>
+    </div>
+
+    <div class="card success">
+        <h3>🔧 Cambios Implementados</h3>
+        <ul>
+            <li><strong>OperatorController</strong>: Nuevo método <code>getServicesBySectorWithOrder()</code></li>
+            <li><strong>Rutas</strong>: Nueva ruta <code>/org/{orgId}/servicios-por-sector/{sectorId}</code></li>
+            <li><strong>JavaScript</strong>: Llamada AJAX actualizada para incluir <code>orgId</code></li>
+            <li><strong>SQL Query</strong>: LEFT JOIN con tabla <code>rutas</code> para ordenamiento</li>
+            <li><strong>Visualización</strong>: Indicador <code>[📍N]</code> para servicios con orden</li>
+        </ul>
+    </div>
+
+    <div class="card warning">
+        <h3>🧭 Flujo de Trabajo Completo</h3>
+        <ol>
+            <li><strong>Panel Control Rutas</strong>: Ir a <code>/org/{ID}/panel-control-rutas</code></li>
+            <li><strong>Establecer Orden</strong>: Seleccionar sector → "Editar Ruta" → Organizar servicios → Guardar</li>
+            <li><strong>Operador</strong>: Ir a <code>/org/{ID}/operator</code></li>
+            <li><strong>Verificar Orden</strong>: Seleccionar el mismo sector → Ver servicios ordenados</li>
+            <li><strong>Indicador Visual</strong>: Los servicios muestran <code>[📍1], [📍2], etc.</code></li>
+        </ol>
+    </div>
+
+    <?php
+    try {
+        // Conexión a base de datos para mostrar estadísticas
+        $pdo = new PDO('mysql:host=localhost;dbname=hydrosite', 'root', '');
+        
+        // Contar rutas configuradas
+        $stmt = $pdo->query("SELECT COUNT(DISTINCT CONCAT(org_id, '-', location_id)) as sectores_con_rutas FROM rutas");
+        $sectoresConRutas = $stmt->fetch(PDO::FETCH_ASSOC)['sectores_con_rutas'];
+        
+        $stmt = $pdo->query("SELECT COUNT(*) as total_rutas FROM rutas");
+        $totalRutas = $stmt->fetch(PDO::FETCH_ASSOC)['total_rutas'];
+        
+        // Obtener ejemplos de rutas
+        $stmt = $pdo->query("
+            SELECT r.org_id, l.name as sector, COUNT(*) as servicios, 
+                   GROUP_CONCAT(r.service_id ORDER BY r.orden SEPARATOR ', ') as orden_servicios
+            FROM rutas r 
+            JOIN locations l ON r.location_id = l.id 
+            GROUP BY r.org_id, r.location_id 
+            LIMIT 3
+        ");
+        $ejemplosRutas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        echo '<div class="card info">';
+        echo '<h3>📊 Estadísticas del Sistema</h3>';
+        echo "<p><strong>Sectores con rutas configuradas:</strong> {$sectoresConRutas}</p>";
+        echo "<p><strong>Total de rutas definidas:</strong> {$totalRutas}</p>";
+        
+        if (!empty($ejemplosRutas)) {
+            echo '<h4>🎯 Ejemplos de Rutas Configuradas:</h4>';
+            foreach ($ejemplosRutas as $ruta) {
+                echo "<div style='margin: 10px 0; padding: 10px; background: #e3f2fd; border-radius: 4px;'>";
+                echo "<strong>Org {$ruta['org_id']}</strong> - Sector: <strong>{$ruta['sector']}</strong><br>";
+                echo "Servicios ({$ruta['servicios']}): {$ruta['orden_servicios']}";
+                echo "</div>";
+            }
+        }
+        echo '</div>';
+        
+        // Obtener organizaciones para links de prueba
+        $stmt = $pdo->query("SELECT id, name FROM orgs LIMIT 5");
+        echo '<div class="card success">';
+        echo '<h3>🔗 Links de Prueba</h3>';
+        while ($org = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $urlRutas = "http://localhost/hydrosite/public_html/public/org/{$org['id']}/panel-control-rutas";
+            $urlOperador = "http://localhost/hydrosite/public_html/public/org/{$org['id']}/operator";
+            echo "<div style='margin: 10px 0;'>";
+            echo "<strong>{$org['name']} (ID: {$org['id']})</strong><br>";
+            echo "<a href='{$urlRutas}' target='_blank' class='test-btn'>📋 Panel Rutas</a>";
+            echo "<a href='{$urlOperador}' target='_blank' class='test-btn'>📊 Operador</a>";
+            echo "</div>";
+        }
+        echo '</div>';
+        
+    } catch (Exception $e) {
+        echo '<div class="card warning">';
+        echo '<h3>⚠️ Error de conexión</h3>';
+        echo '<p>Error: ' . htmlspecialchars($e->getMessage()) . '</p>';
+        echo '</div>';
+    }
+    ?>
+
+    <div class="card info">
+        <h3>🚀 Funcionalidad Completa</h3>
+        <p>El sistema ahora está completamente integrado:</p>
+        <ul>
+            <li><strong>🎯 Orden Personalizado</strong>: Cada sector puede tener su orden específico</li>
+            <li><strong>💾 Persistencia</strong>: El orden se guarda en base de datos</li>
+            <li><strong>🔄 Sincronización</strong>: Operador respeta el orden establecido</li>
+            <li><strong>👁️ Indicadores Visuales</strong>: Números de orden visibles en dropdown</li>
+            <li><strong>🛡️ Compatibilidad</strong>: Sectores sin orden funcionan normalmente</li>
+        </ul>
+    </div>
+</body>
+</html>

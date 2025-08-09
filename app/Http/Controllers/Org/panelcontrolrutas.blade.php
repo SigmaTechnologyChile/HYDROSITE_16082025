@@ -1,8 +1,10 @@
-@extends('layouts.nice', ['active'=>'orgs.locations.panelcontrolrutas', 'title'=>'Panel Control Rutas'])
-
-
-@section('content')
- <style>
+{{-- 
+    ARCHIVO ELIMINADO
+    Este archivo estaba mal ubicado (debería estar en views, no en controllers)
+    Ha sido reemplazado por: resources/views/orgs/locations/panelcontrolrutas_simple.blade.php
+    Fecha: 9 de agosto de 2025
+    Motivo: Consolidación de vistas y corrección de ubicación
+--}}
 
     :root {
 
