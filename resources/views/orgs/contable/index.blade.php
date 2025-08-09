@@ -1,32 +1,84 @@
-<!-- Vista de Libro de Caja Tabular -->
+<!-- Vista de Libro de Caja Tabular Modernizada -->
 @if(!($mostrarLibroCaja ?? false))
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
 </head>
+
+{{-- Incluir estilos modernos del módulo contable --}}
+@include('orgs.contable.partials.contable-styles')
+
 <style>
+  /* Estilos específicos para notificaciones */
   .notification {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 20px;
+    right: 20px;
+    transform: translateX(400px);
     z-index: 9999;
     min-width: 320px;
     max-width: 90vw;
-    padding: 20px 40px;
-    background: #222;
-    color: #fff;
-    border-radius: 10px;
-    font-size: 1.2rem;
-    text-align: center;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.25);
-    display: none;
-    opacity: 0.97;
-    transition: opacity 0.2s;
+    padding: 20px 24px;
+    border-radius: var(--radius-lg);
+    font-size: 1rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-xl);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backdrop-filter: blur(10px);
   }
-  .notification.success { background: #28a745; color: #fff; }
-  .notification.error { background: #dc3545; color: #fff; }
+  
+  .notification.show {
+    transform: translateX(0);
+  }
+  
+  .notification.success { 
+    background: linear-gradient(135deg, var(--success-color) 0%, #38a169 100%);
+    color: white;
+    border-left: 4px solid #22543d;
+  }
+  
+  .notification.error { 
+    background: linear-gradient(135deg, var(--danger-color) 0%, #c53030 100%);
+    color: white;
+    border-left: 4px solid #742a2a;
+  }
+  
+  .notification.warning { 
+    background: linear-gradient(135deg, var(--warning-color) 0%, #c05621 100%);
+    color: white;
+    border-left: 4px solid #7c2d12;
+  }
+  
+  .notification.info { 
+    background: linear-gradient(135deg, var(--info-color) 0%, #3182ce 100%);
+    color: white;
+    border-left: 4px solid #2c5282;
+  }
+  
+  .notification i {
+    font-size: 1.25rem;
+    opacity: 0.9;
+  }
+  
+  .notification-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: currentColor;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s;
+  }
+  
+  .notification-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+</style>
 </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -151,6 +203,15 @@
             <i class="bi bi-journal-plus"></i>Cuentas Iniciales
           </x-boton-protegido>
         </div>
+      </div>
+    </div>
+
+    <!-- Nueva tarjeta para acceso directo a configuración de cuentas iniciales -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <a href="{{ route('cuentas_iniciales.show') }}" class="btn btn-danger">
+          <i class="bi bi-journal-plus"></i> Configuración de Cuentas Iniciales
+        </a>
       </div>
     </div>
   </div>
@@ -1981,6 +2042,6 @@
 </script>
 @endif
 
-@include('orgs.contable.libroCajaTabular', ['id' => $org->id ?? $orgId ?? null])
+@include('orgs.contable.libro_caja_tabular', ['id' => $org->id ?? $orgId ?? null])
 </body>
 </html>

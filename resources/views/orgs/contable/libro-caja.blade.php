@@ -13,41 +13,247 @@
     <link rel="stylesheet" href="{{ asset('css/contable/style.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     
+@extends('layouts.app')
+@php($title = 'Libro de Caja')
+@php($active = '')
+
+@section('content')
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libro de Caja - Sistema Financiero</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="{{ asset('css/contable/style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    
+    {{-- Incluir estilos modernos del módulo contable --}}
+    @include('orgs.contable.partials.contable-styles')
+    
     <style>
-        .container {
+        /* Estilos específicos para Libro de Caja */
+        .libro-caja-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: var(--spacing-xl);
         }
         
-        .card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            margin-bottom: 20px;
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        .libro-caja-header {
+            background: linear-gradient(135deg, var(--success-color) 0%, #20c997 100%);
             color: white;
-            padding: 20px;
-            border-radius: 15px 15px 0 0;
-            margin: -30px -30px 30px -30px;
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            margin: calc(-1 * var(--spacing-xl)) calc(-1 * var(--spacing-xl)) var(--spacing-xl) calc(-1 * var(--spacing-xl));
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            overflow: hidden;
         }
         
-        .filtros-container {
+        .libro-caja-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+            pointer-events: none;
+        }
+        
+        .filtros-modernos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+            padding: var(--spacing-xl);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .filtro-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+        
+        .filtro-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+        
+        .filtro-label i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        .tabla-libro-caja {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .tabla-libro-caja table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .tabla-libro-caja thead {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #4299e1 100%);
+            color: white;
+        }
+        
+        .tabla-libro-caja thead th {
+            padding: 18px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+        
+        .tabla-libro-caja tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        
+        .tabla-libro-caja tbody tr:hover {
+            background-color: #f8fafc;
+            transform: translateX(2px);
+        }
+        
+        .tabla-libro-caja tbody td {
+            padding: 16px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .monto-ingreso {
+            color: var(--success-color);
+            font-weight: 700;
+        }
+        
+        .monto-egreso {
+            color: var(--danger-color);
+            font-weight: 700;
+        }
+        
+        .monto-saldo {
+            color: var(--primary-color);
+            font-weight: 700;
+            background: rgba(44, 82, 130, 0.1);
+            padding: 6px 12px;
+            border-radius: var(--radius-md);
+        }
+        
+        .resumen-totales {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 12px;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
         }
+        
+        .total-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .total-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .total-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-md);
+            opacity: 0.8;
+        }
+        
+        .total-card-ingreso {
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .total-card-ingreso .total-card-icon {
+            color: var(--success-color);
+        }
+        
+        .total-card-egreso {
+            border-left: 4px solid var(--danger-color);
+        }
+        
+        .total-card-egreso .total-card-icon {
+            color: var(--danger-color);
+        }
+        
+        .total-card-saldo {
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .total-card-saldo .total-card-icon {
+            color: var(--primary-color);
+        }
+        
+        .total-valor {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .total-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Responsivo mejorado */
+        @media (max-width: 768px) {
+            .libro-caja-container {
+                padding: var(--spacing-md);
+            }
+            
+            .filtros-modernos {
+                grid-template-columns: 1fr;
+                padding: var(--spacing-lg);
+            }
+            
+            .tabla-libro-caja {
+                overflow-x: auto;
+            }
+            
+            .tabla-libro-caja table {
+                min-width: 800px;
+            }
+            
+            .resumen-totales {
+                grid-template-columns: 1fr;
+            }
+            
+            .libro-caja-header {
+                flex-direction: column;
+                gap: var(--spacing-md);
+                text-align: center;
+            }
+        }
+    </style>
         
         .form-group {
             margin-bottom: 0;

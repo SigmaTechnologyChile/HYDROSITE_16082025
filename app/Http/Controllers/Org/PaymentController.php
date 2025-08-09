@@ -27,8 +27,10 @@ class PaymentController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $id = \Route::current()->Parameter('id');
-        $this->org = Org::find($id);
+        $id = \Route::current()?->parameter('id');
+        if ($id) {
+            $this->org = Org::find($id);
+        }
     }
 
     /**

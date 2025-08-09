@@ -191,27 +191,44 @@ Route::get('/servicios-por-sector/{sectorId}', [App\Http\Controllers\Org\Operato
     ->name('services.by.sector')
     ->where(['sectorId' => '[0-9]+']);
 
+// Rutas especiales para el módulo contable (completamente fuera de cualquier grupo)
+Route::get('org/{id}/cuentas-iniciales', [App\Http\Controllers\Org\ContableController::class, 'cuentasIniciales'])->name('cuentas_iniciales.show');
+Route::get('org/{id}/registro-ingresos-egresos', [App\Http\Controllers\Org\ContableController::class, 'registroIngresosEgresos'])->name('registro_ingresos_egresos.show');
+Route::get('org/{id}/giros-depositos', [App\Http\Controllers\Org\ContableController::class, 'girosDepositos'])->name('giros_depositos.show');
+Route::get('org/{id}/libro-caja-tabular', [App\Http\Controllers\Org\ContableController::class, 'libroCajaTabular'])->name('libro_caja_tabular.show');
+Route::get('org/{id}/balance', [App\Http\Controllers\Org\ContableController::class, 'balance'])->name('balance.show');
+Route::get('org/{id}/conciliacion-bancaria', [App\Http\Controllers\Org\ContableController::class, 'conciliacionBancaria'])->name('conciliacion_bancaria.show');
+Route::get('org/{id}/informe-rubro', [App\Http\Controllers\Org\ContableController::class, 'informePorRubro'])->name('informe_rubro.show');
+Route::get('org/{id}/movimientos', [App\Http\Controllers\Org\ContableController::class, 'movimientos'])->name('movimientos.show');
+
 // Organizationes routes
 
 Route::prefix('org')->name('orgs.')->group(function () {
 
-
-
-    // Nueva ruta para gestión contable
+    // Rutas para gestión contable
     Route::get('{id}/contable', [ContableController::class, 'index'])->name('contable.index');
-    Route::get('{id}/libro-caja', [ContableController::class, 'mostrarLibroCaja'])->name('libro.caja'); // ruta libro caja tabular
+    Route::get('{id}/libro-caja', [ContableController::class, 'mostrarLibroCaja'])->name('libro.caja');
     Route::get('{id}/exportar-excel', [ContableController::class, 'exportarExcel'])->name('contable.exportarExcel');
+    
+    // Rutas para módulos contables específicos
+    Route::get('{id}/contable/balance', [ContableController::class, 'balance'])->name('contable.balance');
+    Route::get('{id}/contable/conciliacion-bancaria', [ContableController::class, 'conciliacionBancaria'])->name('contable.conciliacion.bancaria');
+    Route::get('{id}/contable/movimientos', [ContableController::class, 'movimientos'])->name('contable.movimientos');
+    Route::get('{id}/contable/informe-rubro', [ContableController::class, 'informePorRubro'])->name('contable.informe.rubro');
+    Route::get('{id}/contable/registro-ingresos-egresos', [ContableController::class, 'registroIngresosEgresos'])->name('contable.registro.ingresos.egresos');
+    Route::get('{id}/contable/cuentas-iniciales', [ContableController::class, 'cuentasIniciales'])->name('contable.cuentas.iniciales');
+    Route::get('{id}/contable/cuentas-iniciales/{cuenta}', [ContableController::class, 'mostrarCuentaInicial'])->name('cuentas_iniciales.detalle');
+    Route::get('{id}/contable/configuracion-cuentas', [ContableController::class, 'configuracionCuentas'])->name('contable.configuracion.cuentas');
+    Route::get('{id}/contable/giros-depositos', [ContableController::class, 'girosDepositos'])->name('contable.giros.depositos');
+    Route::get('{id}/contable/nice', [ContableController::class, 'nice'])->name('contable.nice');
 
-    // Rutas para botones principales de acciones rápidas (solo una definición por ruta, sin duplicados)
+    // Rutas para botones principales de acciones rápidas
     Route::get('{id}/ingresos', function($id) {
         return view('orgs.contable.ingresos', ['orgId' => $id]);
     })->name('ingresos.index');
     Route::get('{id}/egresos', function($id) {
         return view('orgs.contable.egresos', ['orgId' => $id]);
     })->name('egresos.index');
-    Route::get('{id}/giros-depositos', function($id) {
-        return view('orgs.contable.giros-depositos', ['orgId' => $id]);
-    })->name('giros-depositos.index');
 
 
 

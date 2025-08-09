@@ -251,4 +251,194 @@ class ContableController extends Controller
             'saldoFinal' => $saldoFinal,
         ];
     }
+
+    /**
+     * Muestra el balance general de la organización
+     */
+    public function balance($id)
+    {
+        $resumen = $this->getResumenSaldos($id);
+        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
+            $q->where('org_id', $id);
+        })->orderBy('fecha', 'desc')->get();
+
+        return view('orgs.contable.balance', array_merge([
+            'orgId' => $id,
+            'movimientos' => $movimientos,
+        ], $resumen));
+    }
+
+    /**
+     * Muestra la conciliación bancaria
+     */
+    public function conciliacionBancaria($id)
+    {
+        $resumen = $this->getResumenSaldos($id);
+        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
+            $q->where('org_id', $id);
+        })->orderBy('fecha', 'desc')->get();
+
+        return view('orgs.contable.conciliacion_bancaria', array_merge([
+            'orgId' => $id,
+            'movimientos' => $movimientos,
+        ], $resumen));
+    }
+
+    /**
+     * Muestra los movimientos contables
+     */
+    public function movimientos($id)
+    {
+        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
+            $q->where('org_id', $id);
+        })->orderBy('fecha', 'desc')->get();
+        $resumen = $this->getResumenSaldos($id);
+
+        return view('orgs.contable.movimientos', array_merge([
+            'orgId' => $id,
+            'movimientos' => $movimientos,
+        ], $resumen));
+    }
+
+    /**
+     * Muestra el informe por rubro
+     */
+    public function informePorRubro($id)
+    {
+        $categorias = \App\Models\Categoria::with(['movimientos' => function($q) use ($id) {
+            $q->whereHas('cuentaOrigen', function($query) use ($id) {
+                $query->where('org_id', $id);
+            });
+        }])->get();
+        $resumen = $this->getResumenSaldos($id);
+
+        return view('orgs.contable.informe_por_rubro', array_merge([
+            'orgId' => $id,
+            'categorias' => $categorias,
+        ], $resumen));
+    }
+
+    /**
+     * Muestra el registro de ingresos y egresos
+     */
+    public function registroIngresosEgresos($id)
+    {
+        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
+            $q->where('org_id', $id);
+        })->orderBy('fecha', 'desc')->get();
+        $resumen = $this->getResumenSaldos($id);
+        $categoriasIngresos = \App\Models\Categoria::where('tipo', 'ingreso')->orderBy('nombre')->get();
+        $categoriasEgresos = \App\Models\Categoria::where('tipo', 'egreso')->orderBy('nombre')->get();
+
+        return view('orgs.contable.registro_ingresos_egresos', array_merge([
+            'orgId' => $id,
+            'movimientos' => $movimientos,
+            'categoriasIngresos' => $categoriasIngresos,
+            'categoriasEgresos' => $categoriasEgresos,
+        ], $resumen));
+    }
+
+    /**
+     * Muestra las cuentas iniciales
+     */
+    public function cuentasIniciales($id)
+    {
+        $configuraciones = ConfiguracionInicial::with('cuenta')->where('org_id', $id)->get();
+        $cuentasIniciales = \App\Models\Cuenta::all();
+        $bancos = \App\Models\Banco::orderBy('nombre')->get();
+        $resumen = $this->getResumenSaldos($id);
+
+        return view('orgs.contable.cuentas_iniciales', array_merge([
+            'orgId' => $id,
+            'cuentasIniciales' => $cuentasIniciales,
+            'configuraciones' => $configuraciones,
+            'bancos' => $bancos,
+        ], $resumen));
+    }
+
+    /**
+     * Muestra una cuenta inicial específica
+     */
+    public function mostrarCuentaInicial($id, $cuenta)
+    {
+        $configuracion = ConfiguracionInicial::with('cuenta')->where('org_id', $id)->where('id', $cuenta)->first();
+        $bancos = \App\Models\Banco::orderBy('nombre')->get();
+        $resumen = $this->getResumenSaldos($id);
+
+        return view('orgs.contable.cuentas_iniciales_modal', array_merge([
+            'orgId' => $id,
+            'configuracion' => $configuracion,
+            'bancos' => $bancos,
+        ], $resumen));
+    }
+
+    /**
+     * Muestra la configuración de cuentas
+     */
+    public function configuracionCuentas($id)
+    {
+        $configuraciones = ConfiguracionInicial::with('cuenta')->where('org_id', $id)->get();
+        $cuentas = \App\Models\Cuenta::all();
+        $bancos = \App\Models\Banco::orderBy('nombre')->get();
+        $resumen = $this->getResumenSaldos($id);
+
+        return view('orgs.contable.configuracion_cuentas_original', array_merge([
+            'orgId' => $id,
+            'cuentas' => $cuentas,
+            'configuraciones' => $configuraciones,
+            'bancos' => $bancos,
+        ], $resumen));
+    }
+
+    /**
+     * Muestra el libro caja en formato tabular
+     */
+    public function libroCajaTabular($id)
+    {
+        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
+            $q->where('org_id', $id);
+        })->orderBy('fecha', 'desc')->get();
+        $resumen = $this->getResumenSaldos($id);
+
+        return view('orgs.contable.libro_caja_tabular', array_merge([
+            'orgId' => $id,
+            'movimientos' => $movimientos,
+        ], $resumen));
+    }
+
+    /**
+     * Muestra la vista de giros y depósitos
+     */
+    public function girosDepositos($id)
+    {
+        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
+            $q->where('org_id', $id);
+        })->orderBy('fecha', 'desc')->get();
+        $resumen = $this->getResumenSaldos($id);
+        $bancos = \App\Models\Banco::orderBy('nombre')->get();
+
+        return view('orgs.contable.giros_depositos', array_merge([
+            'orgId' => $id,
+            'movimientos' => $movimientos,
+            'bancos' => $bancos,
+        ], $resumen));
+    }
+
+    /**
+     * Muestra la vista nice (dashboard personalizado)
+     */
+    public function nice($id)
+    {
+        $resumen = $this->getResumenSaldos($id);
+        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
+            $q->where('org_id', $id);
+        })->orderBy('fecha', 'desc')->limit(10)->get();
+        $configuraciones = ConfiguracionInicial::with('cuenta')->where('org_id', $id)->get();
+
+        return view('orgs.contable.nice', array_merge([
+            'orgId' => $id,
+            'movimientos' => $movimientos,
+            'configuraciones' => $configuraciones,
+        ], $resumen));
+    }
 }

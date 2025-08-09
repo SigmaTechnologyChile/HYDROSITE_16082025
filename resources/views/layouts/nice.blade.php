@@ -915,9 +915,10 @@
                     @php
 
                         $contableActive = in_array($active, [
-
-
-
+                            'orgs.contable.index',
+                            'cuentas_iniciales.show',
+                            'configuracion_cuentas_original.show',
+                            'registro_ingresos_egresos.show'
                         ]);
 
                     @endphp
@@ -946,7 +947,62 @@
 
                             </li>
 
-
+                            <li>
+                                <a href="{{ route('cuentas_iniciales.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'cuentas_iniciales.show' ? 'active' : '' }}">
+                                    <i class="bi bi-journal-plus" style="color: #d32f2f;"></i>
+                                    <span>Config. Cuentas Iniciales</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('registro_ingresos_egresos.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'registro_ingresos_egresos.show' ? 'active' : '' }}">
+                                    <i class="bi bi-arrow-left-right" style="color: #28a745;"></i>
+                                    <span>Registro Ingresos/Egresos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('giros_depositos.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'giros_depositos.show' ? 'active' : '' }}">
+                                    <i class="bi bi-bank" style="color: #007bff;"></i>
+                                    <span>Giros y Depósitos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('libro_caja_tabular.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'libro_caja_tabular.show' ? 'active' : '' }}">
+                                    <i class="bi bi-journal-bookmark" style="color: #6f42c1;"></i>
+                                    <span>Libro de Caja Tabular</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('balance.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'balance.show' ? 'active' : '' }}">
+                                    <i class="bi bi-bar-chart" style="color: #fd7e14;"></i>
+                                    <span>Balance</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('conciliacion_bancaria.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'conciliacion_bancaria.show' ? 'active' : '' }}">
+                                    <i class="bi bi-bank2" style="color: #20c997;"></i>
+                                    <span>Conciliación Bancaria</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('informe_rubro.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'informe_rubro.show' ? 'active' : '' }}">
+                                    <i class="bi bi-pie-chart" style="color: #e83e8c;"></i>
+                                    <span>Informe por Rubro</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('movimientos.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'movimientos.show' ? 'active' : '' }}">
+                                    <i class="bi bi-list-ul" style="color: #6f42c1;"></i>
+                                    <span>Movimientos</span>
+                                </a>
+                            </li>
 
                         </ul>
 
@@ -1951,31 +2007,75 @@
 
                             <li>
 
-                                <a href="{{route('orgs.sections.index', ['id' => auth()->user()->org_id])}}"
-                                    class="{{ in_array($active, ['orgs.sections.index', 'orgs.sections.create']) ? 'active' : '' }}">
+                                <a href="{{ route('orgs.contable.index', ['id' => auth()->user()->org_id]) }}"
+                                    class="{{ $active == 'orgs.contable.index' ? 'active' : '' }}">
 
-                                    <i class="bi bi-circle"></i><span>Registro de ingreso y egresos</span>
+                                    <i class="bi bi-circle"></i><span>Gestión Contable Pro</span>
 
                                 </a>
 
                             </li>
 
                             <li>
-
-                                <a href="{{route('orgs.folios.create', ['id' => auth()->user()->org_id])}}"
-                                    class="{{ in_array($active, ['orgs.folios.index', 'orgs.folios.create']) ? 'active' : '' }}">
-
-                                    <i class="bi bi-circle"></i><span>Libreta de caja tabular con firma electronica</span>
-
+                                <a href="{{ route('cuentas_iniciales.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'cuentas_iniciales.show' ? 'active' : '' }}">
+                                    <i class="bi bi-journal-plus" style="color: #d32f2f;"></i>
+                                    <span>Config. Cuentas Iniciales</span>
                                 </a>
-
+                            </li>
+                            <li>
+                                <a href="{{ route('registro_ingresos_egresos.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'registro_ingresos_egresos.show' ? 'active' : '' }}">
+                                    <i class="bi bi-arrow-left-right" style="color: #28a745;"></i>
+                                    <span>Registro Ingresos/Egresos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('giros_depositos.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'giros_depositos.show' ? 'active' : '' }}">
+                                    <i class="bi bi-bank" style="color: #007bff;"></i>
+                                    <span>Giros y Depósitos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('libro_caja_tabular.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'libro_caja_tabular.show' ? 'active' : '' }}">
+                                    <i class="bi bi-journal-bookmark" style="color: #6f42c1;"></i>
+                                    <span>Libro de Caja Tabular</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('balance.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'balance.show' ? 'active' : '' }}">
+                                    <i class="bi bi-bar-chart" style="color: #fd7e14;"></i>
+                                    <span>Balance</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('conciliacion_bancaria.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'conciliacion_bancaria.show' ? 'active' : '' }}">
+                                    <i class="bi bi-bank2" style="color: #20c997;"></i>
+                                    <span>Conciliación Bancaria</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('informe_rubro.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'informe_rubro.show' ? 'active' : '' }}">
+                                    <i class="bi bi-pie-chart" style="color: #e83e8c;"></i>
+                                    <span>Informe por Rubro</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('movimientos.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'movimientos.show' ? 'active' : '' }}">
+                                    <i class="bi bi-list-ul" style="color: #6f42c1;"></i>
+                                    <span>Movimientos</span>
+                                </a>
                             </li>
 
                         </ul>
 
                     </li>
-
-
 
                     <!-- Agua Potable -->
 
@@ -2022,7 +2122,7 @@
 
                     </li>
 
-                    <!-- INVENTARIO -->
+                    <!-- Inventario -->
 
                     @php
 
@@ -2044,10 +2144,10 @@
 
                     <li class="nav-item">
 
-                        <a class="nav-link {{ $inventarioActive ? '' : 'collapsed' }} disabled text-muted" tabindex="-1"
-                            aria-disabled="true" data-bs-target="#inventories-nav" data-bs-toggle="collapse" href="#">
+                        <a class="nav-link {{ $inventarioActive ? '' : 'collapsed' }}" data-bs-target="#inventories-nav"
+                            data-bs-toggle="collapse" href="#">
 
-                            <i class="ri-archive-line "></i><span>INVENTARIO <i class="bi bi-lock fs-6"></i></span><i
+                            <i class="ri-archive-line" style="color: blue;"></i><span>INVENTARIO</span><i
                                 class="bi bi-chevron-down ms-auto"></i>
 
                         </a>
@@ -2102,8 +2202,6 @@
                         </ul>
 
                     </li>
-
-
 
 
 
@@ -2423,7 +2521,7 @@
                         <a class="nav-link {{ $contableActive ? '' : 'collapsed' }}" data-bs-target="#contable-nav"
                             data-bs-toggle="collapse" href="#">
 
-                            <i class="ri-bill-line" style="color: blue;"></i><span>CONTABLE</span><i
+                            <i class="ri-bill-line" style="color: blue;"></i><span>CONTABLE </span><i
                                 class="bi bi-chevron-down ms-auto"></i>
 
                         </a>
@@ -2433,24 +2531,70 @@
 
                             <li>
 
-                                <a href="{{route('orgs.sections.index', ['id' => auth()->user()->org_id])}}"
-                                    class="{{ in_array($active, ['orgs.sections.index', 'orgs.sections.create']) ? 'active' : '' }}">
+                                <a href="{{ route('orgs.contable.index', ['id' => auth()->user()->org_id]) }}"
+                                    class="{{ $active == 'orgs.contable.index' ? 'active' : '' }}">
 
-                                    <i class="bi bi-circle"></i><span>Registro de ingreso y egresos</span>
+                                    <i class="bi bi-circle"></i><span>Gestión Contable Pro</span>
 
                                 </a>
 
                             </li>
 
                             <li>
-
-                                <a href="{{route('orgs.folios.create', ['id' => auth()->user()->org_id])}}"
-                                    class="{{ in_array($active, ['orgs.folios.index', 'orgs.folios.create']) ? 'active' : '' }}">
-
-                                    <i class="bi bi-circle"></i><span>Libreta de caja tabular con firma electronica</span>
-
+                                <a href="{{ route('cuentas_iniciales.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'cuentas_iniciales.show' ? 'active' : '' }}">
+                                    <i class="bi bi-journal-plus" style="color: #d32f2f;"></i>
+                                    <span>Config. Cuentas Iniciales</span>
                                 </a>
-
+                            </li>
+                            <li>
+                                <a href="{{ route('registro_ingresos_egresos.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'registro_ingresos_egresos.show' ? 'active' : '' }}">
+                                    <i class="bi bi-arrow-left-right" style="color: #28a745;"></i>
+                                    <span>Registro Ingresos/Egresos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('giros_depositos.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'giros_depositos.show' ? 'active' : '' }}">
+                                    <i class="bi bi-bank" style="color: #007bff;"></i>
+                                    <span>Giros y Depósitos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('libro_caja_tabular.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'libro_caja_tabular.show' ? 'active' : '' }}">
+                                    <i class="bi bi-journal-bookmark" style="color: #6f42c1;"></i>
+                                    <span>Libro de Caja Tabular</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('balance.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'balance.show' ? 'active' : '' }}">
+                                    <i class="bi bi-bar-chart" style="color: #fd7e14;"></i>
+                                    <span>Balance</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('conciliacion_bancaria.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'conciliacion_bancaria.show' ? 'active' : '' }}">
+                                    <i class="bi bi-bank2" style="color: #20c997;"></i>
+                                    <span>Conciliación Bancaria</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('informe_rubro.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'informe_rubro.show' ? 'active' : '' }}">
+                                    <i class="bi bi-pie-chart" style="color: #e83e8c;"></i>
+                                    <span>Informe por Rubro</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('movimientos.show', ['id' => auth()->user()->org_id]) }}" 
+                                   class="{{ $active == 'movimientos.show' ? 'active' : '' }}">
+                                    <i class="bi bi-list-ul" style="color: #6f42c1;"></i>
+                                    <span>Movimientos</span>
+                                </a>
                             </li>
 
                         </ul>
@@ -2586,7 +2730,6 @@
                         </ul>
 
                     </li>
-
 
 
 
@@ -2776,3 +2919,7 @@
 
 
 </html>
+
+
+
+

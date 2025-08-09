@@ -1,954 +1,687 @@
-@extends('layouts.app')
+@extends('layouts.nice', ['active' => 'balance', 'title' => 'Balance Financiero'])
+
+{{-- Incluir estilos modernos del módulo contable --}}
+@include('orgs.contable.partials.contable-styles')
 
 @section('content')
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Balance - Sistema Financiero</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="{{ asset('css/contable/style.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <style>
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            margin-bottom: 20px;
-        }
-        
-        .card-header {
-            background: linear-gradient(135deg, #6f42c1 0%, #8e44ad 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px 15px 0 0;
-            margin: -30px -30px 30px -30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .balance-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .resumen-financiero {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .metrica-card {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            border-left: 4px solid #6f42c1;
-            transition: transform 0.3s ease;
-        }
-        
-        .metrica-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .metrica-card h4 {
-            margin: 0;
-            color: #333;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        
-        .metrica-card .valor {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        
-        .metrica-card .porcentaje {
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .activos {
-            border-left-color: #28a745;
-        }
-        
-        .pasivos {
-            border-left-color: #dc3545;
-        }
-        
-        .patrimonio {
-            border-left-color: #17a2b8;
-        }
-        
-        .liquidez {
-            border-left-color: #ffc107;
-        }
-        
-        .rentabilidad {
-            border-left-color: #6f42c1;
-        }
-        
-        .eficiencia {
-            border-left-color: #fd7e14;
-        }
-        
-        .valor-positivo {
-            color: #28a745;
-        }
-        
-        .valor-negativo {
-            color: #dc3545;
-        }
-        
-        .valor-neutral {
-            color: #6c757d;
-        }
-        
-        .chart-container {
-            position: relative;
-            height: 300px;
-            margin: 20px 0;
-        }
-        
-        .balance-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .balance-table th {
-            background: linear-gradient(135deg, #6f42c1 0%, #8e44ad 100%);
-            color: white;
-            padding: 15px 12px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        
-        .balance-table td {
-            padding: 12px;
-            border-bottom: 1px solid #e9ecef;
-            font-size: 14px;
-        }
-        
-        .balance-table tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .balance-table tbody tr:nth-child(even) {
-            background-color: #fdfdfd;
-        }
-        
-        .seccion-balance {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .seccion-balance h4 {
-            margin: 0 0 15px 0;
-            color: #333;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .activos-section {
-            border-left: 4px solid #28a745;
-        }
-        
-        .pasivos-section {
-            border-left: 4px solid #dc3545;
-        }
-        
-        .patrimonio-section {
-            border-left: 4px solid #17a2b8;
-        }
-        
-        .filtros-periodo {
-            display: flex;
-            gap: 15px;
-            align-items: end;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .form-group {
-            margin-bottom: 0;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-        
-        .form-group input,
-        .form-group select {
-            padding: 10px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #6f42c1;
-            box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
-        }
-        
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            justify-content: center;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #6f42c1 0%, #8e44ad 100%);
-            color: white;
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-        }
-        
-        .btn-info {
-            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-            color: white;
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-            color: white;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            padding: 15px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            display: none;
-        }
-        
-        .notification.success { background: #28a745; }
-        .notification.error { background: #dc3545; }
-        .notification.info { background: #17a2b8; }
-        
-        .nav-breadcrumb {
-            background: #f8f9fa;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .nav-breadcrumb a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .nav-breadcrumb a:hover {
-            text-decoration: underline;
-        }
-        
-        .indicadores-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .indicador {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .indicador h5 {
-            margin: 0 0 10px 0;
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-        }
-        
-        .indicador .valor-indicador {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        
-        @media (max-width: 768px) {
-            .balance-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .resumen-financiero {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .filtros-periodo {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .filtros-periodo .form-group {
-                width: 100%;
-            }
-        }
-    </style>
-</head>
+<div class="contable-container">
+    <!-- Breadcrumbs modernos -->
+    <nav class="contable-breadcrumb">
+        <a href="{{ route('orgs.dashboard', ['id' => auth()->user()->org_id ?? 864]) }}" class="contable-breadcrumb-item">
+            <i class="bi bi-house-door"></i> Inicio
+        </a>
+        <span class="contable-breadcrumb-separator">
+            <i class="bi bi-chevron-right"></i>
+        </span>
+        <a href="#" class="contable-breadcrumb-item">Contable</a>
+        <span class="contable-breadcrumb-separator">
+            <i class="bi bi-chevron-right"></i>
+        </span>
+        <span class="contable-breadcrumb-item active">Balance Financiero</span>
+    </nav>
 
-<body>
-    <div id="notification" class="notification"></div>
-
-    <div class="container">
-        <!-- Navegación -->
-        <div class="nav-breadcrumb">
-            <a href="{{ route('dashboard') }}">
-                <i class="bi bi-house"></i> Dashboard
-            </a>
-            <span> / </span>
-            <span>Balance</span>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <div>
-                    <h1><i class="bi bi-bar-chart"></i> Balance General</h1>
-                    <p>Análisis financiero integral del sistema</p>
-                </div>
-                <a href="{{ route('dashboard') }}" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Volver al Dashboard
-                </a>
+    <!-- Header principal -->
+    <div class="contable-section">
+        <div class="contable-header">
+            <div>
+                <h1 class="contable-title">
+                    <i class="bi bi-bar-chart-line"></i>
+                    Balance Financiero
+                </h1>
+                <p class="contable-subtitle">Resumen gráfico y analítico de la situación financiera actual</p>
             </div>
-
-            <!-- Filtros de Período -->
-            <div class="filtros-periodo">
-                <div class="form-group">
-                    <label for="fechaDesdeBalance">
-                        <i class="bi bi-calendar3"></i> Desde
-                    </label>
-                    <input type="date" id="fechaDesdeBalance">
-                </div>
-                
-                <div class="form-group">
-                    <label for="fechaHastaBalance">
-                        <i class="bi bi-calendar3"></i> Hasta
-                    </label>
-                    <input type="date" id="fechaHastaBalance">
-                </div>
-                
-                <div class="form-group">
-                    <label for="periodoBalance">
-                        <i class="bi bi-calendar-range"></i> Período
-                    </label>
-                    <select id="periodoBalance">
-                        <option value="mes_actual">Mes Actual</option>
-                        <option value="trimestre">Trimestre</option>
-                        <option value="semestre">Semestre</option>
-                        <option value="anio">Año</option>
-                        <option value="personalizado">Personalizado</option>
-                    </select>
-                </div>
-                
-                <button id="btnActualizarBalance" class="btn btn-primary">
-                    <i class="bi bi-arrow-clockwise"></i> Actualizar
+            <div class="contable-header-actions">
+                <button class="contable-btn contable-btn-outline">
+                    <i class="bi bi-download"></i>
+                    Exportar
                 </button>
-            </div>
-
-            <!-- Resumen Financiero -->
-            <div class="resumen-financiero">
-                <div class="metrica-card activos">
-                    <h4><i class="bi bi-wallet2"></i> Total Activos</h4>
-                    <div class="valor valor-positivo" id="totalActivos">$0</div>
-                    <div class="porcentaje" id="varActivos">0%</div>
-                </div>
-                
-                <div class="metrica-card pasivos">
-                    <h4><i class="bi bi-credit-card"></i> Total Pasivos</h4>
-                    <div class="valor valor-negativo" id="totalPasivos">$0</div>
-                    <div class="porcentaje" id="varPasivos">0%</div>
-                </div>
-                
-                <div class="metrica-card patrimonio">
-                    <h4><i class="bi bi-piggy-bank"></i> Patrimonio</h4>
-                    <div class="valor" id="patrimonio">$0</div>
-                    <div class="porcentaje" id="varPatrimonio">0%</div>
-                </div>
-                
-                <div class="metrica-card liquidez">
-                    <h4><i class="bi bi-droplet"></i> Liquidez</h4>
-                    <div class="valor" id="indiceLiquidez">0.0</div>
-                    <div class="porcentaje">Ratio</div>
-                </div>
-                
-                <div class="metrica-card rentabilidad">
-                    <h4><i class="bi bi-graph-up"></i> Rentabilidad</h4>
-                    <div class="valor" id="rentabilidad">0%</div>
-                    <div class="porcentaje">ROA</div>
-                </div>
-                
-                <div class="metrica-card eficiencia">
-                    <h4><i class="bi bi-speedometer2"></i> Eficiencia</h4>
-                    <div class="valor" id="eficiencia">0%</div>
-                    <div class="porcentaje">Operativa</div>
-                </div>
-            </div>
-
-            <!-- Gráficos y Balance -->
-            <div class="balance-grid">
-                <!-- Gráfico de Composición -->
-                <div class="seccion-balance">
-                    <h4><i class="bi bi-pie-chart"></i> Composición Patrimonial</h4>
-                    <div class="chart-container">
-                        <canvas id="composicionChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Gráfico de Evolución -->
-                <div class="seccion-balance">
-                    <h4><i class="bi bi-graph-up"></i> Evolución Mensual</h4>
-                    <div class="chart-container">
-                        <canvas id="evolucionChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Balance Detallado -->
-            <div class="seccion-balance activos-section">
-                <h4><i class="bi bi-plus-circle"></i> ACTIVOS</h4>
-                <div class="table-responsive">
-                    <table class="balance-table">
-                        <thead>
-                            <tr>
-                                <th>Cuenta</th>
-                                <th>Monto</th>
-                                <th>Porcentaje</th>
-                            </tr>
-                        </thead>
-                        <tbody id="activosTable">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="seccion-balance pasivos-section">
-                <h4><i class="bi bi-dash-circle"></i> PASIVOS</h4>
-                <div class="table-responsive">
-                    <table class="balance-table">
-                        <thead>
-                            <tr>
-                                <th>Cuenta</th>
-                                <th>Monto</th>
-                                <th>Porcentaje</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pasivosTable">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="seccion-balance patrimonio-section">
-                <h4><i class="bi bi-bank"></i> PATRIMONIO</h4>
-                <div class="table-responsive">
-                    <table class="balance-table">
-                        <thead>
-                            <tr>
-                                <th>Cuenta</th>
-                                <th>Monto</th>
-                                <th>Porcentaje</th>
-                            </tr>
-                        </thead>
-                        <tbody id="patrimonioTable">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Indicadores Financieros -->
-            <div class="seccion-balance">
-                <h4><i class="bi bi-calculator"></i> Indicadores Financieros</h4>
-                <div class="indicadores-grid">
-                    <div class="indicador">
-                        <h5>Ratio Corriente</h5>
-                        <div class="valor-indicador" id="ratioCorriente">0.0</div>
-                    </div>
-                    <div class="indicador">
-                        <h5>Prueba Ácida</h5>
-                        <div class="valor-indicador" id="pruebaAcida">0.0</div>
-                    </div>
-                    <div class="indicador">
-                        <h5>ROE</h5>
-                        <div class="valor-indicador" id="roe">0%</div>
-                    </div>
-                    <div class="indicador">
-                        <h5>ROA</h5>
-                        <div class="valor-indicador" id="roa">0%</div>
-                    </div>
-                    <div class="indicador">
-                        <h5>Endeudamiento</h5>
-                        <div class="valor-indicador" id="endeudamiento">0%</div>
-                    </div>
-                    <div class="indicador">
-                        <h5>Autonomía</h5>
-                        <div class="valor-indicador" id="autonomia">0%</div>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- Enlaces Rápidos -->
-        <div class="card">
-            <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                <h3><i class="bi bi-lightning"></i> Acciones Rápidas</h3>
+        <div class="contable-body">
+            <!-- Resumen financiero modernizado -->
+            <div class="resumen-totales contable-mb-xl">
+                <div class="total-card total-card-ingreso">
+                    <div class="total-card-icon">
+                        <i class="bi bi-arrow-up-circle"></i>
+                    </div>
+                    <div class="total-valor contable-text-success" id="balanceTotalIngresos">$0</div>
+                    <div class="total-label">Total Ingresos</div>
+                </div>
+                
+                <div class="total-card total-card-egreso">
+                    <div class="total-card-icon">
+                        <i class="bi bi-arrow-down-circle"></i>
+                    </div>
+                    <div class="total-valor" style="color: var(--danger-color);" id="balanceTotalEgresos">$0</div>
+                    <div class="total-label">Total Egresos</div>
+                </div>
+                
+                <div class="total-card total-card-saldo">
+                    <div class="total-card-icon">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
+                    <div class="total-valor" style="color: var(--primary-color);" id="balanceSaldoFinal">$0</div>
+                    <div class="total-label">Saldo Final</div>
+                </div>
             </div>
-            <div class="btn-group">
-                <a href="{{ route('libro-caja.index') }}" class="btn btn-info">
-                    <i class="bi bi-journal-bookmark"></i> Libro de Caja
-                </a>
-                <a href="{{ route('movimientos.index') }}" class="btn btn-info">
-                    <i class="bi bi-list-check"></i> Movimientos
-                </a>
-                <button id="btnExportarBalance" class="btn btn-success">
-                    <i class="bi bi-file-earmark-excel"></i> Exportar Balance
-                </button>
-                <button id="btnImprimirBalance" class="btn btn-primary">
-                    <i class="bi bi-printer"></i> Imprimir
-                </button>
+
+            <!-- Gráficos modernizados -->
+            <div class="graficos-grid">
+                <div class="contable-card">
+                    <div class="contable-card-header">
+                        <h3 class="contable-card-title">
+                            <i class="bi bi-pie-chart"></i>
+                            Distribución de Ingresos
+                        </h3>
+                    </div>
+                    <div class="contable-card-body">
+                        <div class="grafico-moderno pie-chart">
+                            <div class="pie-segment venta-agua" style="--percentage: 60%;" title="Venta de Agua: 60%">
+                                <span class="segment-label">Venta de Agua</span>
+                            </div>
+                            <div class="pie-segment cuotas" style="--percentage: 25%;" title="Cuotas: 25%">
+                                <span class="segment-label">Cuotas</span>
+                                </div>
+                                <div class="pie-segment otros-ing" style="--percentage: 15%;" title="Otros: 15%">
+                                    <span class="segment-label">Otros</span>
+                                </div>
+                                <div class="chart-legend">
+                                    <div class="legend-item"><span class="color-box venta-agua"></span> Venta de Agua (60%)</div>
+                                    <div class="legend-item"><span class="color-box cuotas"></span> Cuotas (25%)</div>
+                                    <div class="legend-item"><span class="color-box otros-ing"></span> Otros (15%)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Distribución de Egresos</h3>
+                            <div class="static-chart pie-chart">
+                                <div class="pie-segment energia" style="--percentage: 35%;" title="Energía: 35%">
+                                    <span class="segment-label">Energía</span>
+                                </div>
+                                <div class="pie-segment sueldos" style="--percentage: 40%;" title="Sueldos: 40%">
+                                    <span class="segment-label">Sueldos</span>
+                                </div>
+                                <div class="pie-segment mantencion" style="--percentage: 15%;" title="Mantención: 15%">
+                                    <span class="segment-label">Mantención</span>
+                                </div>
+                                <div class="pie-segment otros-egr" style="--percentage: 10%;" title="Otros: 10%">
+                                    <span class="segment-label">Otros</span>
+                                </div>
+                                <div class="chart-legend">
+                                    <div class="legend-item"><span class="color-box energia"></span> Energía (35%)</div>
+                                    <div class="legend-item"><span class="color-box sueldos"></span> Sueldos (40%)</div>
+                                    <div class="legend-item"><span class="color-box mantencion"></span> Mantención (15%)</div>
+                                    <div class="legend-item"><span class="color-box otros-egr"></span> Otros (10%)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Flujo Mensual</h3>
+                            <div class="static-chart line-chart">
+                                <div class="chart-container">
+                                    <div class="chart-lines">
+                                        <div class="line ingresos-line">
+                                            <div class="point" style="left: 0%; bottom: 45%;" title="Ene: $450.000"></div>
+                                            <div class="point" style="left: 16.6%; bottom: 38%;" title="Feb: $380.000"></div>
+                                            <div class="point" style="left: 33.2%; bottom: 52%;" title="Mar: $520.000"></div>
+                                            <div class="point" style="left: 49.8%; bottom: 46%;" title="Abr: $460.000"></div>
+                                            <div class="point" style="left: 66.4%; bottom: 49%;" title="May: $490.000"></div>
+                                            <div class="point" style="left: 83%; bottom: 53%;" title="Jun: $530.000"></div>
+                                        </div>
+                                        <div class="line egresos-line">
+                                            <div class="point" style="left: 0%; bottom: 28%;" title="Ene: $280.000"></div>
+                                            <div class="point" style="left: 16.6%; bottom: 31%;" title="Feb: $310.000"></div>
+                                            <div class="point" style="left: 33.2%; bottom: 29%;" title="Mar: $290.000"></div>
+                                            <div class="point" style="left: 49.8%; bottom: 32%;" title="Abr: $320.000"></div>
+                                            <div class="point" style="left: 66.4%; bottom: 30%;" title="May: $300.000"></div>
+                                            <div class="point" style="left: 83%; bottom: 35%;" title="Jun: $350.000"></div>
+                                        </div>
+                                    </div>
+                                    <div class="chart-labels">
+                                        <span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span><span>May</span><span>Jun</span>
+                                    </div>
+                                </div>
+                                <div class="chart-legend">
+                                    <div class="legend-item"><span class="color-box ingresos"></span> Ingresos</div>
+                                    <div class="legend-item"><span class="color-box egresos"></span> Egresos</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Conciliación Bancaria</h3>
+                            <div class="static-chart bar-chart">
+                                <div class="bars-container">
+                                    <div class="bar-group">
+                                        <div class="bar registrado" style="height: 60%;" title="Caja Registrado: $120.000"></div>
+                                        <div class="bar bancario" style="height: 57.5%;" title="Caja Bancario: $115.000"></div>
+                                        <span class="bar-label">Caja</span>
+                                    </div>
+                                    <div class="bar-group">
+                                        <div class="bar registrado" style="height: 100%;" title="Cta Cte 1 Registrado: $350.000"></div>
+                                        <div class="bar bancario" style="height: 101.4%;" title="Cta Cte 1 Bancario: $355.000"></div>
+                                        <span class="bar-label">Cta Cte 1</span>
+                                    </div>
+                                    <div class="bar-group">
+                                        <div class="bar registrado" style="height: 80%;" title="Cta Cte 2 Registrado: $180.000"></div>
+                                        <div class="bar bancario" style="height: 77.8%;" title="Cta Cte 2 Bancario: $175.000"></div>
+                                        <span class="bar-label">Cta Cte 2</span>
+                                    </div>
+                                    <div class="bar-group">
+                                        <div class="bar registrado" style="height: 45%;" title="Ahorro Registrado: $90.000"></div>
+                                        <div class="bar bancario" style="height: 46%;" title="Ahorro Bancario: $92.000"></div>
+                                        <span class="bar-label">Ahorro</span>
+                                    </div>
+                                </div>
+                                <div class="chart-legend">
+                                    <div class="legend-item"><span class="color-box registrado"></span> Saldo Registrado</div>
+                                    <div class="legend-item"><span class="color-box bancario"></span> Saldo Bancario</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detalles por categoría -->
+                    <div class="balance-grid">
+                        <div class="balance-card">
+                            <h3><i class="bi bi-arrow-up-circle text-success"></i> Ingresos por Categoría</h3>
+                            <ul id="balanceIngresos" class="category-list">
+                                <!-- Los ingresos por categoría se generarán aquí -->
+                            </ul>
+                        </div>
+
+                        <div class="balance-card">
+                            <h3><i class="bi bi-arrow-down-circle text-danger"></i> Egresos por Categoría</h3>
+                            <ul id="balanceEgresos" class="category-list">
+                                <!-- Los egresos por categoría se generarán aquí -->
+                            </ul>
+                        </div>
+
+                        <div class="balance-card">
+                            <h3><i class="bi bi-clock-history text-info"></i> Últimos Movimientos</h3>
+                            <ul id="balanceMovimientos" class="movement-list">
+                                <!-- Los últimos movimientos se generarán aquí -->
+                            </ul>
+                        </div>
+
+                        <div class="balance-card">
+                            <h3><i class="bi bi-graph-up text-primary"></i> Análisis Financiero</h3>
+                            <div class="analysis-content">
+                                <div class="analysis-item">
+                                    <div class="analysis-label">
+                                        <span>Flujo de efectivo:</span>
+                                        <span id="flujoEfectivo" class="fw-bold">$0</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div id="flujoBar" class="progress-bar bg-success" style="width: 50%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="analysis-item">
+                                    <div class="analysis-label">
+                                        <span>Proporción ingresos/egresos:</span>
+                                        <span id="proporcionIngEgr" class="fw-bold">1:1</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div id="proporcionBar" class="progress-bar bg-primary" style="width: 50%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="analysis-item">
+                                    <div class="analysis-label">
+                                        <span>Porcentaje de ahorro:</span>
+                                        <span id="porcentajeAhorro" class="fw-bold">0%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div id="ahorroBar" class="progress-bar bg-info" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</section>
 
-    <script>
-        // Configuración CSRF para Laravel
-        window.Laravel = {
-            csrfToken: '{{ csrf_token() }}'
-        };
+<style>
+    .summary-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
 
-        // Storage para comunicación entre módulos
-        const STORAGE_KEYS = {
-            ingresos: 'finanzas_ingresos',
-            egresos: 'finanzas_egresos',
-            giros: 'finanzas_giros',
-            depositos: 'finanzas_depositos',
-            saldos: 'finanzas_saldos'
-        };
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
 
-        let composicionChart, evolucionChart;
-        let datosBalance = {
-            activos: {},
-            pasivos: {},
-            patrimonio: {},
-            indicadores: {}
-        };
+    .summary-item {
+        text-align: center;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid;
+    }
 
-        // Inicialización
-        document.addEventListener('DOMContentLoaded', function() {
-            setupEventListeners();
-            configurarFechasPorDefecto();
-            cargarDatosBalance();
-            inicializarGraficos();
-        });
+    .summary-item.ingresos {
+        border-left-color: #28a745;
+        background: rgba(40, 167, 69, 0.1);
+    }
 
-        function setupEventListeners() {
-            document.getElementById('btnActualizarBalance').addEventListener('click', cargarDatosBalance);
-            document.getElementById('periodoBalance').addEventListener('change', handlePeriodoChange);
-            document.getElementById('btnExportarBalance').addEventListener('click', exportarBalance);
-            document.getElementById('btnImprimirBalance').addEventListener('click', imprimirBalance);
-            
-            // Escuchar eventos de otros módulos
-            window.addEventListener('ingresoRegistrado', cargarDatosBalance);
-            window.addEventListener('egresoRegistrado', cargarDatosBalance);
-            window.addEventListener('giroRegistrado', cargarDatosBalance);
-            window.addEventListener('depositoRegistrado', cargarDatosBalance);
+    .summary-item.egresos {
+        border-left-color: #dc3545;
+        background: rgba(220, 53, 69, 0.1);
+    }
+
+    .summary-item.saldo {
+        border-left-color: #007bff;
+        background: rgba(0, 123, 255, 0.1);
+    }
+
+    .summary-item .label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 8px;
+    }
+
+    .summary-item .value {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .chart-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .chart-card h3 {
+        margin: 0 0 15px 0;
+        color: #333;
+        font-size: 1.1rem;
+    }
+
+    /* Estilos para gráficos estáticos */
+    .static-chart {
+        width: 100%;
+        height: 200px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Gráfico de pie/dona */
+    .pie-chart {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .pie-chart::before {
+        content: '';
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: conic-gradient(
+            #28a745 0% 60%,
+            #17a2b8 60% 85%, 
+            #6c757d 85% 100%
+        );
+        margin-bottom: 10px;
+    }
+
+    /* Gráfico de pie para egresos (4 categorías) */
+    .chart-card:nth-child(2) .pie-chart::before {
+        background: conic-gradient(
+            #dc3545 0% 35%,
+            #fd7e14 35% 75%,
+            #ffc107 75% 90%, 
+            #6f42c1 90% 100%
+        );
+    }
+
+    /* Leyenda de gráficos */
+    .chart-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        font-size: 0.85rem;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .color-box {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+    }
+
+    .color-box.venta-agua { background-color: #28a745; }
+    .color-box.cuotas { background-color: #17a2b8; }
+    .color-box.otros-ing { background-color: #6c757d; }
+    .color-box.energia { background-color: #dc3545; }
+    .color-box.sueldos { background-color: #fd7e14; }
+    .color-box.mantencion { background-color: #ffc107; }
+    .color-box.otros-egr { background-color: #6f42c1; }
+    .color-box.ingresos { background-color: #28a745; }
+    .color-box.egresos { background-color: #dc3545; }
+    .color-box.registrado { background-color: #007bff; }
+    .color-box.bancario { background-color: #6c757d; }
+
+    /* Gráfico de líneas */
+    .line-chart .chart-container {
+        width: 100%;
+        height: 120px;
+        position: relative;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        background: linear-gradient(to bottom, transparent 0%, transparent 100%),
+                    repeating-linear-gradient(to bottom, transparent 0px, transparent 19px, #f0f0f0 19px, #f0f0f0 20px);
+    }
+
+    .chart-lines {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .line {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    .point {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        transform: translate(-50%, 50%);
+        cursor: pointer;
+    }
+
+    .ingresos-line .point {
+        background-color: #28a745;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 2px #28a745;
+    }
+
+    .egresos-line .point {
+        background-color: #dc3545;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 2px #dc3545;
+    }
+
+    .chart-labels {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 10px 0;
+        font-size: 0.8rem;
+        color: #666;
+    }
+
+    /* Gráfico de barras */
+    .bar-chart .bars-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+        height: 120px;
+        padding: 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        background: linear-gradient(to bottom, transparent 0%, transparent 100%),
+                    repeating-linear-gradient(to bottom, transparent 0px, transparent 19px, #f0f0f0 19px, #f0f0f0 20px);
+    }
+
+    .bar-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        width: 60px;
+    }
+
+    .bar {
+        width: 18px;
+        min-height: 5px;
+        border-radius: 2px 2px 0 0;
+        margin: 0 1px;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+
+    .bar:hover {
+        opacity: 0.8;
+    }
+
+    .bar.registrado {
+        background-color: #007bff;
+    }
+
+    .bar.bancario {
+        background-color: #6c757d;
+    }
+
+    .bar-label {
+        font-size: 0.75rem;
+        color: #666;
+        margin-top: 5px;
+        text-align: center;
+    }
+
+    .balance-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .balance-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .balance-card h3 {
+        margin: 0 0 15px 0;
+        color: #333;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .category-list, .movement-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .category-list li, .movement-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .category-list li:last-child, .movement-list li:last-child {
+        border-bottom: none;
+    }
+
+    .analysis-content {
+        padding: 15px 0;
+    }
+
+    .analysis-item {
+        margin-bottom: 20px;
+    }
+
+    .analysis-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .analysis-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    .progress {
+        height: 8px;
+        border-radius: 4px;
+    }
+
+    @media (max-width: 768px) {
+        .summary-grid {
+            grid-template-columns: 1fr;
         }
-
-        function configurarFechasPorDefecto() {
-            const hoy = new Date();
-            const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-            
-            document.getElementById('fechaDesdeBalance').value = primerDiaMes.toISOString().split('T')[0];
-            document.getElementById('fechaHastaBalance').value = hoy.toISOString().split('T')[0];
+        
+        .dashboard-grid {
+            grid-template-columns: 1fr;
         }
-
-        function handlePeriodoChange() {
-            const periodo = document.getElementById('periodoBalance').value;
-            const hoy = new Date();
-            let fechaDesde, fechaHasta;
-
-            switch (periodo) {
-                case 'mes_actual':
-                    fechaDesde = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-                    fechaHasta = hoy;
-                    break;
-                case 'trimestre':
-                    fechaDesde = new Date(hoy.getFullYear(), Math.floor(hoy.getMonth() / 3) * 3, 1);
-                    fechaHasta = hoy;
-                    break;
-                case 'semestre':
-                    fechaDesde = new Date(hoy.getFullYear(), hoy.getMonth() < 6 ? 0 : 6, 1);
-                    fechaHasta = hoy;
-                    break;
-                case 'anio':
-                    fechaDesde = new Date(hoy.getFullYear(), 0, 1);
-                    fechaHasta = hoy;
-                    break;
-                default:
-                    return;
-            }
-
-            document.getElementById('fechaDesdeBalance').value = fechaDesde.toISOString().split('T')[0];
-            document.getElementById('fechaHastaBalance').value = fechaHasta.toISOString().split('T')[0];
+        
+        .balance-grid {
+            grid-template-columns: 1fr;
         }
+    }
+</style>
 
-        function cargarDatosBalance() {
-            const fechaDesde = document.getElementById('fechaDesdeBalance').value;
-            const fechaHasta = document.getElementById('fechaHastaBalance').value;
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Cargar datos del balance
+    cargarDatosBalance();
+});
 
-            // Obtener todos los movimientos
-            const ingresos = JSON.parse(localStorage.getItem(STORAGE_KEYS.ingresos) || '[]');
-            const egresos = JSON.parse(localStorage.getItem(STORAGE_KEYS.egresos) || '[]');
-            const giros = JSON.parse(localStorage.getItem(STORAGE_KEYS.giros) || '[]');
-            const depositos = JSON.parse(localStorage.getItem(STORAGE_KEYS.depositos) || '[]');
-            const saldos = JSON.parse(localStorage.getItem(STORAGE_KEYS.saldos) || '{"caja_general": 0, "cuenta_corriente_1": 0, "cuenta_corriente_2": 0}');
-
-            // Filtrar por fechas
-            const movimientosFiltrados = {
-                ingresos: filtrarPorFecha(ingresos, fechaDesde, fechaHasta),
-                egresos: filtrarPorFecha(egresos, fechaDesde, fechaHasta),
-                giros: filtrarPorFecha(giros, fechaDesde, fechaHasta),
-                depositos: filtrarPorFecha(depositos, fechaDesde, fechaHasta)
-            };
-
-            calcularBalance(movimientosFiltrados, saldos);
-            actualizarVisualizacion();
+function cargarDatosBalance() {
+    // Obtener movimientos desde localStorage
+    const movimientos = JSON.parse(localStorage.getItem('movimientos')) || [];
+    
+    // Calcular totales
+    let totalIngresos = 0;
+    let totalEgresos = 0;
+    let ingresosPorCategoria = {};
+    let egresosPorCategoria = {};
+    
+    movimientos.forEach(mov => {
+        if (mov.tipo === 'ingreso') {
+            totalIngresos += parseFloat(mov.monto);
+            ingresosPorCategoria[mov.categoria] = (ingresosPorCategoria[mov.categoria] || 0) + parseFloat(mov.monto);
+        } else if (mov.tipo === 'egreso') {
+            totalEgresos += parseFloat(mov.monto);
+            egresosPorCategoria[mov.categoria] = (egresosPorCategoria[mov.categoria] || 0) + parseFloat(mov.monto);
         }
+    });
+    
+    const saldoFinal = totalIngresos - totalEgresos;
+    
+    // Actualizar resumen
+    document.getElementById('balanceTotalIngresos').textContent = formatCurrency(totalIngresos);
+    document.getElementById('balanceTotalEgresos').textContent = formatCurrency(totalEgresos);
+    document.getElementById('balanceSaldoFinal').textContent = formatCurrency(saldoFinal);
+    
+    // Actualizar análisis financiero
+    document.getElementById('flujoEfectivo').textContent = formatCurrency(saldoFinal);
+    const proporcion = totalEgresos > 0 ? (totalIngresos / totalEgresos).toFixed(2) : '∞';
+    document.getElementById('proporcionIngEgr').textContent = `${proporcion}:1`;
+    const porcentajeAhorro = totalIngresos > 0 ? ((saldoFinal / totalIngresos) * 100).toFixed(1) : '0';
+    document.getElementById('porcentajeAhorro').textContent = `${porcentajeAhorro}%`;
+    
+    // Actualizar barras de progreso
+    const flujoBar = document.getElementById('flujoBar');
+    const proporcionBar = document.getElementById('proporcionBar');
+    const ahorroBar = document.getElementById('ahorroBar');
+    
+    if (saldoFinal >= 0) {
+        flujoBar.className = 'progress-bar bg-success';
+        flujoBar.style.width = '100%';
+    } else {
+        flujoBar.className = 'progress-bar bg-danger';
+        flujoBar.style.width = '100%';
+    }
+    
+    proporcionBar.style.width = Math.min(100, parseFloat(proporcion) * 50) + '%';
+    ahorroBar.style.width = Math.min(100, Math.max(0, parseFloat(porcentajeAhorro))) + '%';
+    
+    // Llenar listas de categorías
+    llenarListaCategorias('balanceIngresos', ingresosPorCategoria);
+    llenarListaCategorias('balanceEgresos', egresosPorCategoria);
+    
+    // Llenar últimos movimientos
+    const ultimosMovimientos = movimientos.slice(-5).reverse();
+    const movimientosList = document.getElementById('balanceMovimientos');
+    movimientosList.innerHTML = '';
+    
+    ultimosMovimientos.forEach(mov => {
+        const li = document.createElement('li');
+        const tipo = mov.tipo === 'ingreso' ? '+' : '-';
+        const clase = mov.tipo === 'ingreso' ? 'text-success' : 'text-danger';
+        li.innerHTML = `
+            <span>${mov.descripcion || mov.detalle || 'Sin descripción'}</span>
+            <span class="${clase}">${tipo}${formatCurrency(mov.monto)}</span>
+        `;
+        movimientosList.appendChild(li);
+    });
+}
 
-        function filtrarPorFecha(movimientos, fechaDesde, fechaHasta) {
-            return movimientos.filter(mov => {
-                if (fechaDesde && mov.fecha < fechaDesde) return false;
-                if (fechaHasta && mov.fecha > fechaHasta) return false;
-                return true;
-            });
-        }
+function llenarListaCategorias(elementId, categorias) {
+    const lista = document.getElementById(elementId);
+    lista.innerHTML = '';
+    
+    Object.entries(categorias).forEach(([categoria, monto]) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <span>${formatearCategoria(categoria)}</span>
+            <span class="fw-bold">${formatCurrency(monto)}</span>
+        `;
+        lista.appendChild(li);
+    });
+}
 
-        function calcularBalance(movimientos, saldos) {
-            // ACTIVOS
-            datosBalance.activos = {
-                'Caja General': saldos.caja_general || 0,
-                'Cuenta Corriente 1': saldos.cuenta_corriente_1 || 0,
-                'Cuenta Corriente 2': saldos.cuenta_corriente_2 || 0,
-                'Cuentas por Cobrar': calcularCuentasPorCobrar(movimientos),
-                'Inventario': 0 // Placeholder
-            };
+function formatearCategoria(categoria) {
+    const categorias = {
+        'venta_agua': 'Venta de Agua',
+        'cuotas_incorporacion': 'Cuotas de Incorporación',
+        'energia_electrica': 'Energía Eléctrica',
+        'sueldos': 'Sueldos/Leyes Sociales',
+        'otras_cuentas': 'Otros Gastos de Operación',
+        'mantencion': 'Gastos de Mantención',
+        'trabajos_domicilio': 'Trabajos a Domicilio',
+        'insumos_oficina': 'Insumos de Oficina',
+        'materiales_red': 'Materiales de Red',
+        'mejoramiento': 'Mejoramiento',
+        'viaticos': 'Viáticos'
+    };
+    
+    return categorias[categoria] || categoria.replace('_', ' ').toUpperCase();
+}
 
-            // PASIVOS
-            datosBalance.pasivos = {
-                'Cuentas por Pagar': calcularCuentasPorPagar(movimientos),
-                'Préstamos': 0, // Placeholder
-                'Impuestos por Pagar': calcularImpuestosPorPagar(movimientos)
-            };
-
-            // PATRIMONIO
-            const totalActivos = Object.values(datosBalance.activos).reduce((sum, val) => sum + val, 0);
-            const totalPasivos = Object.values(datosBalance.pasivos).reduce((sum, val) => sum + val, 0);
-            const patrimonioNeto = totalActivos - totalPasivos;
-
-            datosBalance.patrimonio = {
-                'Capital Inicial': 1000000, // Placeholder
-                'Utilidades Retenidas': patrimonioNeto - 1000000,
-                'Utilidad del Ejercicio': calcularUtilidadEjercicio(movimientos)
-            };
-
-            // INDICADORES
-            calcularIndicadores(totalActivos, totalPasivos, patrimonioNeto, movimientos);
-        }
-
-        function calcularCuentasPorCobrar(movimientos) {
-            // Simplificado: ingresos pendientes de cobro
-            return movimientos.ingresos.reduce((sum, ing) => sum + (ing.pendiente || 0), 0);
-        }
-
-        function calcularCuentasPorPagar(movimientos) {
-            // Simplificado: egresos pendientes de pago
-            return movimientos.egresos.reduce((sum, egr) => sum + (egr.pendiente || 0), 0);
-        }
-
-        function calcularImpuestosPorPagar(movimientos) {
-            // Simplificado: 19% IVA sobre ingresos
-            const totalIngresos = movimientos.ingresos.reduce((sum, ing) => sum + ing.monto, 0);
-            return totalIngresos * 0.19;
-        }
-
-        function calcularUtilidadEjercicio(movimientos) {
-            const totalIngresos = movimientos.ingresos.reduce((sum, ing) => sum + ing.monto, 0);
-            const totalEgresos = movimientos.egresos.reduce((sum, egr) => sum + egr.monto, 0);
-            return totalIngresos - totalEgresos;
-        }
-
-        function calcularIndicadores(totalActivos, totalPasivos, patrimonioNeto, movimientos) {
-            const activosCorrientes = datosBalance.activos['Caja General'] + 
-                                    datosBalance.activos['Cuenta Corriente 1'] + 
-                                    datosBalance.activos['Cuenta Corriente 2'];
-            const pasivosCorrientes = datosBalance.pasivos['Cuentas por Pagar'] + 
-                                    datosBalance.pasivos['Impuestos por Pagar'];
-
-            datosBalance.indicadores = {
-                totalActivos,
-                totalPasivos,
-                patrimonioNeto,
-                ratioCorriente: pasivosCorrientes > 0 ? activosCorrientes / pasivosCorrientes : 0,
-                pruebaAcida: pasivosCorrientes > 0 ? (activosCorrientes - datosBalance.activos['Inventario']) / pasivosCorrientes : 0,
-                roe: patrimonioNeto > 0 ? (calcularUtilidadEjercicio(movimientos) / patrimonioNeto) * 100 : 0,
-                roa: totalActivos > 0 ? (calcularUtilidadEjercicio(movimientos) / totalActivos) * 100 : 0,
-                endeudamiento: totalActivos > 0 ? (totalPasivos / totalActivos) * 100 : 0,
-                autonomia: totalActivos > 0 ? (patrimonioNeto / totalActivos) * 100 : 0
-            };
-        }
-
-        function actualizarVisualizacion() {
-            // Actualizar métricas principales
-            document.getElementById('totalActivos').textContent = formatearMoneda(datosBalance.indicadores.totalActivos);
-            document.getElementById('totalPasivos').textContent = formatearMoneda(datosBalance.indicadores.totalPasivos);
-            document.getElementById('patrimonio').textContent = formatearMoneda(datosBalance.indicadores.patrimonioNeto);
-            
-            // Colorear patrimonio según sea positivo o negativo
-            const patrimonioElement = document.getElementById('patrimonio');
-            patrimonioElement.className = `valor ${datosBalance.indicadores.patrimonioNeto >= 0 ? 'valor-positivo' : 'valor-negativo'}`;
-
-            // Actualizar indicadores
-            document.getElementById('indiceLiquidez').textContent = datosBalance.indicadores.ratioCorriente.toFixed(2);
-            document.getElementById('rentabilidad').textContent = `${datosBalance.indicadores.roa.toFixed(1)}%`;
-            document.getElementById('eficiencia').textContent = `${datosBalance.indicadores.autonomia.toFixed(1)}%`;
-
-            // Actualizar indicadores detallados
-            document.getElementById('ratioCorriente').textContent = datosBalance.indicadores.ratioCorriente.toFixed(2);
-            document.getElementById('pruebaAcida').textContent = datosBalance.indicadores.pruebaAcida.toFixed(2);
-            document.getElementById('roe').textContent = `${datosBalance.indicadores.roe.toFixed(1)}%`;
-            document.getElementById('roa').textContent = `${datosBalance.indicadores.roa.toFixed(1)}%`;
-            document.getElementById('endeudamiento').textContent = `${datosBalance.indicadores.endeudamiento.toFixed(1)}%`;
-            document.getElementById('autonomia').textContent = `${datosBalance.indicadores.autonomia.toFixed(1)}%`;
-
-            // Actualizar tablas
-            actualizarTablaBalance('activosTable', datosBalance.activos, datosBalance.indicadores.totalActivos);
-            actualizarTablaBalance('pasivosTable', datosBalance.pasivos, datosBalance.indicadores.totalPasivos);
-            actualizarTablaBalance('patrimonioTable', datosBalance.patrimonio, Math.abs(datosBalance.indicadores.patrimonioNeto));
-
-            // Actualizar gráficos
-            actualizarGraficos();
-        }
-
-        function actualizarTablaBalance(tableId, datos, total) {
-            const tbody = document.getElementById(tableId);
-            let html = '';
-
-            Object.entries(datos).forEach(([cuenta, monto]) => {
-                const porcentaje = total > 0 ? ((Math.abs(monto) / total) * 100).toFixed(1) : 0;
-                html += `
-                    <tr>
-                        <td>${cuenta}</td>
-                        <td class="${monto >= 0 ? 'valor-positivo' : 'valor-negativo'}">
-                            ${formatearMoneda(monto)}
-                        </td>
-                        <td>${porcentaje}%</td>
-                    </tr>
-                `;
-            });
-
-            // Agregar total
-            html += `
-                <tr style="font-weight: bold; border-top: 2px solid #333;">
-                    <td>TOTAL</td>
-                    <td class="${total >= 0 ? 'valor-positivo' : 'valor-negativo'}">
-                        ${formatearMoneda(total)}
-                    </td>
-                    <td>100%</td>
-                </tr>
-            `;
-
-            tbody.innerHTML = html;
-        }
-
-        function inicializarGraficos() {
-            // Gráfico de composición (pie chart)
-            const ctx1 = document.getElementById('composicionChart').getContext('2d');
-            composicionChart = new Chart(ctx1, {
-                type: 'pie',
-                data: {
-                    labels: ['Activos', 'Pasivos', 'Patrimonio'],
-                    datasets: [{
-                        data: [0, 0, 0],
-                        backgroundColor: ['#28a745', '#dc3545', '#17a2b8'],
-                        borderWidth: 2,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-
-            // Gráfico de evolución (line chart)
-            const ctx2 = document.getElementById('evolucionChart').getContext('2d');
-            evolucionChart = new Chart(ctx2, {
-                type: 'line',
-                data: {
-                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
-                    datasets: [{
-                        label: 'Patrimonio',
-                        data: [0, 0, 0, 0, 0, 0],
-                        borderColor: '#6f42c1',
-                        backgroundColor: 'rgba(111, 66, 193, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return formatearMoneda(value);
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function actualizarGraficos() {
-            // Actualizar gráfico de composición
-            const totalActivos = Math.abs(datosBalance.indicadores.totalActivos);
-            const totalPasivos = Math.abs(datosBalance.indicadores.totalPasivos);
-            const totalPatrimonio = Math.abs(datosBalance.indicadores.patrimonioNeto);
-
-            composicionChart.data.datasets[0].data = [totalActivos, totalPasivos, totalPatrimonio];
-            composicionChart.update();
-
-            // Actualizar gráfico de evolución (datos simulados)
-            const patrimonioActual = datosBalance.indicadores.patrimonioNeto;
-            evolucionChart.data.datasets[0].data = [
-                patrimonioActual * 0.8,
-                patrimonioActual * 0.85,
-                patrimonioActual * 0.9,
-                patrimonioActual * 0.95,
-                patrimonioActual * 0.98,
-                patrimonioActual
-            ];
-            evolucionChart.update();
-        }
-
-        function exportarBalance() {
-            const datos = {
-                fecha: new Date().toISOString().split('T')[0],
-                activos: datosBalance.activos,
-                pasivos: datosBalance.pasivos,
-                patrimonio: datosBalance.patrimonio,
-                indicadores: datosBalance.indicadores
-            };
-
-            const dataStr = JSON.stringify(datos, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `balance_${datos.fecha}.json`;
-            link.click();
-            URL.revokeObjectURL(url);
-
-            mostrarNotificacion('Balance exportado exitosamente', 'success');
-        }
-
-        function imprimirBalance() {
-            window.print();
-        }
-
-        function formatearMoneda(valor) {
-            return new Intl.NumberFormat('es-CL', {
-                style: 'currency',
-                currency: 'CLP'
-            }).format(valor || 0);
-        }
-
-        function mostrarNotificacion(mensaje, tipo = 'success') {
-            const notification = document.getElementById('notification');
-            notification.textContent = mensaje;
-            notification.className = `notification ${tipo}`;
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 4000);
-        }
-
-        // Escuchar cambios de localStorage de otros módulos
-        window.addEventListener('storage', function(e) {
-            if (Object.values(STORAGE_KEYS).includes(e.key)) {
-                cargarDatosBalance();
-            }
-        });
-    </script>
-</body>
-</html>
+function formatCurrency(value) {
+    const num = parseFloat(value) || 0;
+    return num.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
+}
+</script>
 @endsection
