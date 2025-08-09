@@ -149,30 +149,11 @@ class ContableController extends Controller
             ]);
         }
 
-        return redirect()->route('contable.index', ['id' => $request->orgId])->with('success', 'Cuentas iniciales guardadas correctamente.');
+        return redirect()->route('libro.caja', ['id' => $request->orgId])->with('success', 'Cuentas iniciales guardadas correctamente.');
     }
 
 
-    public function index($id)
-    {
-        $configuraciones = ConfiguracionInicial::with('cuenta')->where('org_id', $id)->get();
-        $cuentasIniciales = \App\Models\Cuenta::all();
-        $bancos = \App\Models\Banco::orderBy('nombre')->get();
-        $categoriasIngresos = \App\Models\Categoria::where('tipo', 'ingreso')->orderBy('nombre')->get();
-        $categoriasEgresos = \App\Models\Categoria::where('tipo', 'egreso')->orderBy('nombre')->get();
-        $resumen = $this->getResumenSaldos($id);
-        // Refuerzo: asegurar que orgId siempre se envía correctamente
-        $orgId = $id;
-        return view('orgs.contable.index', array_merge([
-            'orgId' => $orgId,
-            'mostrarLibroCaja' => false,
-            'cuentasIniciales' => $cuentasIniciales,
-            'configuraciones' => $configuraciones,
-            'bancos' => $bancos,
-            'categoriasIngresos' => $categoriasIngresos,
-            'categoriasEgresos' => $categoriasEgresos,
-        ], $resumen));
-    }
+    // Método index eliminado - funcionalidad movida a mostrarLibroCaja
 
 
     public function mostrarLibroCaja($id)

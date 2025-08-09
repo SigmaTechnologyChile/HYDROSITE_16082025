@@ -117,7 +117,7 @@ class ConfiguracionInicialController extends Controller
         $saldoTotal = array_sum($saldos);
         $cuentasIniciales = Cuenta::where('org_id', $orgId)->get(['id','tipo','nombre']);
         $bancos = Banco::orderBy('nombre')->get();
-        return view('orgs.contable.index', compact('configuraciones', 'saldos', 'saldoTotal', 'cuentasIniciales', 'bancos'));
+        return view('orgs.contable.libro-caja', compact('configuraciones', 'saldos', 'saldoTotal', 'cuentasIniciales', 'bancos'));
     }
 
     public function create()

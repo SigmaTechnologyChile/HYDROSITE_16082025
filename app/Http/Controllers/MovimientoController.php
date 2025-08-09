@@ -61,7 +61,7 @@ class MovimientoController extends Controller
         $categoriasIngresos = \App\Models\Categoria::where('tipo', 'ingreso')->orderBy('nombre')->get();
         $categoriasEgresos = \App\Models\Categoria::where('tipo', 'egreso')->orderBy('nombre')->get();
 
-        return view('orgs.contable.index', compact('movimientos', 'bancos', 'configuraciones', 'categoriasIngresos', 'categoriasEgresos', 'saldosIniciales', 'totalSaldoInicial', 'totalSaldoActual'));
+        return view('orgs.contable.libro-caja', compact('movimientos', 'bancos', 'configuraciones', 'categoriasIngresos', 'categoriasEgresos', 'saldosIniciales', 'totalSaldoInicial', 'totalSaldoActual'));
     }
 
     // Guardar nuevo movimiento

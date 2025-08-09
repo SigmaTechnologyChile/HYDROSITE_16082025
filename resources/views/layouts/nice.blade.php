@@ -915,7 +915,7 @@
                     @php
 
                         $contableActive = in_array($active, [
-                            'orgs.contable.index',
+                            'libro.caja',
                             'cuentas_iniciales.show',
                             'configuracion_cuentas_original.show',
                             'registro_ingresos_egresos.show'
@@ -938,8 +938,8 @@
 
                             <li>
 
-                                <a href="{{ route('orgs.contable.index', ['id' => auth()->user()->org_id]) }}"
-                                    class="{{ $active == 'orgs.contable.index' ? 'active' : '' }}">
+                                <a href="{{ route('libro.caja', ['id' => auth()->user()->org_id]) }}"
+                                    class="{{ $active == 'libro.caja' ? 'active' : '' }}">
 
                                     <i class="bi bi-circle"></i><span>Gestión Contable Pro</span>
 
@@ -1543,8 +1543,8 @@
 
                             <li>
 
-                                <a href="{{ route('orgs.contable.index', ['id' => auth()->user()->org_id]) }}"
-                                    class="{{ $active == 'orgs.contable.index' ? 'active' : '' }}">
+                                <a href="{{ route('libro.caja', ['id' => auth()->user()->org_id]) }}"
+                                    class="{{ $active == 'libro.caja' ? 'active' : '' }}">
 
                                     <i class="bi bi-circle"></i><span>Gestión Contable Pro</span>
 
@@ -2007,8 +2007,8 @@
 
                             <li>
 
-                                <a href="{{ route('orgs.contable.index', ['id' => auth()->user()->org_id]) }}"
-                                    class="{{ $active == 'orgs.contable.index' ? 'active' : '' }}">
+                                <a href="{{ route('libro.caja', ['id' => auth()->user()->org_id]) }}"
+                                    class="{{ $active == 'libro.caja' ? 'active' : '' }}">
 
                                     <i class="bi bi-circle"></i><span>Gestión Contable Pro</span>
 
@@ -2531,8 +2531,8 @@
 
                             <li>
 
-                                <a href="{{ route('orgs.contable.index', ['id' => auth()->user()->org_id]) }}"
-                                    class="{{ $active == 'orgs.contable.index' ? 'active' : '' }}">
+                                <a href="{{ route('libro.caja', ['id' => auth()->user()->org_id]) }}"
+                                    class="{{ $active == 'libro.caja' ? 'active' : '' }}">
 
                                     <i class="bi bi-circle"></i><span>Gestión Contable Pro</span>
 
@@ -2746,12 +2746,12 @@
             @elseif($user->isCrc() || $perfilId == 3)
   @php
 
-                    $libroCajaActive = $active === 'orgs.contable.index';
+                    $libroCajaActive = $active === 'libro.caja';
 
                 @endphp
 
                  <li  class="nav-item">
-                    <a href="{{ route('orgs.contable.index', ['id' => auth()->user()->org_id]) }}"
+                    <a href="{{ route('libro.caja', ['id' => auth()->user()->org_id]) }}"
                             class="nav-link {{ $libroCajaActive ? 'active' : '' }}">
                         <i class="bi bi-circle"></i><span>Gestión Contable Pro</span>
                     </a>

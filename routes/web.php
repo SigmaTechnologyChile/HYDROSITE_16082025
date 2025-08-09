@@ -219,7 +219,6 @@ Route::get('test-ajax', function() {
 Route::prefix('org')->name('orgs.')->group(function () {
 
     // Rutas para gestión contable
-    Route::get('{id}/contable', [ContableController::class, 'index'])->name('contable.index');
     Route::get('{id}/libro-caja', [ContableController::class, 'mostrarLibroCaja'])->name('libro.caja');
     Route::get('{id}/exportar-excel', [ContableController::class, 'exportarExcel'])->name('contable.exportarExcel');
     
