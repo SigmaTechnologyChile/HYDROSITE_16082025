@@ -7,6 +7,20 @@
 
 @section('content')
 
+<!-- DEBUG: Verificar que orgId esté disponible -->
+<script>
+  const debugOrgId = 864; // Valor directo para debugging
+  console.log('🔍 DEBUG orgId hardcoded:', debugOrgId);
+  console.log('🔍 DEBUG orgId desde servidor:', {{ $orgId ?? 'null' }});
+  console.log('🔍 DEBUG URL actual:', window.location.href);
+  
+  // Verificación de coincidencia
+  const serverOrgId = {{ $orgId ?? 'null' }};
+  if (serverOrgId !== 864) {
+    console.warn('⚠️ ADVERTENCIA: orgId del servidor no coincide con 864:', serverOrgId);
+  }
+</script>
+
 <!-- Bootstrap Icons -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -443,15 +457,18 @@
 
     <!-- Tarjeta de configuración principal -->
     <div class="config-card">
-      <form id="cuentasInicialesForm" method="POST" action="#">
+      <form id="cuentasInicialesForm" onsubmit="return false;">
         @csrf
+        <!-- Campo oculto para orgId como respaldo -->
+        <input type="hidden" name="orgId" value="864" id="orgIdHidden">
+        
         <!-- Alerta estilo balance -->
         <div class="alert-warning-balance">
           <div class="alert-icon">
             <i class="bi bi-exclamation-triangle"></i>
           </div>
           <div class="alert-content">
-            <strong>Atención:</strong> ¿Está seguro(a) de guardar los cambios? Esta operación solo se podrá realizar una sola vez.
+            <strong>Atención:</strong> Puedes modificar los valores de las cuentas iniciales cuando lo necesites.
           </div>
         </div>
         
@@ -505,19 +522,18 @@
                   <option value="">Sin banco</option>
                   @if(isset($bancos) && $bancos->count() > 0)
                     @foreach($bancos as $banco)
-                      <option value="{{ $banco->codigo }}">{{ $banco->nombre }}</option>
+                      <option value="{{ $banco->id }}">{{ $banco->nombre }}</option>
                     @endforeach
                   @else
                     <!-- Fallback en caso de que no haya datos de bancos -->
-                    <option value="banco_estado">Banco Estado</option>
-                    <option value="banco_chile">Banco de Chile</option>
-                    <option value="banco_bci">BCI</option>
-                    <option value="banco_santander">Santander</option>
-                    <option value="banco_itau">Itaú</option>
-                    <option value="banco_scotiabank">Scotiabank</option>
-                    <option value="banco_bice">BICE</option>
-                    <option value="banco_security">Security</option>
-                    <option value="banco_falabella">Falabella</option>
+                    <option value="1">Banco de Chile</option>
+                    <option value="2">Banco Santander</option>
+                    <option value="3">Banco BCI</option>
+                    <option value="4">Banco Estado</option>
+                    <option value="5">Scotiabank Chile</option>
+                    <option value="6">Banco Itaú</option>
+                    <option value="7">Banco Security</option>
+                    <option value="8">Banco Falabella</option>
                     <option value="banco_ripley">Ripley</option>
                     <option value="banco_consorcio">Consorcio</option>
                     <option value="otro">Otro</option>
@@ -573,21 +589,20 @@
                   <option value="">Sin banco</option>
                   @if(isset($bancos) && $bancos->count() > 0)
                     @foreach($bancos as $banco)
-                      <option value="{{ $banco->codigo }}">{{ $banco->nombre }}</option>
+                      <option value="{{ $banco->id }}">{{ $banco->nombre }}</option>
                     @endforeach
                   @else
                     <!-- Fallback en caso de que no haya datos de bancos -->
-                    <option value="banco_estado">Banco Estado</option>
-                    <option value="banco_chile">Banco de Chile</option>
-                    <option value="banco_bci">BCI</option>
-                    <option value="banco_santander">Santander</option>
-                    <option value="banco_itau">Itaú</option>
-                    <option value="banco_scotiabank">Scotiabank</option>
-                    <option value="banco_bice">BICE</option>
-                    <option value="banco_security">Security</option>
-                    <option value="banco_falabella">Falabella</option>
-                    <option value="banco_ripley">Ripley</option>
-                    <option value="banco_consorcio">Consorcio</option>
+                    <option value="1">Banco de Chile</option>
+                    <option value="2">Banco Santander</option>
+                    <option value="3">Banco BCI</option>
+                    <option value="4">Banco Estado</option>
+                    <option value="5">Scotiabank Chile</option>
+                    <option value="6">Banco Itaú</option>
+                    <option value="7">Banco Security</option>
+                    <option value="8">Banco Falabella</option>
+                    <option value="9">Banco Ripley</option>
+                    <option value="10">Banco Consorcio</option>
                     <option value="otro">Otro</option>
                   @endif
                 </select>
@@ -646,7 +661,7 @@
             🏦 Actualizar Solo Bancos
           </button>
           
-          <button type="submit" class="btn-config-primary">
+          <button type="button" class="btn-config-primary" onclick="configurarCuentasIniciales();" id="btnGuardarCuentas">
             <i class="bi bi-save"></i>
             Guardar Cuentas Iniciales
           </button>
@@ -660,6 +675,12 @@
 </div>
 
 <script>
+// FUNCIÓN DE PRUEBA SIMPLE
+window.configurarCuentasIniciales = function() {
+  alert('¡Función ejecutándose correctamente!');
+  console.log('🚀 Función funcionando');
+};
+
 // Variables globales
 let saldosCuentas = {
   caja_general: 0,
@@ -672,6 +693,156 @@ let accountDetails = {
   cuenta_corriente_1: { banco: '', numero: '' },
   cuenta_ahorro: { banco: '', numero: '' }
 };
+
+// FUNCIÓN GLOBAL DE GUARDADO - COMENTADA TEMPORALMENTE
+/*
+window.configurarCuentasIniciales = function(e) {
+  console.log('🚀 FUNCIÓN configurarCuentasIniciales EJECUTÁNDOSE...');
+  if (e) e.preventDefault();
+  
+  console.log('✅ Comenzando proceso de configuración...');
+  
+  // Obtener valores del formulario
+  const formData = new FormData();
+  
+  // Obtener orgId desde el servidor (más confiable que extraer de URL)
+  let orgId = {{ $orgId ?? 'null' }};
+  
+  // Respaldo: si orgId es null, intentar obtenerlo del campo hidden
+  if (orgId === null || orgId === undefined) {
+    const hiddenOrgId = document.getElementById('orgIdHidden');
+    if (hiddenOrgId && hiddenOrgId.value) {
+      orgId = hiddenOrgId.value;
+      console.log('🔄 Usando orgId del campo hidden en submitForm:', orgId);
+    }
+  }
+  
+  console.log('🔍 DEBUG orgId en submitForm:', orgId, typeof orgId);
+  
+  if (!orgId || orgId === 'null') {
+    console.error('❌ ERROR: No se puede obtener orgId válido en submitForm');
+    alert('Error: No se puede determinar la organización. Recarga la página.');
+    return;
+  }
+  
+  formData.append('orgId', orgId);
+  
+  // Obtener saldos
+  const saldoCajaGeneral = document.getElementById('saldo-caja-general').value;
+  const saldoCtaCorriente1 = document.getElementById('saldo-cta-corriente-1').value;
+  const saldoCuentaAhorro = document.getElementById('saldo-cuenta-ahorro').value;
+  
+  // Agregar saldos al FormData
+  formData.append('saldo_caja_general', saldoCajaGeneral);
+  formData.append('saldo_cta_corriente_1', saldoCtaCorriente1);
+  formData.append('saldo_cuenta_ahorro', saldoCuentaAhorro);
+  
+  // Obtener detalles de bancos y números de cuenta
+  const bancoCorriente1 = document.getElementById('banco-cta-corriente-1').value;
+  const numeroCorriente1 = document.getElementById('numero-cta-corriente-1').value;
+  const bancoAhorro = document.getElementById('banco-cuenta-ahorro').value;
+  const numeroAhorro = document.getElementById('numero-cuenta-ahorro').value;
+  
+  // Agregar detalles al FormData
+  formData.append('banco_cta_corriente_1', bancoCorriente1);
+  formData.append('numero_cta_corriente_1', numeroCorriente1);
+  formData.append('banco_cuenta_ahorro', bancoAhorro);
+  formData.append('numero_cuenta_ahorro', numeroAhorro);
+  
+  // Obtener cuentas dinámicas
+  const cuentasDinamicas = [];
+  document.querySelectorAll('.dynamic-account').forEach(section => {
+    const tipo = section.getAttribute('data-tipo');
+    const saldoInput = section.querySelector('.saldo-dinamico');
+    const bancoSelect = section.querySelector('.banco-dinamico');
+    const numeroInput = section.querySelector('.numero-dinamico');
+    
+    if (saldoInput && bancoSelect && numeroInput) {
+      cuentasDinamicas.push({
+        tipo: tipo,
+        saldo: saldoInput.value || 0,
+        banco: bancoSelect.value,
+        numero: numeroInput.value
+      });
+    }
+  });
+  
+  // Agregar cuentas dinámicas si existen
+  if (cuentasDinamicas.length > 0) {
+    formData.append('cuentas_dinamicas', JSON.stringify(cuentasDinamicas));
+  }
+  
+  console.log('=== DATOS A ENVIAR ===');
+  console.log('orgId:', orgId);
+  console.log('Cuentas dinámicas encontradas:', cuentasDinamicas.length);
+  for (let [key, value] of formData.entries()) {
+    console.log(key + ': ' + value);
+  }
+  console.log('======================');
+  
+  console.log('✅ Al menos un banco está seleccionado. Procediendo...');
+  
+  // Realizar el fetch
+  fetch(`/org/${orgId}/cuentas-iniciales`, {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    }
+  })
+  .then(response => {
+    console.log('📡 Respuesta recibida:', response.status, response.statusText);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    return response.text().then(text => {
+      console.log('📄 Texto de respuesta recibido:', text.substring(0, 500));
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        console.error('📄 Texto que no se pudo parsear:', text.substring(0, 1000));
+        throw new Error(`Respuesta no es JSON válido. Servidor devolvió HTML/texto: ${text.substring(0, 200)}...`);
+      }
+    });
+  })
+  .then(data => {
+    console.log('✅ Respuesta exitosa del servidor:', data);
+    
+    // Actualizar localStorage
+    saldosCuentas.caja_general = parseFloat(document.getElementById('saldo-caja-general').value) || 0;
+    saldosCuentas.cuenta_corriente_1 = parseFloat(document.getElementById('saldo-cta-corriente-1').value) || 0;
+    saldosCuentas.cuenta_ahorro = parseFloat(document.getElementById('saldo-cuenta-ahorro').value) || 0;
+    
+    accountDetails.caja_general = {
+      banco: '',
+      numero: ''
+    };
+    
+    accountDetails.cuenta_corriente_1 = {
+      banco: document.getElementById('banco-cta-corriente-1').value,
+      numero: document.getElementById('numero-cta-corriente-1').value
+    };
+    
+    accountDetails.cuenta_ahorro = {
+      banco: document.getElementById('banco-cuenta-ahorro').value,
+      numero: document.getElementById('numero-cuenta-ahorro').value
+    };
+    
+    localStorage.setItem('saldosCuentas', JSON.stringify(saldosCuentas));
+    guardarDetallesCuentas();
+    localStorage.setItem('initialAccountsSet', 'true');
+    initialAccountsSet = true;
+    
+    // mostrarNotificacion(data.message || 'Cuentas iniciales guardadas correctamente en la base de datos', 'success');
+  })
+  .catch(error => {
+    console.error('Error completo:', error);
+    // mostrarNotificacion('Error al guardar las cuentas iniciales: ' + error.message, 'error');
+  });
+};
+*/
 
 let initialAccountsSet = false;
 let contadorCuentasCorrientes = 1; // Contador para cuentas corrientes adicionales
@@ -894,7 +1065,24 @@ function generarOpcionesBanco() {
 
 // Función para guardar cuenta individual automáticamente
 function guardarCuentaIndividual(tipoCuenta, elemento) {
-  const orgId = window.location.pathname.split('/')[2];
+  const orgId = 864; // TEMPORAL: usar valor directo para debugging
+  
+  // Respaldo: si orgId es null, intentar obtenerlo del campo hidden
+  if (orgId === null || orgId === undefined) {
+    const hiddenOrgId = document.getElementById('orgIdHidden');
+    if (hiddenOrgId && hiddenOrgId.value) {
+      orgId = parseInt(hiddenOrgId.value);
+      console.log('� Usando orgId del campo hidden:', orgId);
+    }
+  }
+  
+  console.log('�🔍 DEBUG orgId en guardarCuentaIndividual:', orgId, typeof orgId);
+  
+  if (!orgId) {
+    console.error('❌ ERROR: No se puede obtener orgId válido');
+    alert('Error: No se puede determinar la organización. Recarga la página.');
+    return;
+  }
   
   // Determinar el prefijo del ID basado en el tipo de cuenta
   let prefijo = '';
@@ -923,6 +1111,14 @@ function guardarCuentaIndividual(tipoCuenta, elemento) {
   formData.append('orgId', orgId);
   formData.append('_token', '{{ csrf_token() }}');
   
+  console.log('🔍 DEBUG Datos enviados:', {
+    orgId: orgId,
+    tipoCuenta: tipoCuenta,
+    saldo: saldo,
+    banco: banco,
+    responsable: responsable
+  });
+  
   // Enviar en el formato que espera el controlador original
   if (tipoCuenta === 'caja_general') {
     formData.append('saldo_caja_general', saldo);
@@ -947,6 +1143,12 @@ function guardarCuentaIndividual(tipoCuenta, elemento) {
     responsable: responsable
   });
   
+  console.log('🚀 Enviando a URL:', `/org/${orgId}/cuentas-iniciales`);
+  console.log('🚀 FormData contenido:');
+  for (let [key, value] of formData.entries()) {
+    console.log(`  ${key}: ${value}`);
+  }
+  
   // Enviar al backend con el mismo endpoint
   fetch(`/org/${orgId}/cuentas-iniciales`, {
     method: 'POST',
@@ -956,13 +1158,17 @@ function guardarCuentaIndividual(tipoCuenta, elemento) {
     }
   })
   .then(response => {
-    console.log('Respuesta del servidor:', response.status);
+    console.log('🔍 Respuesta del servidor:', response.status, response.statusText);
     if (response.ok) {
-      return response.json().catch(() => ({ success: true }));
+      return response.json().catch((err) => {
+        console.warn('No se pudo parsear JSON, asumiendo éxito:', err);
+        return { success: true };
+      });
     } else {
       return response.text().then(text => {
-        console.error('Error del servidor:', text);
-        throw new Error('Error en la respuesta del servidor: ' + response.status);
+        console.error('❌ Error del servidor:', text);
+        console.error('❌ Status:', response.status);
+        throw new Error('Error en la respuesta del servidor: ' + response.status + ' - ' + text);
       });
     }
   })
@@ -1091,7 +1297,23 @@ function eliminarCuenta(cuentaId, botonElement) {
     const seccionCuenta = botonElement.closest('.form-section-balance');
     
     // Eliminar de la base de datos
-    const orgId = window.location.pathname.split('/')[2];
+    let orgId = {{ $orgId ?? 'null' }};
+    
+    // Respaldo: si orgId es null, intentar obtenerlo del campo hidden
+    if (orgId === null || orgId === undefined) {
+      const hiddenOrgId = document.getElementById('orgIdHidden');
+      if (hiddenOrgId && hiddenOrgId.value) {
+        orgId = parseInt(hiddenOrgId.value);
+        console.log('🔄 Usando orgId del campo hidden en eliminarCuenta:', orgId);
+      }
+    }
+    
+    if (!orgId) {
+      console.error('❌ ERROR: No se puede obtener orgId válido en eliminarCuenta');
+      alert('Error: No se puede determinar la organización.');
+      return;
+    }
+    
     const formData = new FormData();
     formData.append('orgId', orgId);
     formData.append('_token', '{{ csrf_token() }}');
@@ -1152,16 +1374,18 @@ function guardarDetallesCuentas() {
 
 // Función para cargar datos guardados
 function cargarDatosGuardados() {
-  // Primero intentar cargar desde datos del servidor (PHP a JavaScript)
-  @if(isset($configuraciones) && $configuraciones->count() > 0)
-    const configuracionesServidor = @json($configuraciones);
-    console.log('Configuraciones encontradas en servidor:', configuracionesServidor);
+  return new Promise((resolve, reject) => {
+    // Primero intentar cargar desde datos del servidor (PHP a JavaScript)
+    @if(isset($configuraciones) && $configuraciones->count() > 0)
+      const configuracionesServidor = @json($configuraciones);
+      console.log('Configuraciones encontradas en servidor:', configuracionesServidor);
     
     // DEBUG: Mostrar detalles de cada configuración
     configuracionesServidor.forEach((config, index) => {
       console.log(`📋 Config ${index}:`, {
-        tipo: config.cuenta ? config.cuenta.tipo : 'SIN TIPO',
-        banco: config.banco,
+        tipo: config.tipo,
+        banco_id: config.banco_id,
+        banco: config.banco ? config.banco.nombre : 'Sin banco',
         numero_cuenta: config.numero_cuenta,
         saldo_inicial: config.saldo_inicial
       });
@@ -1174,7 +1398,7 @@ function cargarDatosGuardados() {
       
       // Cargar cada configuración
       configuracionesServidor.forEach(config => {
-        const tipocuenta = config.cuenta.tipo;
+        const tipocuenta = config.tipo;
         
         switch(tipocuenta) {
           case 'caja_general':
@@ -1186,18 +1410,24 @@ function cargarDatosGuardados() {
             
           case 'cuenta_corriente_1':
             document.getElementById('saldo-cta-corriente-1').value = config.saldo_inicial || 0;
-            document.getElementById('banco-cta-corriente-1').value = config.banco || '';
+            document.getElementById('banco-cta-corriente-1').value = config.banco_id || '';
             document.getElementById('numero-cta-corriente-1').value = config.numero_cuenta || '';
             saldosCuentas.cuenta_corriente_1 = parseFloat(config.saldo_inicial) || 0;
-            accountDetails.cuenta_corriente_1 = { banco: config.banco || '', numero: config.numero_cuenta || '' };
+            accountDetails.cuenta_corriente_1 = { 
+              banco: config.banco ? config.banco.nombre : '', 
+              numero: config.numero_cuenta || '' 
+            };
             break;
             
           case 'cuenta_ahorro':
             document.getElementById('saldo-cuenta-ahorro').value = config.saldo_inicial || 0;
-            document.getElementById('banco-cuenta-ahorro').value = config.banco || '';
+            document.getElementById('banco-cuenta-ahorro').value = config.banco_id || '';
             document.getElementById('numero-cuenta-ahorro').value = config.numero_cuenta || '';
             saldosCuentas.cuenta_ahorro = parseFloat(config.saldo_inicial) || 0;
-            accountDetails.cuenta_ahorro = { banco: config.banco || '', numero: config.numero_cuenta || '' };
+            accountDetails.cuenta_ahorro = { 
+              banco: config.banco ? config.banco.nombre : '', 
+              numero: config.numero_cuenta || '' 
+            };
             break;
         }
       });
@@ -1212,7 +1442,8 @@ function cargarDatosGuardados() {
       
       console.log('✅ Datos cargados desde el servidor. Formulario listo para modificaciones.');
       console.log('🔧 Puedes actualizar bancos y otros datos, luego guardar cambios.');
-      return; // No cargar desde localStorage si hay datos del servidor
+      resolve('Datos cargados desde servidor');
+      // No cargar desde localStorage si hay datos del servidor
     }
   @endif
   
@@ -1246,23 +1477,39 @@ function cargarDatosGuardados() {
     document.getElementById('numero-cuenta-ahorro').value = accountDetails.cuenta_ahorro.numero;
     
     console.log('Datos cargados desde localStorage');
+    resolve('Datos cargados desde localStorage');
+  } else {
+    console.log('⚠️ No hay datos previos. Formulario iniciado vacío.');
+    reject('No hay datos previos');
   }
-}
-
-// Función para configurar cuentas iniciales
-function configurarCuentasIniciales(e) {
-  e.preventDefault(); // Prevenir envío normal para controlar el proceso
   
-  if (!confirm('¿Está seguro(a) de guardar los cambios? Esta operación solo se podrá realizar una sola vez.')) {
-    return;
-  }
+  }); // Cerrar Promise
+} // Cerrar función cargarDatosGuardados
+
+// Inicializar cuando se carga la página
   
   // Obtener valores del formulario
   const formData = new FormData();
   
-  // Obtener orgId desde la URL (asumir formato /org/{id}/cuentas-iniciales)
-  const urlParts = window.location.pathname.split('/');
-  const orgId = urlParts[2]; // Posición del id en la URL
+  // Obtener orgId desde el servidor (más confiable que extraer de URL)
+  let orgId = {{ $orgId ?? 'null' }};
+  
+  // Respaldo: si orgId es null, intentar obtenerlo del campo hidden
+  if (orgId === null || orgId === undefined) {
+    const hiddenOrgId = document.getElementById('orgIdHidden');
+    if (hiddenOrgId && hiddenOrgId.value) {
+      orgId = parseInt(hiddenOrgId.value);
+      console.log('� Usando orgId del campo hidden en submitForm:', orgId);
+    }
+  }
+  
+  console.log('�🔍 DEBUG orgId en submitForm:', orgId, typeof orgId);
+  
+  if (!orgId) {
+    console.error('❌ ERROR: No se puede obtener orgId válido en submitForm');
+    alert('Error: No se puede determinar la organización. Recarga la página.');
+    return;
+  }
   
   formData.append('orgId', orgId);
   formData.append('_token', '{{ csrf_token() }}');
@@ -1277,6 +1524,15 @@ function configurarCuentasIniciales(e) {
   console.log('🔍 Elemento banco corriente 1:', bancoCorriente1);
   console.log('🔍 Valor banco corriente 1:', bancoCorriente1 ? bancoCorriente1.value : 'ELEMENTO NO ENCONTRADO');
   
+  // DEBUG ADICIONAL: Verificar opciones disponibles
+  if (bancoCorriente1) {
+    console.log('📋 Opciones disponibles en banco corriente 1:');
+    Array.from(bancoCorriente1.options).forEach((option, index) => {
+      console.log(`  ${index}: value="${option.value}" text="${option.text}" selected=${option.selected}`);
+    });
+    console.log('📋 Índice seleccionado:', bancoCorriente1.selectedIndex);
+  }
+  
   // FORZAR CAPTURA: Si el elemento existe pero el valor está vacío, tomar el primer valor disponible
   let valorBancoCorriente1 = '';
   if (bancoCorriente1) {
@@ -1286,6 +1542,9 @@ function configurarCuentasIniciales(e) {
     // Si está vacío, NO forzar - permitir que esté vacío
     if (!valorBancoCorriente1) {
       console.log('⚠️ Campo banco corriente 1 está vacío - se enviará vacío');
+      console.log('💡 Sugerencia: Selecciona un banco en el formulario antes de guardar');
+    } else {
+      console.log('✅ Banco corriente 1 seleccionado correctamente:', valorBancoCorriente1);
     }
   }
   
@@ -1299,6 +1558,15 @@ function configurarCuentasIniciales(e) {
   console.log('🔍 Elemento banco ahorro:', bancoAhorro);
   console.log('🔍 Valor banco ahorro:', bancoAhorro ? bancoAhorro.value : 'ELEMENTO NO ENCONTRADO');
   
+  // DEBUG ADICIONAL: Verificar opciones disponibles
+  if (bancoAhorro) {
+    console.log('📋 Opciones disponibles en banco ahorro:');
+    Array.from(bancoAhorro.options).forEach((option, index) => {
+      console.log(`  ${index}: value="${option.value}" text="${option.text}" selected=${option.selected}`);
+    });
+    console.log('📋 Índice seleccionado:', bancoAhorro.selectedIndex);
+  }
+  
   // FORZAR CAPTURA: Si el elemento existe pero el valor está vacío, tomar el primer valor disponible
   let valorBancoAhorro = '';
   if (bancoAhorro) {
@@ -1308,6 +1576,9 @@ function configurarCuentasIniciales(e) {
     // Si está vacío, NO forzar - permitir que esté vacío
     if (!valorBancoAhorro) {
       console.log('⚠️ Campo banco ahorro está vacío - se enviará vacío');
+      console.log('💡 Sugerencia: Selecciona un banco en el formulario antes de guardar');
+    } else {
+      console.log('✅ Banco ahorro seleccionado correctamente:', valorBancoAhorro);
     }
   }
   
@@ -1396,6 +1667,25 @@ function configurarCuentasIniciales(e) {
   console.log('🔍 FIN DEBUG BANCOS');
   console.log('======================');
   
+  // *** VALIDACIÓN FINAL: Confirmar que los bancos tienen valores ***
+  console.log('🚨 VALIDACIÓN FINAL ANTES DE ENVIAR:');
+  const validacionBancos = {
+    corriente1: formData.get('banco_cta_corriente_1'),
+    ahorro: formData.get('banco_cuenta_ahorro')
+  };
+  console.log('📋 Valores finales de bancos en FormData:', validacionBancos);
+  
+  if (!validacionBancos.corriente1 && !validacionBancos.ahorro) {
+    console.log('⚠️ ADVERTENCIA: Ningún banco seleccionado');
+    const continuar = confirm('⚠️ No has seleccionado ningún banco. ¿Deseas continuar sin bancos?');
+    if (!continuar) {
+      console.log('❌ Usuario canceló por falta de bancos');
+      return;
+    }
+  } else {
+    console.log('✅ Al menos un banco está seleccionado. Procediendo...');
+  }
+  
   // Enviar al backend usando el mismo endpoint
   fetch(`/org/${orgId}/cuentas-iniciales`, {
     method: 'POST',
@@ -1466,29 +1756,51 @@ function configurarCuentasIniciales(e) {
     localStorage.setItem('initialAccountsSet', 'true');
     initialAccountsSet = true;
     
-    mostrarNotificacion(data.message || 'Cuentas iniciales guardadas correctamente en la base de datos', 'success');
+    // mostrarNotificacion(data.message || 'Cuentas iniciales guardadas correctamente en la base de datos', 'success');
   })
   .catch(error => {
     console.error('Error completo:', error);
-    mostrarNotificacion('Error al guardar las cuentas iniciales: ' + error.message, 'error');
+    // mostrarNotificacion('Error al guardar las cuentas iniciales: ' + error.message, 'error');
   });
-}
+}; // Fin de window.configurarCuentasIniciales
 
 // Inicializar cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
-  // LIMPIEZA TEMPORAL - Eliminar después de usar
-  localStorage.removeItem('saldosCuentas');
-  localStorage.removeItem('accountDetails');
-  localStorage.removeItem('initialAccountsSet');
-  console.log('LocalStorage limpiado para empezar de nuevo');
+  // LIMPIEZA DESACTIVADA TEMPORALMENTE - Para permitir modificaciones
+  // localStorage.removeItem('saldosCuentas');
+  // localStorage.removeItem('accountDetails');
+  // localStorage.removeItem('initialAccountsSet');
   
-  cargarDatosGuardados();
+  // DEBUG: Verificar estado del botón
+  const btnGuardar = document.getElementById('btnGuardarCuentas');
+  console.log('🔍 Estado del botón guardar:', {
+    disabled: btnGuardar.disabled,
+    style: btnGuardar.style.cssText,
+    classes: btnGuardar.className
+  });
+  
+  // Forzar habilitación del botón
+  btnGuardar.disabled = false;
+  btnGuardar.style.pointerEvents = 'auto';
+  btnGuardar.style.opacity = '1';
+  console.log('✅ Botón guardar forzado a estar habilitado');
+  console.log('🔧 MODO MODIFICACIÓN: localStorage preservado para permitir ediciones');
+  
+  // Primero intentar cargar datos del servidor
+  cargarDatosGuardados().then(() => {
+    console.log('✅ Datos cargados desde el servidor. Formulario listo para modificaciones.');
+    console.log('🔧 Puedes actualizar bancos y otros datos, luego guardar cambios.');
+  }).catch((error) => {
+    console.log('⚠️ No hay datos previos o error cargando. Iniciando con formulario vacío.');
+    console.log('📝 Puedes llenar el formulario y guardar para crear las cuentas iniciales.');
+    // No hacer nada especial - dejar que el usuario llene el formulario normalmente
+  });
   
   // AUTO-GUARDADO DESACTIVADO - Solo guardado manual con botón
   // configurarAutoGuardado();
   
   // Event listener para el formulario (guardado manual solamente)
-  document.getElementById('cuentasInicialesForm').addEventListener('submit', configurarCuentasIniciales);
+  // document.getElementById('cuentasInicialesForm').addEventListener('submit', configurarCuentasIniciales);
   
   // Test: Verificar que las funciones estén disponibles
   console.log('Funciones cargadas:', {
@@ -1496,9 +1808,13 @@ document.addEventListener('DOMContentLoaded', function() {
     crearSeccionCuentaCorriente: typeof crearSeccionCuentaCorriente,
     crearSeccionCuentaAhorro: typeof crearSeccionCuentaAhorro
   });
-  
+}); // *** FIN del event listener DOMContentLoaded ***
+
+// ===============================================
+// FUNCIONES GLOBALES (FUERA del event listener)
+// ===============================================
   // Función para actualizar accountDetails con valores actuales del formulario
-  function actualizarAccountDetails() {
+  window.actualizarAccountDetails = function() {
     console.log('🔄 Actualizando accountDetails con valores del formulario...');
     
     accountDetails.caja_general = {
@@ -1598,7 +1914,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Mostrar mensaje y recargar
-    alert('✅ localStorage limpiado completamente. La página se recargará.');
+    // alert('✅ localStorage limpiado completamente. La página se recargará.');
     location.reload();
   };
   
@@ -1606,9 +1922,25 @@ document.addEventListener('DOMContentLoaded', function() {
   window.actualizarSoloBancos = function() {
     console.log('🏦 ACTUALIZANDO SOLO BANCOS...');
     
-    // Obtener orgId desde la URL
-    const orgId = window.location.pathname.split('/')[2];
+    // Obtener orgId desde el servidor (más confiable)
+    let orgId = {{ $orgId ?? 'null' }};
+    
+    // Respaldo: si orgId es null, intentar obtenerlo del campo hidden
+    if (orgId === null || orgId === undefined) {
+      const hiddenOrgId = document.getElementById('orgIdHidden');
+      if (hiddenOrgId && hiddenOrgId.value) {
+        orgId = parseInt(hiddenOrgId.value);
+        console.log('🔄 Usando orgId del campo hidden en actualizarBancos:', orgId);
+      }
+    }
+    
     console.log('🔍 orgId detectado:', orgId);
+    
+    if (!orgId) {
+      console.error('❌ ERROR: No se puede obtener orgId válido en actualizarBancos');
+      alert('Error: No se puede determinar la organización.');
+      return;
+    }
     
     // Crear FormData solo con bancos
     const formData = new FormData();
@@ -1627,7 +1959,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Verificar que al menos un banco tenga valor
     const tieneUnBanco = (bancoCorriente1 && bancoCorriente1.value) || (bancoAhorro && bancoAhorro.value);
     if (!tieneUnBanco) {
-      alert('⚠️ Debes seleccionar al menos un banco antes de actualizar');
+      // alert('⚠️ Debes seleccionar al menos un banco antes de actualizar');
       return;
     }
     
@@ -1686,14 +2018,14 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(data => {
       console.log('✅ Bancos actualizados exitosamente:', data);
-      alert('✅ Bancos actualizados correctamente: ' + data.message);
+      // alert('✅ Bancos actualizados correctamente: ' + data.message);
       console.log('🔄 Recargando página...');
       location.reload();
     })
     .catch(error => {
       console.error('❌ Error completo:', error);
       console.error('❌ Error stack:', error.stack);
-      alert('❌ Error actualizando bancos: ' + error.message);
+      // alert('❌ Error actualizando bancos: ' + error.message);
     });
   };
 });

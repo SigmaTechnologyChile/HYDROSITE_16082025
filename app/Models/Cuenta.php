@@ -7,11 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 class Cuenta extends Model
 {
     protected $table = 'cuentas';
-    public $timestamps = false;
 
     protected $fillable = [
-        'org_id', 'nombre', 'tipo', 'saldo_actual', 'banco_id', 'numero_cuenta', 'creado_en'
+        'org_id', 
+        'nombre', 
+        'tipo', 
+        'saldo_actual', 
+        'banco_id', 
+        'nombre_banco', // ← NUEVO CAMPO
+        'numero_cuenta', 
+        'responsable'
     ];
+
+    protected $casts = [
+        'saldo_actual' => 'decimal:2',
+    ];
+
+    // Relaciones
     public function banco()
     {
         return $this->belongsTo(Banco::class, 'banco_id');
@@ -25,5 +37,22 @@ class Cuenta extends Model
     public function movimientosDestino()
     {
         return $this->hasMany(Movimiento::class, 'cuenta_destino_id');
+    }
+
+    // Scopes
+    public function scopePorOrganizacion($query, $orgId)
+    {
+        return $query->where('org_id', $orgId);
+    }
+
+    public function scopePorTipo($query, $tipo)
+    {
+        return $query->where('tipo', $tipo);
+    }
+
+    // Métodos auxiliares
+    public function getNombreBancoAttribute()
+    {
+        return $this->banco ? $this->banco->nombre : null;
     }
 }

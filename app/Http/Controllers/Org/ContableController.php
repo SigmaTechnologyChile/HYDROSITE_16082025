@@ -7,6 +7,7 @@ use App\Models\Cuenta;
 use App\Models\Categoria;
 use App\Models\Movimiento;
 use App\Models\ConfiguracionInicial;
+use App\Models\ConfiguracionCuentasIniciales;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -52,6 +53,263 @@ class ContableController extends Controller
     }
 
     public function store(Request $request)
+    {
+        return $this->storeNuevoFlujo($request);
+    }
+
+    /**
+     * NUEVO FLUJO - Configuración inicial con copia automática a tabla operativa
+     */
+    public function storeNuevoFlujo(Request $request)
+    {
+        try {
+            \Log::info('=== NUEVO FLUJO - STORE INICIADO ===');
+            \Log::info('Timestamp: ' . now());
+            \Log::info('Data recibida:', $request->all());
+            \Log::info('Headers:', $request->headers->all());
+            \Log::info('Method: ' . $request->method());
+            \Log::info('URL: ' . $request->url());
+            
+            // DEBUG específico del orgId
+            $orgIdFromRequest = $request->input('orgId');
+            \Log::info('DEBUG orgId raw: ' . $orgIdFromRequest);
+            \Log::info('DEBUG orgId type: ' . gettype($orgIdFromRequest));
+            \Log::info('DEBUG orgId isEmpty: ' . (empty($orgIdFromRequest) ? 'YES' : 'NO'));
+            \Log::info('DEBUG orgId isNull: ' . (is_null($orgIdFromRequest) ? 'YES' : 'NO'));
+            
+            // Debugging de todos los campos importantes
+            \Log::info('🔍 Todos los inputs:', [
+                'orgId' => $request->input('orgId'),
+                'saldo_caja_general' => $request->input('saldo_caja_general'),
+                'responsable' => $request->input('responsable'),
+                '_token' => $request->input('_token') ? 'PRESENTE' : 'AUSENTE'
+            ]);
+            
+            // Debug específico del orgId
+            \Log::info('orgId recibido:', [
+                'value' => $request->input('orgId'),
+                'type' => gettype($request->input('orgId')),
+                'is_null' => is_null($request->input('orgId')),
+                'is_empty' => empty($request->input('orgId'))
+            ]);
+            
+            // Obtener orgId ANTES de validación (como en método antiguo)
+            $orgId = $request->input('orgId');
+            \Log::info('DEBUG - orgId obtenido ANTES de validación: ' . $orgId);
+            
+            // Validación básica (SIN validar orgId aquí, como en método antiguo)
+            $request->validate([
+                'saldo_caja_general' => 'required|numeric|min:0',
+                'saldo_cta_corriente_1' => 'required|numeric|min:0',
+                'saldo_cuenta_ahorro' => 'required|numeric|min:0',
+                'responsable' => 'required|string|max:100',
+                'banco_cta_corriente_1' => 'nullable|integer|exists:bancos,id',
+                'banco_cuenta_ahorro' => 'nullable|integer|exists:bancos,id',
+                'numero_cta_corriente_1' => 'nullable|string|max:50',
+                'numero_cuenta_ahorro' => 'nullable|string|max:50',
+            ]);
+            
+            // Validar orgId manualmente después (más control)
+            if (!$orgId || !is_numeric($orgId)) {
+                \Log::error('ERROR - orgId inválido: ' . $orgId);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Error: ID de organización inválido',
+                    'debug' => ['orgId_received' => $orgId, 'type' => gettype($orgId)]
+                ], 400);
+            }
+            
+            $orgId = intval($orgId); // Convertir a entero
+            \Log::info('DEBUG - orgId convertido: ' . $orgId);
+            
+            if ($orgId <= 0) {
+                \Log::error('ERROR: orgId inválido después de conversión: ' . $orgId);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ID de organización inválido'
+                ], 400);
+            }
+            
+            \Log::info("🏢 Procesando para organización: {$orgId}");
+
+            // Array para rastrear cuentas procesadas
+            $cuentasProcesadas = [];
+
+            // 1. CAJA GENERAL
+            $this->procesarConfiguracionInicial([
+                'org_id' => $orgId,
+                'tipo_cuenta' => 'caja_general',
+                'saldo_inicial' => $request->saldo_caja_general,
+                'responsable' => $request->responsable,
+                'banco_id' => null, // Caja general no tiene banco
+                'numero_cuenta' => null,
+                'observaciones' => 'Caja general - Efectivo'
+            ], $cuentasProcesadas);
+
+            // 2. CUENTA CORRIENTE 1
+            $this->procesarConfiguracionInicial([
+                'org_id' => $orgId,
+                'tipo_cuenta' => 'cuenta_corriente_1',
+                'saldo_inicial' => $request->saldo_cta_corriente_1,
+                'responsable' => $request->responsable,
+                'banco_id' => $request->banco_cta_corriente_1,
+                'numero_cuenta' => $request->numero_cta_corriente_1,
+                'observaciones' => 'Cuenta corriente principal'
+            ], $cuentasProcesadas);
+
+            // 3. CUENTA AHORRO
+            $this->procesarConfiguracionInicial([
+                'org_id' => $orgId,
+                'tipo_cuenta' => 'cuenta_ahorro',
+                'saldo_inicial' => $request->saldo_cuenta_ahorro,
+                'responsable' => $request->responsable,
+                'banco_id' => $request->banco_cuenta_ahorro,
+                'numero_cuenta' => $request->numero_cuenta_ahorro,
+                'observaciones' => 'Cuenta de ahorro principal'
+            ], $cuentasProcesadas);
+
+            \Log::info('✅ PROCESO COMPLETADO');
+            \Log::info('📊 Resumen:', [
+                'total_cuentas' => count($cuentasProcesadas),
+                'cuentas' => $cuentasProcesadas,
+                'timestamp' => now()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Configuración de cuentas guardada exitosamente',
+                'data' => [
+                    'total_cuentas' => count($cuentasProcesadas),
+                    'cuentas_procesadas' => $cuentasProcesadas
+                ]
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('❌ Errores de validación:', $e->errors());
+            return response()->json([
+                'success' => false,
+                'message' => 'Errores de validación',
+                'errors' => $e->errors()
+            ], 422);
+
+        } catch (\Exception $e) {
+            \Log::error('❌ Error en store:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error interno del servidor: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Procesa la configuración inicial de una cuenta y la copia a la tabla operativa
+     */
+    private function procesarConfiguracionInicial($datos, &$cuentasProcesadas)
+    {
+        \Log::info("🔄 Procesando: {$datos['tipo_cuenta']}");
+
+        // Obtener nombre del banco si existe
+        $nombreBanco = null;
+        if ($datos['banco_id']) {
+            $banco = \App\Models\Banco::find($datos['banco_id']);
+            $nombreBanco = $banco ? $banco->nombre : null;
+        }
+
+        // 1. Guardar/actualizar en configuracion_cuentas_iniciales
+        $configuracion = ConfiguracionCuentasIniciales::updateOrCreate(
+            [
+                'org_id' => $datos['org_id'],
+                'tipo_cuenta' => $datos['tipo_cuenta']
+            ],
+            [
+                'saldo_inicial' => $datos['saldo_inicial'],
+                'responsable' => $datos['responsable'],
+                'banco_id' => $datos['banco_id'],
+                'nombre_banco' => $nombreBanco, // ← NUEVO CAMPO
+                'numero_cuenta' => $datos['numero_cuenta'],
+                'observaciones' => $datos['observaciones'],
+                'copiado_a_cuentas' => false // Resetear flag
+            ]
+        );
+
+        \Log::info("💾 Configuración inicial guardada ID: {$configuracion->id}");
+
+        // 2. Copiar automáticamente a tabla operativa (cuentas)
+        $this->copiarACuentasOperativas($configuracion);
+
+        // 3. Marcar como copiado
+        $configuracion->update(['copiado_a_cuentas' => true]);
+
+        // 4. Agregar al tracking
+        $cuentasProcesadas[] = [
+            'tipo' => $datos['tipo_cuenta'],
+            'saldo' => $datos['saldo_inicial'],
+            'banco_id' => $datos['banco_id'],
+            'numero_cuenta' => $datos['numero_cuenta'],
+            'configuracion_id' => $configuracion->id
+        ];
+
+        \Log::info("✅ {$datos['tipo_cuenta']} procesada completamente");
+    }
+
+    /**
+     * Copia la configuración inicial a la tabla operativa (cuentas)
+     */
+    private function copiarACuentasOperativas($configuracion)
+    {
+        $nombreCuenta = $this->generarNombreCuenta($configuracion->tipo_cuenta);
+        
+        // Obtener nombre del banco si existe
+        $nombreBanco = null;
+        if ($configuracion->banco_id) {
+            $banco = \App\Models\Banco::find($configuracion->banco_id);
+            $nombreBanco = $banco ? $banco->nombre : null;
+        }
+        
+        $cuenta = Cuenta::updateOrCreate(
+            [
+                'org_id' => $configuracion->org_id,
+                'tipo' => $configuracion->tipo_cuenta
+            ],
+            [
+                'nombre' => $nombreCuenta,
+                'saldo_actual' => $configuracion->saldo_inicial,
+                'banco_id' => $configuracion->banco_id,
+                'nombre_banco' => $nombreBanco, // ← NUEVO CAMPO
+                'numero_cuenta' => $configuracion->numero_cuenta,
+                'responsable' => $configuracion->responsable
+            ]
+        );
+
+        \Log::info("🔗 Cuenta operativa actualizada ID: {$cuenta->id}, Nombre: {$nombreCuenta}, Banco: {$nombreBanco}");
+        
+        return $cuenta;
+    }
+
+    /**
+     * Genera nombres descriptivos para las cuentas
+     */
+    private function generarNombreCuenta($tipoCuenta)
+    {
+        $nombres = [
+            'caja_general' => 'Caja General',
+            'cuenta_corriente_1' => 'Cuenta Corriente Principal',
+            'cuenta_ahorro' => 'Cuenta de Ahorro Principal',
+            'cuenta_corriente_2' => 'Cuenta Corriente Secundaria',
+            'cuenta_corriente_3' => 'Cuenta Corriente Terciaria'
+        ];
+
+        return $nombres[$tipoCuenta] ?? ucfirst(str_replace('_', ' ', $tipoCuenta));
+    }
+
+    /**
+     * MÉTODO ANTIGUO - mantenido como backup
+     */
+    public function storeAntiguo(Request $request)
     {
         try {
             // LOG: Test inicial
@@ -106,6 +364,13 @@ class ContableController extends Controller
         // LOG: Debug de datos recibidos
         \Log::info('=== DATOS RECIBIDOS EN STORE ===');
         \Log::info('orgId: ' . $orgId);
+        \Log::info('🔍 BANCOS RECIBIDOS:');
+        \Log::info('  - banco_cta_corriente_1: ' . ($request->banco_cta_corriente_1 ?? 'NULL'));
+        \Log::info('  - banco_cuenta_ahorro: ' . ($request->banco_cuenta_ahorro ?? 'NULL'));
+        \Log::info('🔍 SALDOS RECIBIDOS:');
+        \Log::info('  - saldo_caja_general: ' . ($request->saldo_caja_general ?? 'NULL'));
+        \Log::info('  - saldo_cta_corriente_1: ' . ($request->saldo_cta_corriente_1 ?? 'NULL'));
+        \Log::info('  - saldo_cuenta_ahorro: ' . ($request->saldo_cuenta_ahorro ?? 'NULL'));
         \Log::info('cuentas_dinamicas: ' . $request->input('cuentas_dinamicas'));
         \Log::info('Todos los parámetros:', $request->all());
         
@@ -558,27 +823,27 @@ class ContableController extends Controller
      */
     private function getResumenSaldos($orgId)
     {
-        $cuentaCajaGeneral = ConfiguracionInicial::where('org_id', $orgId)->whereHas('cuenta', function($q) {
-            $q->where('tipo', 'caja_general');
-        })->orderByDesc('id')->first();
-        $cuentaCorriente1 = ConfiguracionInicial::where('org_id', $orgId)->whereHas('cuenta', function($q) {
-            $q->where('tipo', 'cuenta_corriente_1');
-        })->orderByDesc('id')->first();
-        $cuentaAhorro = ConfiguracionInicial::where('org_id', $orgId)->whereHas('cuenta', function($q) {
-            $q->where('tipo', 'cuenta_ahorro');
-        })->orderByDesc('id')->first();
+        // Usar directamente la tabla de cuentas operativas (nuevo flujo)
+        $cuentaCajaGeneral = Cuenta::where('org_id', $orgId)->where('tipo', 'caja_general')->first();
+        $cuentaCorriente1 = Cuenta::where('org_id', $orgId)->where('tipo', 'cuenta_corriente_1')->first();
+        $cuentaAhorro = Cuenta::where('org_id', $orgId)->where('tipo', 'cuenta_ahorro')->first();
 
-        // Saldos iniciales
+        // Obtener configuraciones iniciales para saldos históricos
+        $configCaja = ConfiguracionCuentasIniciales::where('org_id', $orgId)->where('tipo_cuenta', 'caja_general')->first();
+        $configCorriente = ConfiguracionCuentasIniciales::where('org_id', $orgId)->where('tipo_cuenta', 'cuenta_corriente_1')->first();
+        $configAhorro = ConfiguracionCuentasIniciales::where('org_id', $orgId)->where('tipo_cuenta', 'cuenta_ahorro')->first();
+
+        // Saldos iniciales (desde configuración)
         $saldosIniciales = [
-            'Caja General' => $cuentaCajaGeneral->saldo_inicial ?? 0,
-            'Cuenta Corriente 1' => $cuentaCorriente1->saldo_inicial ?? 0,
-            'Cuenta de Ahorro' => $cuentaAhorro->saldo_inicial ?? 0,
+            'Caja General' => $configCaja->saldo_inicial ?? 0,
+            'Cuenta Corriente 1' => $configCorriente->saldo_inicial ?? 0,
+            'Cuenta de Ahorro' => $configAhorro->saldo_inicial ?? 0,
         ];
 
-        // Saldos actuales
-        $cuentaCajaGeneralActual = $cuentaCajaGeneral && $cuentaCajaGeneral->cuenta ? $cuentaCajaGeneral->cuenta->saldo_actual : 0;
-        $cuentaCorriente1Actual = $cuentaCorriente1 && $cuentaCorriente1->cuenta ? $cuentaCorriente1->cuenta->saldo_actual : 0;
-        $cuentaAhorroActual = $cuentaAhorro && $cuentaAhorro->cuenta ? $cuentaAhorro->cuenta->saldo_actual : 0;
+        // Saldos actuales (desde tabla operativa)
+        $cuentaCajaGeneralActual = $cuentaCajaGeneral ? $cuentaCajaGeneral->saldo_actual : 0;
+        $cuentaCorriente1Actual = $cuentaCorriente1 ? $cuentaCorriente1->saldo_actual : 0;
+        $cuentaAhorroActual = $cuentaAhorro ? $cuentaAhorro->saldo_actual : 0;
 
         // Suma total inicial y actual
         $totalSaldoInicial = array_sum($saldosIniciales);
@@ -599,9 +864,12 @@ class ContableController extends Controller
 
         return [
             'saldosIniciales' => $saldosIniciales,
-            'cuentaCajaGeneral' => $cuentaCajaGeneral,
-            'cuentaCorriente1' => $cuentaCorriente1,
-            'cuentaAhorro' => $cuentaAhorro,
+            'cuentaCajaGeneral' => $configCaja, // Configuración inicial para compatibilidad
+            'cuentaCorriente1' => $configCorriente,
+            'cuentaAhorro' => $configAhorro,
+            'cuentaCajaGeneralOperativa' => $cuentaCajaGeneral, // Cuentas operativas
+            'cuentaCorriente1Operativa' => $cuentaCorriente1,
+            'cuentaAhorroOperativa' => $cuentaAhorro,
             'totalSaldoInicial' => $totalSaldoInicial,
             'totalSaldoActual' => $totalSaldoActual,
             'totalIngresos' => $totalIngresos,
@@ -688,11 +956,11 @@ class ContableController extends Controller
         $categoriasIngresos = \App\Models\Categoria::where('tipo', 'ingreso')->orderBy('nombre')->get();
         $categoriasEgresos = \App\Models\Categoria::where('tipo', 'egreso')->orderBy('nombre')->get();
         
-        // Obtener configuraciones iniciales con nombres de banco
-        $configuracionesIniciales = ConfiguracionInicial::where('org_id', $id)
-            ->whereNotNull('banco')
-            ->where('banco', '!=', '')
-            ->orderBy('banco')
+        // Obtener configuraciones iniciales con nombres de banco (usando nueva tabla)
+        $configuracionesIniciales = ConfiguracionCuentasIniciales::where('org_id', $id)
+            ->whereNotNull('banco_id')
+            ->with('banco')
+            ->orderBy('created_at')
             ->get();
 
         return view('orgs.contable.registro_ingresos_egresos', array_merge([
@@ -709,8 +977,9 @@ class ContableController extends Controller
      */
     public function cuentasIniciales($id)
     {
-        $configuraciones = ConfiguracionInicial::with('cuenta')->where('org_id', $id)->get();
-        $cuentasIniciales = \App\Models\Cuenta::all();
+        // Usar las nuevas tablas del flujo
+        $configuraciones = ConfiguracionCuentasIniciales::where('org_id', $id)->get();
+        $cuentasIniciales = \App\Models\Cuenta::where('org_id', $id)->get();
         $bancos = \App\Models\Banco::orderBy('nombre')->get();
         $resumen = $this->getResumenSaldos($id);
 
@@ -728,7 +997,7 @@ class ContableController extends Controller
      */
     public function mostrarCuentaInicial($id, $cuenta)
     {
-        $configuracion = ConfiguracionInicial::with('cuenta')->where('org_id', $id)->where('id', $cuenta)->first();
+        $configuracion = ConfiguracionCuentasIniciales::with('banco')->where('org_id', $id)->where('id', $cuenta)->first();
         $bancos = \App\Models\Banco::orderBy('nombre')->get();
         $resumen = $this->getResumenSaldos($id);
 
@@ -744,12 +1013,12 @@ class ContableController extends Controller
      */
     public function configuracionCuentas($id)
     {
-        $configuraciones = ConfiguracionInicial::with('cuenta')->where('org_id', $id)->get();
-        $cuentas = \App\Models\Cuenta::all();
+        $configuraciones = ConfiguracionCuentasIniciales::with('banco')->where('org_id', $id)->get();
+        $cuentas = \App\Models\Cuenta::where('org_id', $id)->get();
         $bancos = \App\Models\Banco::orderBy('nombre')->get();
         $resumen = $this->getResumenSaldos($id);
 
-        return view('orgs.contable.configuracion_cuentas_original', array_merge([
+        return view('orgs.contable.configuracion_cuentas_new', array_merge([
             'orgId' => $id,
             'cuentas' => $cuentas,
             'configuraciones' => $configuraciones,
@@ -1003,7 +1272,7 @@ class ContableController extends Controller
           ->orderBy('fecha', 'desc')->get();
         
         $resumen = $this->getResumenSaldos($id);
-        $configuracionesIniciales = ConfiguracionInicial::where('org_id', $id)->get();
+        $configuracionesIniciales = ConfiguracionCuentasIniciales::where('org_id', $id)->get();
 
         return view('orgs.contable.giros_depositos', array_merge([
             'orgId' => $id,
@@ -1021,7 +1290,7 @@ class ContableController extends Controller
         $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
             $q->where('org_id', $id);
         })->orderBy('fecha', 'desc')->limit(10)->get();
-        $configuraciones = ConfiguracionInicial::with('cuenta')->where('org_id', $id)->get();
+        $configuraciones = ConfiguracionCuentasIniciales::with('banco')->where('org_id', $id)->get();
 
         return view('orgs.contable.nice', array_merge([
             'orgId' => $id,
@@ -1380,10 +1649,10 @@ class ContableController extends Controller
                     $cuentaCorriente1->banco_id = $bancoCorr1['id'];
                     $cuentaCorriente1->save();
                     
-                    // Actualizar configuracion_cuentas_iniciales
-                    ConfiguracionInicial::where('org_id', $orgId)
-                        ->where('cuenta_id', $cuentaCorriente1->id)
-                        ->update(['banco' => $bancoCorr1['nombre']]);
+                    // Actualizar configuracion_cuentas_iniciales (nueva tabla)
+                    ConfiguracionCuentasIniciales::where('org_id', $orgId)
+                        ->where('tipo', 'cuenta_corriente_1')
+                        ->update(['banco_id' => $bancoCorr1['id']]);
                     
                     $bancosActualizados++;
                     \Log::info('✅ Banco actualizado para cuenta corriente 1: ' . $bancoCorr1['nombre']);
@@ -1400,10 +1669,10 @@ class ContableController extends Controller
                     $cuentaAhorro->banco_id = $bancoAhorro['id'];
                     $cuentaAhorro->save();
                     
-                    // Actualizar configuracion_cuentas_iniciales
-                    ConfiguracionInicial::where('org_id', $orgId)
-                        ->where('cuenta_id', $cuentaAhorro->id)
-                        ->update(['banco' => $bancoAhorro['nombre']]);
+                    // Actualizar configuracion_cuentas_iniciales (nueva tabla)
+                    ConfiguracionCuentasIniciales::where('org_id', $orgId)
+                        ->where('tipo', 'cuenta_ahorro')
+                        ->update(['banco_id' => $bancoAhorro['id']]);
                     
                     $bancosActualizados++;
                     \Log::info('✅ Banco actualizado para cuenta ahorro: ' . $bancoAhorro['nombre']);
