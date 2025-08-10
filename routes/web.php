@@ -29,9 +29,18 @@ use App\Http\Controllers\CuentaController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ConfiguracionInicialController;
 Route::post('/sincronizar-saldos-iniciales', [ConfiguracionInicialController::class, 'sincronizarSaldosIniciales'])->name('sincronizar.saldos.iniciales');
+use App\Http\Controllers\FKConstraintController;
 use App\Http\Controllers\ConciliacionController;
 use App\Http\Controllers\AuditoriaCuentaController;
 
+// Rutas para FK Constraint Management (Issue #1451)
+Route::prefix('fk-constraint')->name('fk-constraint.')->group(function() {
+    Route::get('/', [FKConstraintController::class, 'index'])->name('index');
+    Route::post('/check-dependencies', [FKConstraintController::class, 'checkDependencies'])->name('check-dependencies');
+    Route::post('/safe-delete', [FKConstraintController::class, 'safeDelete'])->name('safe-delete');
+    Route::post('/generate-script', [FKConstraintController::class, 'generateScript'])->name('generate-script');
+    Route::post('/handle-delete', [FKConstraintController::class, 'handleDelete'])->name('handle-delete');
+});
 
 // Rutas para movimientos
 Route::resource('movimientos', MovimientoController::class);
@@ -238,6 +247,7 @@ Route::prefix('org')->name('orgs.')->group(function () {
     Route::get('{id}/contable/registro-ingresos-egresos', [ContableController::class, 'registroIngresosEgresos'])->name('contable.registro.ingresos.egresos');
     Route::get('{id}/contable/cuentas-iniciales', [ContableController::class, 'cuentasIniciales'])->name('contable.cuentas.iniciales');
     Route::post('{id}/contable/cuentas-iniciales', [ContableController::class, 'guardarCuentasIniciales'])->name('contable.cuentas.iniciales.guardar');
+    Route::get('{id}/contable/cuentas-iniciales-datos', [ContableController::class, 'obtenerDatosCuentasIniciales'])->name('contable.cuentas.iniciales.datos');
     Route::get('{id}/contable/cuentas-iniciales/{cuenta}', [ContableController::class, 'mostrarCuentaInicial'])->name('cuentas_iniciales.detalle');
     Route::get('{id}/contable/configuracion-cuentas', [ContableController::class, 'configuracionCuentas'])->name('contable.configuracion.cuentas');
     Route::get('{id}/contable/giros-depositos', [ContableController::class, 'girosDepositos'])->name('contable.giros.depositos');

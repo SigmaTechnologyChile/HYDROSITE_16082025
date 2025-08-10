@@ -695,7 +695,8 @@
                             <td>{{ number_format($saldosIniciales['Cuenta Corriente 2'] ?? 0, 0, ',', '.') }}</td>
                             <td>{{ number_format($saldosIniciales['Cuenta de Ahorro'] ?? 0, 0, ',', '.') }}</td>
                         </tr>
-                        @forelse($movimientos as $movimiento)
+                        {{-- COMENTADO: tabla movimientos eliminada --}}
+                        {{-- @forelse($movimientos as $movimiento)
                             <tr>
                                 <td>
                                     <button class="btn btn-sm btn-outline-primary" title="Editar">
@@ -709,14 +710,15 @@
                                 <td>{{ number_format($movimiento->otros_ingresos ?? 0, 0, ',', '.') }}</td>
                                 <td>{{ number_format($movimiento->giros ?? 0, 0, ',', '.') }}</td>
                             </tr>
-                        @empty
+                        @empty --}}
                             <tr class="sin-movimientos">
                                 <td colspan="7">
                                     <i class="bi bi-inbox" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
-                                    No hay movimientos registrados
+                                    {{-- No hay movimientos registrados --}}
+                                    Módulo de movimientos temporalmente deshabilitado
                                 </td>
                             </tr>
-                        @endforelse
+                        {{-- @endforelse --}}
                     </tbody>
                 </table>
             </div>

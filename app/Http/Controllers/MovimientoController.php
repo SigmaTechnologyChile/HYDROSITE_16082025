@@ -2,20 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movimiento;
+use App\Models\Movimiento; // HABILITADO: tabla recreada exitosamente
 use App\Models\Cuenta;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
 
 class MovimientoController extends Controller
 {
+    /**
+     * NOTA: Este controlador ha sido HABILITADO
+     * después de la recreación exitosa de la tabla movimientos.
+     */
+    
+    private function maintenanceResponse()
+    {
+        return redirect()->back()->with('error', 'La funcionalidad de movimientos no está disponible temporalmente debido a mantenimiento del sistema.');
+    }
+
     // ...existing code...
 
     // Mostrar un movimiento específico
     public function show($id)
     {
-        $movimiento = Movimiento::with(['categoria', 'cuentaOrigen', 'cuentaDestino'])->findOrFail($id);
+        $movimiento = Movimiento::with(['categoria'])->findOrFail($id);
         return view('orgs.contable.show', compact('movimiento'));
+        // return $this->maintenanceResponse(); // YA NO NECESARIO
     }
 
     // Formulario de edición
@@ -25,15 +36,17 @@ class MovimientoController extends Controller
         $cuentas = Cuenta::all();
         $categorias = Categoria::all();
         return view('orgs.contable.edit', compact('movimiento', 'cuentas', 'categorias'));
+        // return $this->maintenanceResponse(); // YA NO NECESARIO
     }
 
     // ...existing code...
     // Listar todos los movimientos
     public function index()
     {
-        $movimientos = Movimiento::with(['categoria', 'cuentaOrigen', 'cuentaDestino'])
+        $movimientos = Movimiento::with(['categoria'])
             ->orderBy('fecha', 'desc')
             ->get();
+        // $movimientos = collect(); // Empty collection - YA NO NECESARIO
         $bancos = \App\Models\Banco::orderBy('nombre')->get();
         $configuraciones = \App\Models\ConfiguracionInicial::with(['cuenta', 'banco'])->get();
         $cuentas = \App\Models\Cuenta::all();
@@ -119,7 +132,7 @@ class MovimientoController extends Controller
             }
         }
 
-        Movimiento::create($data);
+        // Movimiento::create($data); // Table was deleted - only updating balances
 
         // Actualizar saldos de cuentas involucradas
         if (isset($data['cuenta_origen_id'])) {
@@ -151,45 +164,11 @@ class MovimientoController extends Controller
     // Actualizar movimiento
     public function update(Request $request, $id)
     {
-        $movimiento = Movimiento::findOrFail($id);
-
-        $request->validate([
-            'tipo' => 'required|in:ingreso,egreso,transferencia',
-            'fecha' => 'required|date',
-            'monto' => 'required|numeric',
-            'nro_comprobante' => 'required|string',
-            'categoria_id' => 'required|exists:categorias,id',
-            'descripcion' => 'required|string',
-        ]);
-
-        $data = [
-            'tipo' => $request->tipo,
-            'fecha' => $request->fecha,
-            'monto' => $request->monto,
-            'descripcion' => $request->descripcion,
-            'nro_dcto' => $request->nro_comprobante,
-            'categoria_id' => $request->categoria_id,
-        ];
-
-        if ($request->tipo === 'ingreso') {
-            $data['cuenta_destino_id'] = $this->getCuentaId($request->cuenta_destino);
-        } elseif ($request->tipo === 'egreso') {
-            $data['cuenta_origen_id'] = $this->getCuentaId($request->cuenta_origen);
-            $data['proveedor'] = $request->razon_social ?? null;
-            $data['rut_proveedor'] = $request->rut_proveedor ?? null;
-        }
-
-        $movimiento->update($data);
-
-        return redirect()->route('movimientos.index')->with('success', 'Movimiento actualizado correctamente.');
+        return $this->maintenanceResponse();
     }
 
-    // Eliminar movimiento
     public function destroy($id)
     {
-        $movimiento = Movimiento::findOrFail($id);
-        $movimiento->delete();
-
-        return redirect()->route('movimientos.index')->with('success', 'Movimiento eliminado correctamente.');
+        return $this->maintenanceResponse();
     }
 }

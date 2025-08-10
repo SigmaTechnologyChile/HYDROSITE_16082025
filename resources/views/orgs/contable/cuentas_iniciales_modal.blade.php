@@ -1,4 +1,10 @@
 
+@extends('layouts.nice', ['active' => 'cuentas_iniciales'])
+
+@section('title', 'Configuración de Cuentas Iniciales')
+
+@section('content')
+
 <style>
   /* Variables CSS modernas basadas en el index */
   :root {
@@ -34,27 +40,23 @@
     width: 100%;
   }
 
-  /* Overlay del modal - DISEÑO MEJORADO */
+  /* Overlay del modal - CONVERTIDO A PÁGINA COMPLETA */
   #cuentasInicialesModal {
-    position: fixed;
-    top: 0;
-    left: 0;
+    position: relative;
+    top: auto;
+    left: auto;
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
-    display: none;
+    height: auto;
+    background: #f8f9fa;
+    backdrop-filter: none;
+    display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
-    padding: 1rem;
+    z-index: auto;
+    padding: 2rem;
     animation: fadeIn 0.3s ease-out;
     overflow-y: auto;
-  }
-
-  /* Estado visible del modal */
-  #cuentasInicialesModal.show {
-    display: flex !important;
+    min-height: 100vh;
   }
 
   /* Animaciones mejoradas */
@@ -387,6 +389,16 @@
     cursor: not-allowed;
   }
 
+  /* Spinner animation */
+  .spin {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
   /* Responsivo mejorado */
   @media (max-width: 1024px) {
     .modal-content {
@@ -533,6 +545,7 @@
       </div>
 
       <form id="cuentasInicialesForm">
+        @csrf
         <!-- Caja General -->
         <div class="form-section">
           <div class="form-section-header">
@@ -542,10 +555,10 @@
             </h3>
           </div>
           <div class="form-section-body">
-            <div class="form-grid three-cols">
+            <div class="form-grid one-col">
               <div class="form-group">
                 <label for="saldo-caja-general">
-                  Saldo Inicial
+                  Saldo Inicial (Efectivo)
                   <span class="required">*</span>
                 </label>
                 <input 
@@ -553,38 +566,10 @@
                   id="saldo-caja-general" 
                   name="saldo_caja_general" 
                   class="form-input"
-                  step="0.01" 
+                  step="1" 
                   min="0" 
-                  placeholder="0.00"
+                  placeholder="0"
                   required
-                >
-              </div>
-              <div class="form-group">
-                <label for="banco-caja-general">Banco</label>
-                <select id="banco-caja-general" name="banco_caja_general" class="form-input form-select">
-                  <option value="">Seleccionar banco</option>
-                  <option value="banco_estado">Banco Estado</option>
-                  <option value="banco_chile">Banco de Chile</option>
-                  <option value="banco_bci">BCI</option>
-                  <option value="banco_santander">Santander</option>
-                  <option value="banco_itau">Itaú</option>
-                  <option value="banco_scotiabank">Scotiabank</option>
-                  <option value="banco_bice">BICE</option>
-                  <option value="banco_security">Security</option>
-                  <option value="banco_falabella">Falabella</option>
-                  <option value="banco_ripley">Ripley</option>
-                  <option value="banco_consorcio">Consorcio</option>
-                  <option value="otro">Otro</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="numero-caja-general">Número de Cuenta</label>
-                <input 
-                  type="text" 
-                  id="numero-caja-general" 
-                  name="numero_caja_general"
-                  class="form-input"
-                  placeholder="Ej: 12345678-9"
                 >
               </div>
             </div>
@@ -611,9 +596,9 @@
                   id="saldo-cta-corriente-1" 
                   name="saldo_cta_corriente_1" 
                   class="form-input"
-                  step="0.01" 
+                  step="1" 
                   min="0" 
-                  placeholder="0.00"
+                  placeholder="0"
                   required
                 >
               </div>
@@ -621,18 +606,9 @@
                 <label for="banco-cta-corriente-1">Banco</label>
                 <select id="banco-cta-corriente-1" name="banco_cta_corriente_1" class="form-input form-select">
                   <option value="">Seleccionar banco</option>
-                  <option value="banco_estado">Banco Estado</option>
-                  <option value="banco_chile">Banco de Chile</option>
-                  <option value="banco_bci">BCI</option>
-                  <option value="banco_santander">Santander</option>
-                  <option value="banco_itau">Itaú</option>
-                  <option value="banco_scotiabank">Scotiabank</option>
-                  <option value="banco_bice">BICE</option>
-                  <option value="banco_security">Security</option>
-                  <option value="banco_falabella">Falabella</option>
-                  <option value="banco_ripley">Ripley</option>
-                  <option value="banco_consorcio">Consorcio</option>
-                  <option value="otro">Otro</option>
+                  @foreach($bancos as $banco)
+                    <option value="{{ $banco->id }}">{{ $banco->nombre }}</option>
+                  @endforeach
                 </select>
               </div>
               <div class="form-group">
@@ -669,9 +645,9 @@
                   id="saldo-cta-corriente-2" 
                   name="saldo_cta_corriente_2" 
                   class="form-input"
-                  step="0.01" 
+                  step="1" 
                   min="0" 
-                  placeholder="0.00"
+                  placeholder="0"
                   required
                 >
               </div>
@@ -679,18 +655,9 @@
                 <label for="banco-cta-corriente-2">Banco</label>
                 <select id="banco-cta-corriente-2" name="banco_cta_corriente_2" class="form-input form-select">
                   <option value="">Seleccionar banco</option>
-                  <option value="banco_estado">Banco Estado</option>
-                  <option value="banco_chile">Banco de Chile</option>
-                  <option value="banco_bci">BCI</option>
-                  <option value="banco_santander">Santander</option>
-                  <option value="banco_itau">Itaú</option>
-                  <option value="banco_scotiabank">Scotiabank</option>
-                  <option value="banco_bice">BICE</option>
-                  <option value="banco_security">Security</option>
-                  <option value="banco_falabella">Falabella</option>
-                  <option value="banco_ripley">Ripley</option>
-                  <option value="banco_consorcio">Consorcio</option>
-                  <option value="otro">Otro</option>
+                  @foreach($bancos as $banco)
+                    <option value="{{ $banco->id }}">{{ $banco->nombre }}</option>
+                  @endforeach
                 </select>
               </div>
               <div class="form-group">
@@ -727,9 +694,9 @@
                   id="saldo-cuenta-ahorro" 
                   name="saldo_cuenta_ahorro" 
                   class="form-input"
-                  step="0.01" 
+                  step="1" 
                   min="0" 
-                  placeholder="0.00"
+                  placeholder="0"
                   required
                 >
               </div>
@@ -737,18 +704,9 @@
                 <label for="banco-cuenta-ahorro">Banco</label>
                 <select id="banco-cuenta-ahorro" name="banco_cuenta_ahorro" class="form-input form-select">
                   <option value="">Seleccionar banco</option>
-                  <option value="banco_estado">Banco Estado</option>
-                  <option value="banco_chile">Banco de Chile</option>
-                  <option value="banco_bci">BCI</option>
-                  <option value="banco_santander">Santander</option>
-                  <option value="banco_itau">Itaú</option>
-                  <option value="banco_scotiabank">Scotiabank</option>
-                  <option value="banco_bice">BICE</option>
-                  <option value="banco_security">Security</option>
-                  <option value="banco_falabella">Falabella</option>
-                  <option value="banco_ripley">Ripley</option>
-                  <option value="banco_consorcio">Consorcio</option>
-                  <option value="otro">Otro</option>
+                  @foreach($bancos as $banco)
+                    <option value="{{ $banco->id }}">{{ $banco->nombre }}</option>
+                  @endforeach
                 </select>
               </div>
               <div class="form-group">
@@ -900,7 +858,193 @@ document.addEventListener('DOMContentLoaded', function() {
   if (urlParams.get('modal') === 'cuentas_iniciales') {
     openModal();
   }
+
+  // Manejar envío del formulario
+  const form = document.getElementById('cuentasInicialesForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Obtener orgId de la URL actual
+      const pathParts = window.location.pathname.split('/');
+      const orgIndex = pathParts.indexOf('org');
+      const orgId = orgIndex !== -1 && pathParts[orgIndex + 1] ? pathParts[orgIndex + 1] : null;
+      
+      if (!orgId) {
+        alert('Error: No se puede determinar la organización');
+        return;
+      }
+      
+      const formData = new FormData(form);
+      const submitBtn = form.querySelector('button[type="submit"]');
+      
+      // Deshabilitar botón
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="bi bi-spinner-border spin"></i> Guardando...';
+      
+      // Enviar datos
+      fetch(`/org/${orgId}/contable/cuentas-iniciales`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Mensaje de éxito
+          mostrarMensaje('✅ Éxito', data.message, 'success');
+          setTimeout(() => {
+            closeModal();
+            // Recargar la página para mostrar los nuevos datos
+            window.location.reload();
+          }, 2000);
+        } else {
+          // Mensaje de error desde el servidor
+          mostrarMensaje('❌ Error', data.message, 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Mensaje de error de conexión
+        mostrarMensaje('❌ Error de Conexión', 'No se pudo conectar con el servidor. Verifique su conexión e intente nuevamente.', 'error');
+      })
+      .finally(() => {
+        // Rehabilitar botón
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="bi bi-check-circle"></i> Guardar Configuración';
+      });
+    });
+  }
+
+  // Cargar datos existentes cuando se abre el modal
+  window.cargarDatosCuentasIniciales = function() {
+    const pathParts = window.location.pathname.split('/');
+    const orgIndex = pathParts.indexOf('org');
+    const orgId = orgIndex !== -1 && pathParts[orgIndex + 1] ? pathParts[orgIndex + 1] : null;
+    
+    if (!orgId) return;
+    
+    fetch(`/org/${orgId}/contable/cuentas-iniciales-datos`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success && data.cuentas) {
+        data.cuentas.forEach(cuenta => {
+          // Mapear tipo a ID de elemento
+          let elementId = '';
+          switch(cuenta.tipo) {
+            case 'caja_general':
+              elementId = 'saldo-caja-general';
+              break;
+            case 'cuenta_corriente_1':
+              elementId = 'saldo-cta-corriente-1';
+              document.getElementById('banco-cta-corriente-1').value = cuenta.banco || '';
+              document.getElementById('numero-cta-corriente-1').value = cuenta.numero_cuenta || '';
+              break;
+            case 'cuenta_ahorro':
+              elementId = 'saldo-cuenta-ahorro';
+              document.getElementById('banco-cuenta-ahorro').value = cuenta.banco || '';
+              document.getElementById('numero-cuenta-ahorro').value = cuenta.numero_cuenta || '';
+              break;
+          }
+          
+          if (elementId) {
+            const elemento = document.getElementById(elementId);
+            if (elemento) {
+              elemento.value = cuenta.saldo_actual || cuenta.saldo_inicial || 0;
+            }
+          }
+          
+          // Establecer responsable si existe
+          if (cuenta.responsable) {
+            const responsableInput = document.getElementById('responsable');
+            if (responsableInput) {
+              responsableInput.value = cuenta.responsable;
+            }
+          }
+        });
+      }
+    })
+    .catch(error => {
+      console.log('No hay datos previos o error cargando:', error);
+    });
+  };
+
+  // Sobrescribir función openModal para cargar datos
+  const originalOpenModal = window.openCuentasInicialesModal;
+  window.openCuentasInicialesModal = function() {
+    if (originalOpenModal) {
+      originalOpenModal();
+    }
+    // Cargar datos después de abrir el modal
+    setTimeout(() => {
+      cargarDatosCuentasIniciales();
+    }, 100);
+  };
+
+  // Función para mostrar mensajes elegantes
+  function mostrarMensaje(titulo, mensaje, tipo) {
+    // Remover mensajes anteriores
+    const mensajeAnterior = document.querySelector('.mensaje-notificacion');
+    if (mensajeAnterior) {
+      mensajeAnterior.remove();
+    }
+
+    // Crear el contenedor del mensaje
+    const mensajeDiv = document.createElement('div');
+    mensajeDiv.className = `mensaje-notificacion alert alert-${tipo === 'success' ? 'success' : 'danger'} alert-dismissible fade show`;
+    mensajeDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      min-width: 350px;
+      max-width: 500px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border: none;
+      border-radius: 8px;
+    `;
+
+    const icono = tipo === 'success' ? '✅' : '❌';
+    const colorClase = tipo === 'success' ? 'text-success' : 'text-danger';
+
+    mensajeDiv.innerHTML = `
+      <div class="d-flex align-items-center">
+        <span class="fs-4 me-2">${icono}</span>
+        <div class="flex-grow-1">
+          <h6 class="alert-heading mb-1 ${colorClase}"><strong>${titulo}</strong></h6>
+          <p class="mb-0">${mensaje}</p>
+        </div>
+        <button type="button" class="btn-close" onclick="this.parentElement.parentElement.remove()"></button>
+      </div>
+    `;
+
+    // Agregar al DOM
+    document.body.appendChild(mensajeDiv);
+
+    // Auto-remover después de 5 segundos (excepto errores que permanecen más tiempo)
+    const tiempoAuto = tipo === 'success' ? 5000 : 8000;
+    setTimeout(() => {
+      if (mensajeDiv && mensajeDiv.parentNode) {
+        mensajeDiv.classList.add('fade');
+        setTimeout(() => {
+          if (mensajeDiv && mensajeDiv.parentNode) {
+            mensajeDiv.remove();
+          }
+        }, 300);
+      }
+    }, tiempoAuto);
+  }
   
   console.log('🎉 Modal de Cuentas Iniciales inicializado correctamente!');
 });
 </script>
+
+@endsection

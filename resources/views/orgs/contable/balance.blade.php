@@ -414,6 +414,12 @@
 </style>
 
 @section('content')
+{{-- ALERTA: Módulo de movimientos deshabilitado --}}
+<div class="alert alert-info" role="alert">
+    <i class="bi bi-info-circle"></i>
+    <strong>Información:</strong> El módulo de movimientos está temporalmente deshabilitado.
+    Las funcionalidades de cuentas y balances básicos siguen disponibles.
+</div>
 <div class="balance-section">
     <!-- Header -->
     <div class="section-header">
@@ -555,7 +561,8 @@
         
         <div class="balance-card">
             <h3><i class="bi bi-clock-history"></i> Últimos Movimientos</h3>
-            @if(isset($movimientos) && $movimientos->count() > 0)
+            {{-- COMENTADO: tabla movimientos eliminada --}}
+            @if(false) {{-- Condición deshabilitada temporalmente --}}
                 <div style="overflow-x: auto;">
                     <table class="movements-table">
                         <thead>
@@ -566,29 +573,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($movimientos->take(8) as $movimiento)
+                            {{-- Tabla temporal vacía mientras se restaura funcionalidad --}}
                             <tr>
-                                <td>{{ \Carbon\Carbon::parse($movimiento->fecha)->format('d/m') }}</td>
-                                <td style="text-align: left; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                    {{ Str::limit($movimiento->descripcion, 25) }}
-                                </td>
-                                <td>
-                                    @php
-                                        $monto = ($movimiento->total_consumo ?? 0) + ($movimiento->cuotas_incorporacion ?? 0) + ($movimiento->otros_ingresos ?? 0) + ($movimiento->giros ?? 0);
-                                    @endphp
-                                    <span class="{{ $monto >= 0 ? 'monto-positivo' : 'monto-negativo' }}">
-                                        ${{ number_format(abs($monto), 0, ',', '.') }}
-                                    </span>
+                                <td colspan="3" class="text-center text-muted">
+                                    <em>Datos de movimientos en proceso de restauración</em>
                                 </td>
                             </tr>
-                            @endforeach
                         </tbody>
                     </table>
                 </div>
             @else
                 <div style="text-align: center; padding: 30px; color: #718096;">
                     <i class="bi bi-inbox" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
-                    No hay movimientos registrados
+                    Módulo de movimientos temporalmente deshabilitado
                 </div>
             @endif
         </div>

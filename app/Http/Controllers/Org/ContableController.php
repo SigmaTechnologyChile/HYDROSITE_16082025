@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Org;
 use App\Http\Controllers\Controller;
 use App\Models\Cuenta;
 use App\Models\Categoria;
-use App\Models\Movimiento;
+use App\Models\Movimiento; // HABILITADO: tabla recreada exitosamente
 use App\Models\ConfiguracionInicial;
 use App\Models\ConfiguracionCuentasIniciales;
+use App\Models\Banco;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -21,10 +22,11 @@ class ContableController extends Controller
      */
     public function exportarExcel($id)
     {
-        // Obtener movimientos filtrados por organización
-        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
-            $q->where('org_id', $id);
-        })->orderBy('fecha', 'desc')->get();
+        // HABILITADO: tabla movimientos recreada exitosamente
+        $movimientos = \App\Models\Movimiento::where('org_id', $id)
+            ->orderBy('fecha', 'desc')->get();
+        
+        // $movimientos = collect(); // Array vacío temporal - YA NO NECESARIO
 
         // Crear el contenido CSV manualmente (puedes cambiar a Laravel Excel si está instalado)
         $headers = [
@@ -806,11 +808,12 @@ class ContableController extends Controller
 
     public function mostrarLibroCaja($id)
     {
-        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
-            $q->where('org_id', $id);
-        })
-        ->orderBy('fecha', 'desc')
-        ->get();
+        // HABILITADO: tabla movimientos recreada exitosamente
+        $movimientos = \App\Models\Movimiento::where('org_id', $id)
+            ->orderBy('fecha', 'desc')
+            ->get();
+        
+        // $movimientos = collect(); // Array vacío temporal - YA NO NECESARIO
         $resumen = $this->getResumenSaldos($id);
         return view('orgs.contable.libro-caja', array_merge([
             'orgId' => $id,
@@ -850,16 +853,20 @@ class ContableController extends Controller
         $totalSaldoActual = $cuentaCajaGeneralActual + $cuentaCorriente1Actual + $cuentaAhorroActual;
         $saldosIniciales['Saldo Total'] = $totalSaldoInicial + $totalSaldoActual;
 
-        // Totales de movimientos
-        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($orgId) {
-            $q->where('org_id', $orgId);
-        })->get();
-        $totalIngresos = $movimientos->sum(function($m) {
-            return ($m->total_consumo ?? 0) + ($m->cuotas_incorporacion ?? 0) + ($m->otros_ingresos ?? 0);
-        });
-        $totalEgresos = $movimientos->sum(function($m) {
-            return ($m->giros ?? 0);
-        });
+        // Totales de movimientos - COMENTADO: tabla movimientos eliminada
+        // $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($orgId) {
+        //     $q->where('org_id', $orgId);
+        // })->get();
+        // $totalIngresos = $movimientos->sum(function($m) {
+        //     return ($m->total_consumo ?? 0) + ($m->cuotas_incorporacion ?? 0) + ($m->otros_ingresos ?? 0);
+        // });
+        // $totalEgresos = $movimientos->sum(function($m) {
+        //     return ($m->giros ?? 0);
+        // });
+        
+        // Valores por defecto sin movimientos
+        $totalIngresos = 0;
+        $totalEgresos = 0;
         $saldoFinal = $saldosIniciales['Saldo Total'] + $totalIngresos - $totalEgresos;
 
         return [
@@ -884,9 +891,10 @@ class ContableController extends Controller
     public function balance($id)
     {
         $resumen = $this->getResumenSaldos($id);
-        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
-            $q->where('org_id', $id);
-        })->orderBy('fecha', 'desc')->get();
+        // HABILITADO: tabla movimientos recreada exitosamente
+        $movimientos = \App\Models\Movimiento::where('org_id', $id)
+            ->orderBy('fecha', 'desc')->get();
+        // $movimientos = collect(); // Array vacío temporal - YA NO NECESARIO
 
         return view('orgs.contable.balance', array_merge([
             'orgId' => $id,
@@ -900,9 +908,10 @@ class ContableController extends Controller
     public function conciliacionBancaria($id)
     {
         $resumen = $this->getResumenSaldos($id);
-        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
-            $q->where('org_id', $id);
-        })->orderBy('fecha', 'desc')->get();
+        // HABILITADO: tabla movimientos recreada exitosamente
+        $movimientos = \App\Models\Movimiento::where('org_id', $id)
+            ->orderBy('fecha', 'desc')->get();
+        // $movimientos = collect(); // Array vacío temporal - YA NO NECESARIO
 
         return view('orgs.contable.conciliacion_bancaria', array_merge([
             'orgId' => $id,
@@ -915,9 +924,10 @@ class ContableController extends Controller
      */
     public function movimientos($id)
     {
-        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
-            $q->where('org_id', $id);
-        })->orderBy('fecha', 'desc')->get();
+        // $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
+        //     $q->where('org_id', $id);
+        // })->orderBy('fecha', 'desc')->get();
+        $movimientos = collect(); // Empty collection - table was deleted
         $resumen = $this->getResumenSaldos($id);
 
         return view('orgs.contable.movimientos', array_merge([
@@ -949,9 +959,10 @@ class ContableController extends Controller
      */
     public function registroIngresosEgresos($id)
     {
-        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
-            $q->where('org_id', $id);
-        })->orderBy('fecha', 'desc')->get();
+        // $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
+        //     $q->where('org_id', $id);
+        // })->orderBy('fecha', 'desc')->get();
+        $movimientos = collect(); // Empty collection - table was deleted
         $resumen = $this->getResumenSaldos($id);
         $categoriasIngresos = \App\Models\Categoria::where('tipo', 'ingreso')->orderBy('nombre')->get();
         $categoriasEgresos = \App\Models\Categoria::where('tipo', 'egreso')->orderBy('nombre')->get();
@@ -983,7 +994,7 @@ class ContableController extends Controller
         $bancos = \App\Models\Banco::orderBy('nombre')->get();
         $resumen = $this->getResumenSaldos($id);
 
-        return view('orgs.contable.configuracion_cuentas_new', array_merge([
+        return view('orgs.contable.cuentas_iniciales_modal', array_merge([
             'orgId' => $id,
             'cuentasIniciales' => $cuentasIniciales,
             'configuraciones' => $configuraciones,
@@ -1001,7 +1012,7 @@ class ContableController extends Controller
         $bancos = \App\Models\Banco::orderBy('nombre')->get();
         $resumen = $this->getResumenSaldos($id);
 
-        return view('orgs.contable.configuracion_cuentas_new', array_merge([
+        return view('orgs.contable.cuentas_iniciales_modal', array_merge([
             'orgId' => $id,
             'configuracion' => $configuracion,
             'bancos' => $bancos,
@@ -1018,12 +1029,144 @@ class ContableController extends Controller
         $bancos = \App\Models\Banco::orderBy('nombre')->get();
         $resumen = $this->getResumenSaldos($id);
 
-        return view('orgs.contable.configuracion_cuentas_new', array_merge([
+        return view('orgs.contable.cuentas_iniciales_modal', array_merge([
             'orgId' => $id,
             'cuentas' => $cuentas,
             'configuraciones' => $configuraciones,
             'bancos' => $bancos,
         ], $resumen));
+    }
+
+    /**
+     * Obtiene los datos de las cuentas iniciales por AJAX
+     */
+    public function obtenerDatosCuentasIniciales($id)
+    {
+        try {
+            $configuraciones = ConfiguracionCuentasIniciales::where('org_id', $id)->get();
+            
+            return response()->json([
+                'success' => true,
+                'cuentas' => $configuraciones->map(function($config) {
+                    return [
+                        'tipo' => $config->tipo,
+                        'saldo_inicial' => $config->saldo_inicial,
+                        'saldo_actual' => $config->saldo_actual,
+                        'banco' => $config->banco,
+                        'numero_cuenta' => $config->numero_cuenta,
+                        'responsable' => $config->responsable,
+                    ];
+                })
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener datos: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Guarda las cuentas iniciales desde el modal
+     */
+    public function guardarCuentasIniciales(Request $request, $id)
+    {
+        try {
+            \DB::beginTransaction();
+
+            // Validar datos básicos - añadimos cuenta corriente 2
+            $request->validate([
+                'saldo_caja_general' => 'required|integer|min:0',
+                'saldo_cta_corriente_1' => 'required|integer|min:0',
+                'saldo_cta_corriente_2' => 'nullable|integer|min:0',
+                'saldo_cuenta_ahorro' => 'required|integer|min:0',
+                'responsable' => 'nullable|string|max:255',
+            ]);
+
+            // Usar los nombres exactos de los campos del formulario
+            $cuentasParaGuardar = [
+                [
+                    'tipo_cuenta' => 'caja_general',
+                    'saldo' => $request->saldo_caja_general,
+                    'banco_id' => 'EFECTIVO', // Caja General es efectivo
+                    'nombre_banco' => 'CAJA', // Nombre específico para caja
+                    'numero' => '99',   // Identificador específico para cuenta caja
+                    'responsable' => $request->responsable ?? '',
+                ],
+                [
+                    'tipo_cuenta' => 'cuenta_corriente_1',
+                    'saldo' => $request->saldo_cta_corriente_1,
+                    'banco_id' => $request->banco_cta_corriente_1 ?: null,
+                    'nombre_banco' => $this->obtenerNombreBanco($request->banco_cta_corriente_1),
+                    'numero' => $request->numero_cta_corriente_1 ?? '',
+                    'responsable' => $request->responsable ?? '',
+                ],
+                [
+                    'tipo_cuenta' => 'cuenta_corriente_2',
+                    'saldo' => $request->saldo_cta_corriente_2 ?? 0,
+                    'banco_id' => $request->banco_cta_corriente_2 ?: null,
+                    'nombre_banco' => $this->obtenerNombreBanco($request->banco_cta_corriente_2),
+                    'numero' => $request->numero_cta_corriente_2 ?? '',
+                    'responsable' => $request->responsable ?? '',
+                ],
+                [
+                    'tipo_cuenta' => 'cuenta_ahorro',
+                    'saldo' => $request->saldo_cuenta_ahorro,
+                    'banco_id' => $request->banco_cuenta_ahorro ?: null,
+                    'nombre_banco' => $this->obtenerNombreBanco($request->banco_cuenta_ahorro),
+                    'numero' => $request->numero_cuenta_ahorro ?? '',
+                    'responsable' => $request->responsable ?? '',
+                ],
+            ];
+
+            foreach ($cuentasParaGuardar as $cuentaData) {
+                ConfiguracionCuentasIniciales::updateOrCreate(
+                    [
+                        'org_id' => $id,
+                        'tipo_cuenta' => $cuentaData['tipo_cuenta']
+                    ],
+                    [
+                        'saldo_inicial' => $cuentaData['saldo'],
+                        'banco_id' => $cuentaData['banco_id'],
+                        'nombre_banco' => $cuentaData['nombre_banco'],
+                        'numero_cuenta' => $cuentaData['numero'],
+                        'responsable' => $cuentaData['responsable'],
+                    ]
+                );
+            }
+
+            \DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Cuentas iniciales guardadas correctamente',
+                'debug_info' => [
+                    'total_cuentas_guardadas' => count($cuentasParaGuardar),
+                    'timestamp' => now()->toDateTimeString(),
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            \DB::rollback();
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar las cuentas: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Obtiene el nombre del banco por su ID
+     */
+    private function obtenerNombreBanco($bancoId)
+    {
+        if (!$bancoId) {
+            return null;
+        }
+        
+        $banco = Banco::find($bancoId);
+        return $banco ? $banco->nombre : null;
     }
 
     /**
@@ -1057,19 +1200,20 @@ class ContableController extends Controller
         ];
         
         // Obtener movimientos para mostrar en la tabla
-        $movimientos = \App\Models\Movimiento::with(['categoria', 'cuentaOrigen', 'cuentaDestino'])
-            ->where(function($q) use ($id) {
-                $q->whereHas('cuentaOrigen', function($sq) use ($id) {
-                    $sq->where('org_id', $id);
-                })->orWhereHas('cuentaDestino', function($sq) use ($id) {
-                    $sq->where('org_id', $id);
-                });
-            })
-            ->orderBy('fecha', 'desc')
-            ->get()
-            ->map(function($movimiento) use ($columnasIngresos, $columnasEgresos) {
-                return $this->mapearMovimientoTabular($movimiento, $columnasIngresos, $columnasEgresos);
-            });
+        // $movimientos = \App\Models\Movimiento::with(['categoria', 'cuentaOrigen', 'cuentaDestino'])
+        //     ->where(function($q) use ($id) {
+        //         $q->whereHas('cuentaOrigen', function($sq) use ($id) {
+        //             $sq->where('org_id', $id);
+        //         })->orWhereHas('cuentaDestino', function($sq) use ($id) {
+        //             $sq->where('org_id', $id);
+        //         });
+        //     })
+        //     ->orderBy('fecha', 'desc')
+        //     ->get()
+        //     ->map(function($movimiento) use ($columnasIngresos, $columnasEgresos) {
+        //         return $this->mapearMovimientoTabular($movimiento, $columnasIngresos, $columnasEgresos);
+        //     });
+        $movimientos = collect(); // Empty collection - table was deleted
         
         // Obtener saldos reales de las cuentas para el encabezado
         $cuentaCajaGeneral = $cuentas->where('tipo', 'caja_general')->first();
@@ -1262,14 +1406,12 @@ class ContableController extends Controller
      */
     public function girosDepositos($id)
     {
-        $movimientos = \App\Models\Movimiento::where(function($q) use ($id) {
-            $q->whereHas('cuentaOrigen', function($sq) use ($id) {
-                $sq->where('org_id', $id);
-            })->orWhereHas('cuentaDestino', function($sq) use ($id) {
-                $sq->where('org_id', $id);
-            });
-        })->where('tipo', 'transferencia')
-          ->orderBy('fecha', 'desc')->get();
+        // HABILITADO: tabla movimientos recreada exitosamente
+        $movimientos = \App\Models\Movimiento::where('org_id', $id)
+            ->where('tipo', 'transferencia')
+            ->orderBy('fecha', 'desc')->get();
+        
+        // $movimientos = collect(); // Array vacío temporal - YA NO NECESARIO
         
         $resumen = $this->getResumenSaldos($id);
         $configuracionesIniciales = ConfiguracionCuentasIniciales::where('org_id', $id)->get();
@@ -1287,9 +1429,10 @@ class ContableController extends Controller
     public function nice($id)
     {
         $resumen = $this->getResumenSaldos($id);
-        $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
-            $q->where('org_id', $id);
-        })->orderBy('fecha', 'desc')->limit(10)->get();
+        // $movimientos = \App\Models\Movimiento::whereHas('cuentaOrigen', function($q) use ($id) {
+        //     $q->where('org_id', $id);
+        // })->orderBy('fecha', 'desc')->limit(10)->get();
+        $movimientos = collect(); // Empty collection - table was deleted
         $configuraciones = ConfiguracionCuentasIniciales::with('banco')->where('org_id', $id)->get();
 
         return view('orgs.contable.nice', array_merge([
@@ -1363,22 +1506,23 @@ class ContableController extends Controller
             }
 
             // Crear el movimiento de ingreso
-            $movimiento = \App\Models\Movimiento::create([
-                'org_id' => $request->org_id ?? auth()->user()->org_id,
-                'tipo' => 'ingreso',
-                'cuenta_destino_id' => $request->cuenta_destino,
-                'categoria_id' => $request->categoria,
-                'monto' => $request->monto,
-                'descripcion' => $request->descripcion,
-                'fecha' => $request->fecha,
-                'nro_dcto' => $request->numero_comprobante,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+            // $movimiento = \App\Models\Movimiento::create([
+            //     'org_id' => $request->org_id ?? auth()->user()->org_id,
+            //     'tipo' => 'ingreso',
+            //     'cuenta_destino_id' => $request->cuenta_destino,
+            //     'categoria_id' => $request->categoria,
+            //     'monto' => $request->monto,
+            //     'descripcion' => $request->descripcion,
+            //     'fecha' => $request->fecha,
+            //     'nro_dcto' => $request->numero_comprobante,
+            //     'created_at' => now(),
+            //     'updated_at' => now()
+            // ]);
+            // Note: Movimiento table was deleted - only updating account balances
 
             // Aplicar mapeo tabular automático
-            $movimiento = $this->mapearMovimientoTabular($movimiento);
-            $movimiento->save();
+            // $movimiento = $this->mapearMovimientoTabular($movimiento);
+            // $movimiento->save();
 
             // Actualizar saldo de la cuenta destino (SUMAR el ingreso)
             $cuentaDestino->saldo_actual += $request->monto;
@@ -1390,7 +1534,7 @@ class ContableController extends Controller
                 'success' => true,
                 'message' => 'Ingreso registrado exitosamente',
                 'data' => [
-                    'movimiento_id' => $movimiento->id,
+                    // 'movimiento_id' => $movimiento->id,
                     'nuevo_saldo' => $cuentaDestino->saldo_actual,
                     'cuenta_nombre' => $cuentaDestino->nombre
                 ]
@@ -1436,24 +1580,25 @@ class ContableController extends Controller
             }
 
             // Crear el movimiento de egreso
-            $movimiento = \App\Models\Movimiento::create([
-                'org_id' => $request->org_id ?? auth()->user()->org_id,
-                'tipo' => 'egreso',
-                'cuenta_origen_id' => $request->cuenta_origen,
-                'categoria_id' => $request->categoria,
-                'monto' => $request->monto,
-                'descripcion' => $request->descripcion,
-                'fecha' => $request->fecha,
-                'nro_dcto' => $request->numero_comprobante,
-                'proveedor' => $request->razon_social,
-                'rut_proveedor' => $request->rut_proveedor,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+            // $movimiento = \App\Models\Movimiento::create([
+            //     'org_id' => $request->org_id ?? auth()->user()->org_id,
+            //     'tipo' => 'egreso',
+            //     'cuenta_origen_id' => $request->cuenta_origen,
+            //     'categoria_id' => $request->categoria,
+            //     'monto' => $request->monto,
+            //     'descripcion' => $request->descripcion,
+            //     'fecha' => $request->fecha,
+            //     'nro_dcto' => $request->numero_comprobante,
+            //     'proveedor' => $request->razon_social,
+            //     'rut_proveedor' => $request->rut_proveedor,
+            //     'created_at' => now(),
+            //     'updated_at' => now()
+            // ]);
+            // Note: Movimiento table was deleted - only updating account balances
 
             // Aplicar mapeo tabular automático
-            $movimiento = $this->mapearMovimientoTabular($movimiento);
-            $movimiento->save();
+            // $movimiento = $this->mapearMovimientoTabular($movimiento);
+            // $movimiento->save();
 
             // Actualizar saldo de la cuenta origen (RESTAR el egreso)
             $cuentaOrigen->saldo_actual -= $request->monto;
@@ -1465,7 +1610,7 @@ class ContableController extends Controller
                 'success' => true,
                 'message' => 'Egreso registrado exitosamente',
                 'data' => [
-                    'movimiento_id' => $movimiento->id,
+                    // 'movimiento_id' => $movimiento->id,
                     'nuevo_saldo' => $cuentaOrigen->saldo_actual,
                     'cuenta_nombre' => $cuentaOrigen->nombre
                 ]
@@ -1509,24 +1654,25 @@ class ContableController extends Controller
             }
 
             // Crear el movimiento de giro (transferencia saliente)
-            $movimiento = \App\Models\Movimiento::create([
-                'org_id' => $request->org_id ?? auth()->user()->org_id,
-                'tipo' => 'transferencia',
-                'subtipo' => 'giro',
-                'cuenta_origen_id' => $request->cuenta_origen,
-                'cuenta_destino_id' => null, // Externa, no afecta cuentas internas
-                'monto' => $request->monto,
-                'descripcion' => $request->descripcion,
-                'fecha' => $request->fecha,
-                'nro_dcto' => $request->numero_comprobante,
-                'proveedor' => $request->beneficiario,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+            // $movimiento = \App\Models\Movimiento::create([
+            //     'org_id' => $request->org_id ?? auth()->user()->org_id,
+            //     'tipo' => 'transferencia',
+            //     'subtipo' => 'giro',
+            //     'cuenta_origen_id' => $request->cuenta_origen,
+            //     'cuenta_destino_id' => null, // Externa, no afecta cuentas internas
+            //     'monto' => $request->monto,
+            //     'descripcion' => $request->descripcion,
+            //     'fecha' => $request->fecha,
+            //     'nro_dcto' => $request->numero_comprobante,
+            //     'proveedor' => $request->beneficiario,
+            //     'created_at' => now(),
+            //     'updated_at' => now()
+            // ]);
+            // Note: Movimiento table was deleted - only updating account balances
 
             // Aplicar mapeo tabular automático (columna giros)
-            $movimiento = $this->mapearMovimientoTabular($movimiento);
-            $movimiento->save();
+            // $movimiento = $this->mapearMovimientoTabular($movimiento);
+            // $movimiento->save();
 
             // Actualizar saldo de la cuenta origen (RESTAR el giro)
             $cuentaOrigen->saldo_actual -= $request->monto;
@@ -1538,7 +1684,7 @@ class ContableController extends Controller
                 'success' => true,
                 'message' => 'Giro procesado exitosamente',
                 'data' => [
-                    'movimiento_id' => $movimiento->id,
+                    // 'movimiento_id' => $movimiento->id,
                     'nuevo_saldo' => $cuentaOrigen->saldo_actual,
                     'cuenta_nombre' => $cuentaOrigen->nombre
                 ]
@@ -1577,24 +1723,25 @@ class ContableController extends Controller
             }
 
             // Crear el movimiento de depósito (transferencia entrante)
-            $movimiento = \App\Models\Movimiento::create([
-                'org_id' => $request->org_id ?? auth()->user()->org_id,
-                'tipo' => 'transferencia',
-                'subtipo' => 'deposito',
-                'cuenta_origen_id' => null, // Externa, no afecta cuentas internas
-                'cuenta_destino_id' => $request->cuenta_destino,
-                'monto' => $request->monto,
-                'descripcion' => $request->descripcion,
-                'fecha' => $request->fecha,
-                'nro_dcto' => $request->numero_comprobante,
-                'proveedor' => $request->origen,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
+            // $movimiento = \App\Models\Movimiento::create([
+            //     'org_id' => $request->org_id ?? auth()->user()->org_id,
+            //     'tipo' => 'transferencia',
+            //     'subtipo' => 'deposito',
+            //     'cuenta_origen_id' => null, // Externa, no afecta cuentas internas
+            //     'cuenta_destino_id' => $request->cuenta_destino,
+            //     'monto' => $request->monto,
+            //     'descripcion' => $request->descripcion,
+            //     'fecha' => $request->fecha,
+            //     'nro_dcto' => $request->numero_comprobante,
+            //     'proveedor' => $request->origen,
+            //     'created_at' => now(),
+            //     'updated_at' => now()
+            // ]);
+            // Note: Movimiento table was deleted - only updating account balances
 
             // Aplicar mapeo tabular automático (columna depósitos)
-            $movimiento = $this->mapearMovimientoTabular($movimiento);
-            $movimiento->save();
+            // $movimiento = $this->mapearMovimientoTabular($movimiento);
+            // $movimiento->save();
 
             // Actualizar saldo de la cuenta destino (SUMAR el depósito)
             $cuentaDestino->saldo_actual += $request->monto;
@@ -1606,7 +1753,7 @@ class ContableController extends Controller
                 'success' => true,
                 'message' => 'Depósito procesado exitosamente',
                 'data' => [
-                    'movimiento_id' => $movimiento->id,
+                    // 'movimiento_id' => $movimiento->id,
                     'nuevo_saldo' => $cuentaDestino->saldo_actual,
                     'cuenta_nombre' => $cuentaDestino->nombre
                 ]

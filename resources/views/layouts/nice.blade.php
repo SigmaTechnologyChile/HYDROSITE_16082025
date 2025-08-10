@@ -18,7 +18,7 @@
 
 
 
-    <title>{{ $title ?? 'Módulo Contable' }} - {{ config('app.name', 'HydroSite') }}</title>
+    <title>@yield('title', 'HydroSite') - {{ config('app.name', 'HydroSite') }}</title>
 
 
 
@@ -539,9 +539,7 @@
     <aside id="sidebar" class="sidebar d-print-none">
 
         @php
-            // Definir variables por defecto
-            $active = $active ?? '';
-            
+
             $planId = Auth::user()->plan_id;
 
             $esencial = in_array($planId, [0]);
@@ -577,7 +575,7 @@
                     <li class="nav-item">
 
                         <a href="{{ route('orgs.dashboard', ['id' => auth()->user()->org_id]) }}"
-                            class="nav-link {{ $active == 'orgs.dashboard' ? '' : 'collapsed' }}">
+                            class="nav-link {{ (isset($active) && $active == 'orgs.dashboard') ? '' : 'collapsed' }}">
 
                             <i class="bi bi-speedometer2" style="color: orange;"></i><span>Dashboard</span>
 
@@ -937,17 +935,6 @@
 
                         <ul id="contable-nav" class="nav-content collapse {{ $contableActive ? 'show' : '' }}"
                             data-bs-parent="#sidebar-nav">
-
-                            <li>
-
-                                <a href="{{ route('orgs.libro.caja', ['id' => auth()->user()->org_id]) }}"
-                                    class="{{ $active == 'orgs.libro.caja' ? 'active' : '' }}">
-
-                                    <i class="bi bi-circle"></i><span>Libro Caja</span>
-
-                                </a>
-
-                            </li>
 
                             <li>
                                 <a href="{{ route('cuentas_iniciales.show', ['id' => auth()->user()->org_id]) }}" 
@@ -1543,16 +1530,7 @@
                         <ul id="contable-nav" class="nav-content collapse {{ $contableActive ? 'show' : '' }}"
                             data-bs-parent="#sidebar-nav">
 
-                            <li>
 
-                                <a href="{{ route('orgs.libro.caja', ['id' => auth()->user()->org_id]) }}"
-                                    class="{{ $active == 'orgs.libro.caja' ? 'active' : '' }}">
-
-                                    <i class="bi bi-circle"></i><span>Libro Caja</span>
-
-                                </a>
-
-                            </li>
 
 
 

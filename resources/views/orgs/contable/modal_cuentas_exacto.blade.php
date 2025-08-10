@@ -1,4 +1,4 @@
-@extends('layouts.nice')
+@extends('layouts.nice', ['active' => 'modal_cuentas_exacto'])
 
 {{-- Incluir estilos modernos del módulo contable --}}
 @include('orgs.contable.partials.contable-styles')

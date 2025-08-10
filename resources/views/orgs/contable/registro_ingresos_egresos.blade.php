@@ -4,6 +4,12 @@
 @include('orgs.contable.partials.contable-styles')
 
 @section('content')
+{{-- ALERTA: Módulo de movimientos deshabilitado --}}
+<div class="alert alert-info" role="alert">
+    <i class="bi bi-info-circle"></i>
+    <strong>Información:</strong> El módulo de movimientos está temporalmente deshabilitado.
+    Las funcionalidades de cuentas y balances básicos siguen disponibles.
+</div>
 <div class="contable-container">
     <!-- Breadcrumbs modernos -->
     <nav class="contable-breadcrumb">

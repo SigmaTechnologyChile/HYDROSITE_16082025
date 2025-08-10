@@ -1,4 +1,4 @@
-@extends('layouts.nice')
+@extends('layouts.nice', ['active' => 'giros_depositos'])
 
 @section('title', 'Giros y Depósitos')
 
@@ -464,6 +464,12 @@
 </style>
 
 @section('content')
+{{-- ALERTA: Módulo de movimientos deshabilitado --}}
+<div class="alert alert-info" role="alert">
+    <i class="bi bi-info-circle"></i>
+    <strong>Información:</strong> El módulo de movimientos está temporalmente deshabilitado.
+    Las funcionalidades de cuentas y balances básicos siguen disponibles.
+</div>
 <div class="contable-container">
   <div class="balance-section">
     <!-- Header de la sección estilo balance -->
@@ -670,7 +676,7 @@
             <tr>
               <td colspan="6" class="text-center text-secondary" style="padding: 30px;">
                 <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 15px; opacity: 0.5;"></i>
-                No hay movimientos registrados
+                Módulo de movimientos temporalmente deshabilitado
               </td>
             </tr>
           </tbody>
@@ -771,7 +777,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tr>
                     <td colspan="6" class="text-center text-secondary" style="padding: 30px;">
                         <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 15px; opacity: 0.5;"></i>
-                        No hay movimientos registrados
+                        Módulo de movimientos temporalmente deshabilitado
                     </td>
                 </tr>
             `;

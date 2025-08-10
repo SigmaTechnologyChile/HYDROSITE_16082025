@@ -1,4 +1,4 @@
-@extends('layouts.nice')
+@extends('layouts.nice', ['active' => 'informe_por_rubro'])
 
 @section('title', 'Informe por Rubro')
 
@@ -482,6 +482,12 @@
 </style>
 
 @section('content')
+{{-- ALERTA: Módulo de movimientos deshabilitado --}}
+<div class="alert alert-info" role="alert">
+    <i class="bi bi-info-circle"></i>
+    <strong>Información:</strong> El módulo de movimientos está temporalmente deshabilitado.
+    Las funcionalidades de cuentas y balances básicos siguen disponibles.
+</div>
 <div class="contable-container">
   <div class="balance-section">
     <!-- Header de la sección estilo balance -->
