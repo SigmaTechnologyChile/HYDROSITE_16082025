@@ -8,5 +8,5 @@ class Banco extends Model
 {
     protected $table = 'bancos';
     public $timestamps = false;
-    protected $fillable = ['nombre'];
+    protected $fillable = ['nombre', 'codigo'];
 }

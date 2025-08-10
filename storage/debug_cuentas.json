@@ -1,0 +1,21 @@
+{
+    "timestamp": "2025-08-10T03:33:35.881803Z",
+    "orgId": "864",
+    "cuentas_dinamicas_raw": "[{\"tipo\":\"cuenta_corriente_2\",\"saldo\":\"5000000\",\"banco\":\"null\",\"numero\":\"7373737373\",\"responsable\":\"hydrosite\"}]",
+    "has_cuentas_dinamicas": true,
+    "all_request": {
+        "orgId": "864",
+        "_token": "IczjqvvNYdzH1UY8GWSS6mBvfXWA9ZXeYyzxjQoM",
+        "saldo_caja_general": "2000000",
+        "saldo_cta_corriente_1": "3000000",
+        "banco_cta_corriente_1": null,
+        "numero_cta_corriente_1": "54545454545454",
+        "saldo_cuenta_ahorro": "7000000",
+        "banco_cuenta_ahorro": null,
+        "numero_cuenta_ahorro": "6262626262",
+        "responsable_caja_general": "hydrosite",
+        "responsable_cta_corriente_1": "hydrosite",
+        "responsable_cuenta_ahorro": "hydrosite",
+        "cuentas_dinamicas": "[{\"tipo\":\"cuenta_corriente_2\",\"saldo\":\"5000000\",\"banco\":\"null\",\"numero\":\"7373737373\",\"responsable\":\"hydrosite\"}]"
+    }
+}

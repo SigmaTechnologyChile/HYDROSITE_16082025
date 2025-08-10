@@ -8,13 +8,13 @@
     
       <nav id="navmenu" class="navmenu">
         <ul>
-            <li><a href="{{route('welcome')}}" @if($active == 'welcome') class="active" @endif>Home</a></li>
-            <li><a href="{{route('abouts')}}"@if($active == 'abouts') class="active" @endif>Sobre HydroSite</a></li>
+            <li><a href="{{route('welcome')}}" @if(($active ?? '') == 'welcome') class="active" @endif>Home</a></li>
+            <li><a href="{{route('abouts')}}"@if(($active ?? '') == 'abouts') class="active" @endif>Sobre HydroSite</a></li>
             <li class="dropdown"><a href="#"><span>Servicio al Cliente</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                 <ul>
-                    <li><a href="{{route('faq')}}"@if($active == 'faq') class="active" @endif>FAQ</a></li>
-                    <li><a href="{{route('contact')}}"@if($active == 'contact') class="active" @endif>Contacto</a></li>
-                    <li><a href="{{route('pricing')}}"@if($active == 'pricing') class="active" @endif>Precios</a></li>
+                    <li><a href="{{route('faq')}}"@if(($active ?? '') == 'faq') class="active" @endif>FAQ</a></li>
+                    <li><a href="{{route('contact')}}"@if(($active ?? '') == 'contact') class="active" @endif>Contacto</a></li>
+                    <li><a href="{{route('pricing')}}"@if(($active ?? '') == 'pricing') class="active" @endif>Precios</a></li>
                 </ul>
             </li>
             @if (Route::has('login'))

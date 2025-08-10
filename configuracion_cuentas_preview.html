@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de Cuentas Iniciales - Preview</title>
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        /* ================================
+           VARIABLES CSS DESIGN SYSTEM
+           ================================ */
+        :root {
+            --primary-color: #2c5282;
+            --secondary-color: #4CAF50;
+            --danger-color: #e53e3e;
+            --success-color: #48bb78;
+            --warning-color: #dd6b20;
+            --info-color: #4299e1;
+            --purple-color: #805ad5;
+            --orange-color: #dd6b20;
+            --light-bg: #f8f9fa;
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --hover-border: #cbd5e0;
+            --focus-border: #4299e1;
+            
+            /* Sombras modernas */
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            
+            /* Radius modernos */
+            --radius-xs: 0.125rem;
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            --radius-full: 9999px;
+            
+            /* Espaciado */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+        }
+
+        /* ================================
+           RESET Y BASE
+           ================================ */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: var(--spacing-xl);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        /* ================================
+           PÁGINA CONTABLE
+           ================================ */
+        .contable-page {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contable-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #4299e1 100%);
+            color: white;
+            padding: var(--spacing-xl);
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .contable-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+            pointer-events: none;
+        }
+
+        .contable-header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .contable-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .contable-title i {
+            font-size: 2.25rem;
+            opacity: 0.95;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .contable-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin: var(--spacing-sm) 0 0 0;
+        }
+
+        .contable-content {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+        }
+
+        .contable-card {
+            padding: var(--spacing-2xl);
+        }
+
+        /* ================================
+           ALERTAS Y NOTIFICACIONES
+           ================================ */
+        .contable-alert {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .contable-alert-icon {
+            flex-shrink: 0;
+        }
+
+        .contable-alert-icon i {
+            font-size: 1.25rem;
+            margin-top: 2px;
+        }
+
+        .contable-alert-warning {
+            background: linear-gradient(135deg, #fff3cd 0%, #fef3cd 100%);
+            border: 1px solid #f4c430;
+            border-left: 4px solid var(--warning-color);
+            color: #8b4513;
+        }
+
+        .contable-alert-warning i {
+            color: var(--warning-color);
+        }
+
+        /* ================================
+           FORMULARIOS MODERNOS
+           ================================ */
+        .contable-form-section {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--spacing-xl);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .contable-form-section:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .contable-form-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .contable-form-header h4 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .contable-form-header h4 i {
+            color: var(--primary-color);
+            font-size: 1.375rem;
+        }
+
+        .contable-form-body {
+            padding: var(--spacing-xl);
+        }
+
+        .contable-form-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-lg);
+        }
+
+        @media (max-width: 1024px) {
+            .contable-form-grid-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .contable-form-grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .contable-form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .contable-form-label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .contable-form-required {
+            color: var(--danger-color);
+            margin-left: var(--spacing-xs);
+        }
+
+        .contable-form-input,
+        .contable-form-select {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            font-size: 16px;
+            color: var(--text-primary);
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .contable-form-input:focus,
+        .contable-form-select:focus {
+            border-color: var(--primary-color);
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(44, 82, 130, 0.15);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .contable-form-input:hover,
+        .contable-form-select:hover {
+            background-color: #fff;
+            border-color: var(--hover-border);
+        }
+
+        .contable-form-input:disabled,
+        .contable-form-select:disabled {
+            background-color: #f1f5f9;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        .contable-form-select {
+            cursor: pointer;
+        }
+
+        /* ================================
+           BOTONES MODERNOS
+           ================================ */
+        .contable-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            padding: 16px 28px;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+        }
+
+        .contable-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .contable-btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #4299e1 100%);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .contable-btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .contable-btn-lg {
+            font-size: 18px;
+            padding: 18px 32px;
+        }
+
+        .contable-form-actions {
+            margin-top: var(--spacing-2xl);
+            text-align: center;
+        }
+
+        /* Margin utilities */
+        .contable-mb-xl {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        /* ================================
+           NOTIFICACIONES
+           ================================ */
+        .contable-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+            min-width: 320px;
+            max-width: 90vw;
+            padding: var(--spacing-xl);
+            background: var(--success-color);
+            color: white;
+            border-radius: var(--radius-lg);
+            font-size: 1.1rem;
+            text-align: center;
+            box-shadow: var(--shadow-2xl);
+            opacity: 0.97;
+            transition: all 0.3s ease;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-md);
+        }
+
+        .contable-notification.error {
+            background: var(--danger-color);
+        }
+
+        .contable-notification.success {
+            background: var(--success-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="contable-page">
+        <div class="contable-header">
+            <div class="contable-header-content">
+                <div class="contable-header-info">
+                    <h1 class="contable-title">
+                        <i class="bi bi-journal-plus"></i>
+                        Configuración de Cuentas Iniciales
+                    </h1>
+                    <p class="contable-subtitle">Configure los saldos iniciales de sus cuentas bancarias</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="contable-content">
+            <div class="contable-card">
+                <form id="cuentasInicialesForm">
+                    <div class="contable-alert contable-alert-warning contable-mb-xl">
+                        <div class="contable-alert-icon">
+                            <i class="bi bi-exclamation-triangle"></i>
+                        </div>
+                        <div class="contable-alert-content">
+                            <strong>Atención:</strong> ¿Está seguro(a) de guardar los cambios? Esta operación solo se podrá realizar una sola vez.
+                        </div>
+                    </div>
+                    
+                    <!-- Sección: Caja General -->
+                    <div class="contable-form-section contable-mb-xl">
+                        <div class="contable-form-header">
+                            <h4>
+                                <i class="bi bi-cash-stack"></i>
+                                Saldo Inicial de Caja General
+                            </h4>
+                        </div>
+                        <div class="contable-form-body">
+                            <div class="contable-form-grid-3">
+                                <div class="contable-form-group">
+                                    <label for="saldo-caja-general" class="contable-form-label">
+                                        <i class="bi bi-currency-dollar"></i>
+                                        Saldo Caja General
+                                    </label>
+                                    <input type="number" id="saldo-caja-general" name="saldo_caja_general" 
+                                           class="contable-form-input" step="0.01" min="0" required>
+                                </div>
+                                
+                                <div class="contable-form-group">
+                                    <label for="banco-caja-general" class="contable-form-label">
+                                        <i class="bi bi-bank"></i>
+                                        Banco
+                                    </label>
+                                    <select id="banco-caja-general" name="banco_caja_general" class="contable-form-select">
+                                        <option value="">Sin banco</option>
+                                        <option value="banco_estado">Banco Estado</option>
+                                        <option value="banco_chile">Banco de Chile</option>
+                                        <option value="banco_bci">BCI</option>
+                                        <option value="banco_santander">Santander</option>
+                                        <option value="banco_itau">Itaú</option>
+                                        <option value="banco_scotiabank">Scotiabank</option>
+                                        <option value="banco_bice">BICE</option>
+                                        <option value="banco_security">Security</option>
+                                        <option value="banco_falabella">Falabella</option>
+                                        <option value="banco_ripley">Ripley</option>
+                                        <option value="banco_consorcio">Consorcio</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="contable-form-group">
+                                    <label for="numero-caja-general" class="contable-form-label">
+                                        <i class="bi bi-credit-card"></i>
+                                        Número de Cuenta
+                                    </label>
+                                    <input type="text" id="numero-caja-general" name="numero_caja_general" 
+                                           class="contable-form-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sección: Cuenta Corriente 1 -->
+                    <div class="contable-form-section contable-mb-xl">
+                        <div class="contable-form-header">
+                            <h4>
+                                <i class="bi bi-bank2"></i>
+                                Cuenta Corriente 1
+                            </h4>
+                        </div>
+                        <div class="contable-form-body">
+                            <div class="contable-form-grid-3">
+                                <div class="contable-form-group">
+                                    <label for="saldo-cta-corriente-1" class="contable-form-label">
+                                        <i class="bi bi-currency-dollar"></i>
+                                        Saldo Cuenta Corriente 1
+                                    </label>
+                                    <input type="number" id="saldo-cta-corriente-1" name="saldo_cta_corriente_1" 
+                                           class="contable-form-input" step="0.01" min="0" required>
+                                </div>
+                                
+                                <div class="contable-form-group">
+                                    <label for="banco-cta-corriente-1" class="contable-form-label">
+                                        <i class="bi bi-bank"></i>
+                                        Banco
+                                    </label>
+                                    <select id="banco-cta-corriente-1" name="banco_cta_corriente_1" class="contable-form-select">
+                                        <option value="">Sin banco</option>
+                                        <option value="banco_estado">Banco Estado</option>
+                                        <option value="banco_chile">Banco de Chile</option>
+                                        <option value="banco_bci">BCI</option>
+                                        <option value="banco_santander">Santander</option>
+                                        <option value="banco_itau">Itaú</option>
+                                        <option value="banco_scotiabank">Scotiabank</option>
+                                        <option value="banco_bice">BICE</option>
+                                        <option value="banco_security">Security</option>
+                                        <option value="banco_falabella">Falabella</option>
+                                        <option value="banco_ripley">Ripley</option>
+                                        <option value="banco_consorcio">Consorcio</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="contable-form-group">
+                                    <label for="numero-cta-corriente-1" class="contable-form-label">
+                                        <i class="bi bi-credit-card"></i>
+                                        Número de Cuenta
+                                    </label>
+                                    <input type="text" id="numero-cta-corriente-1" name="numero_cta_corriente_1" 
+                                           class="contable-form-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sección: Cuenta Corriente 2 -->
+                    <div class="contable-form-section contable-mb-xl">
+                        <div class="contable-form-header">
+                            <h4>
+                                <i class="bi bi-bank2"></i>
+                                Cuenta Corriente 2
+                            </h4>
+                        </div>
+                        <div class="contable-form-body">
+                            <div class="contable-form-grid-3">
+                                <div class="contable-form-group">
+                                    <label for="saldo-cta-corriente-2" class="contable-form-label">
+                                        <i class="bi bi-currency-dollar"></i>
+                                        Saldo Cuenta Corriente 2
+                                    </label>
+                                    <input type="number" id="saldo-cta-corriente-2" name="saldo_cta_corriente_2" 
+                                           class="contable-form-input" step="0.01" min="0" required>
+                                </div>
+                                
+                                <div class="contable-form-group">
+                                    <label for="banco-cta-corriente-2" class="contable-form-label">
+                                        <i class="bi bi-bank"></i>
+                                        Banco
+                                    </label>
+                                    <select id="banco-cta-corriente-2" name="banco_cta_corriente_2" class="contable-form-select">
+                                        <option value="">Sin banco</option>
+                                        <option value="banco_estado">Banco Estado</option>
+                                        <option value="banco_chile">Banco de Chile</option>
+                                        <option value="banco_bci">BCI</option>
+                                        <option value="banco_santander">Santander</option>
+                                        <option value="banco_itau">Itaú</option>
+                                        <option value="banco_scotiabank">Scotiabank</option>
+                                        <option value="banco_bice">BICE</option>
+                                        <option value="banco_security">Security</option>
+                                        <option value="banco_falabella">Falabella</option>
+                                        <option value="banco_ripley">Ripley</option>
+                                        <option value="banco_consorcio">Consorcio</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="contable-form-group">
+                                    <label for="numero-cta-corriente-2" class="contable-form-label">
+                                        <i class="bi bi-credit-card"></i>
+                                        Número de Cuenta
+                                    </label>
+                                    <input type="text" id="numero-cta-corriente-2" name="numero_cta_corriente_2" 
+                                           class="contable-form-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sección: Cuenta de Ahorro -->
+                    <div class="contable-form-section contable-mb-xl">
+                        <div class="contable-form-header">
+                            <h4>
+                                <i class="bi bi-piggy-bank"></i>
+                                Cuenta de Ahorro
+                            </h4>
+                        </div>
+                        <div class="contable-form-body">
+                            <div class="contable-form-grid-3">
+                                <div class="contable-form-group">
+                                    <label for="saldo-cuenta-ahorro" class="contable-form-label">
+                                        <i class="bi bi-currency-dollar"></i>
+                                        Saldo Cuenta de Ahorro
+                                    </label>
+                                    <input type="number" id="saldo-cuenta-ahorro" name="saldo_cuenta_ahorro" 
+                                           class="contable-form-input" step="0.01" min="0" required>
+                                </div>
+                                
+                                <div class="contable-form-group">
+                                    <label for="banco-cuenta-ahorro" class="contable-form-label">
+                                        <i class="bi bi-bank"></i>
+                                        Banco
+                                    </label>
+                                    <select id="banco-cuenta-ahorro" name="banco_cuenta_ahorro" class="contable-form-select">
+                                        <option value="">Sin banco</option>
+                                        <option value="banco_estado">Banco Estado</option>
+                                        <option value="banco_chile">Banco de Chile</option>
+                                        <option value="banco_bci">BCI</option>
+                                        <option value="banco_santander">Santander</option>
+                                        <option value="banco_itau">Itaú</option>
+                                        <option value="banco_scotiabank">Scotiabank</option>
+                                        <option value="banco_bice">BICE</option>
+                                        <option value="banco_security">Security</option>
+                                        <option value="banco_falabella">Falabella</option>
+                                        <option value="banco_ripley">Ripley</option>
+                                        <option value="banco_consorcio">Consorcio</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="contable-form-group">
+                                    <label for="numero-cuenta-ahorro" class="contable-form-label">
+                                        <i class="bi bi-credit-card"></i>
+                                        Número de Cuenta
+                                    </label>
+                                    <input type="text" id="numero-cuenta-ahorro" name="numero_cuenta_ahorro" 
+                                           class="contable-form-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sección: Responsable -->
+                    <div class="contable-form-section contable-mb-xl">
+                        <div class="contable-form-header">
+                            <h4>
+                                <i class="bi bi-person-check"></i>
+                                Información del Responsable
+                            </h4>
+                        </div>
+                        <div class="contable-form-body">
+                            <div class="contable-form-group">
+                                <label for="responsable" class="contable-form-label">
+                                    <i class="bi bi-person"></i>
+                                    Nombre Responsable
+                                    <span class="contable-form-required">*</span>
+                                </label>
+                                <input type="text" id="responsable" name="responsable" 
+                                       class="contable-form-input" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botón de envío -->
+                    <div class="contable-form-actions">
+                        <button type="submit" class="contable-btn contable-btn-primary contable-btn-lg">
+                            <i class="bi bi-save"></i>
+                            Guardar Cuentas Iniciales
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Notification div -->
+        <div id="notification" class="contable-notification"></div>
+    </div>
+
+    <script>
+        // Variables globales
+        let saldosCuentas = {
+            caja_general: 0,
+            cuenta_corriente_1: 0,
+            cuenta_corriente_2: 0,
+            cuenta_ahorro: 0
+        };
+
+        let accountDetails = {
+            caja_general: { banco: '', numero: '' },
+            cuenta_corriente_1: { banco: '', numero: '' },
+            cuenta_corriente_2: { banco: '', numero: '' },
+            cuenta_ahorro: { banco: '', numero: '' }
+        };
+
+        let initialAccountsSet = false;
+
+        // Función para mostrar notificaciones
+        function mostrarNotificacion(mensaje, tipo = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = mensaje;
+            notification.className = `contable-notification ${tipo}`;
+            notification.style.display = 'flex';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Función para guardar detalles de cuentas
+        function guardarDetallesCuentas() {
+            localStorage.setItem('accountDetails', JSON.stringify(accountDetails));
+        }
+
+        // Función para cargar datos guardados
+        function cargarDatosGuardados() {
+            const savedSaldos = localStorage.getItem('saldosCuentas');
+            const savedDetails = localStorage.getItem('accountDetails');
+            const savedInitial = localStorage.getItem('initialAccountsSet');
+
+            if (savedSaldos) {
+                saldosCuentas = JSON.parse(savedSaldos);
+            }
+
+            if (savedDetails) {
+                accountDetails = JSON.parse(savedDetails);
+            }
+
+            if (savedInitial === 'true') {
+                initialAccountsSet = true;
+                // Deshabilitar formulario si ya fue configurado
+                const inputs = document.querySelectorAll('#cuentasInicialesForm input, #cuentasInicialesForm select');
+                inputs.forEach(input => {
+                    input.disabled = true;
+                });
+                
+                // Cargar valores en el formulario
+                document.getElementById('saldo-caja-general').value = saldosCuentas.caja_general;
+                document.getElementById('saldo-cta-corriente-1').value = saldosCuentas.cuenta_corriente_1;
+                document.getElementById('saldo-cta-corriente-2').value = saldosCuentas.cuenta_corriente_2;
+                document.getElementById('saldo-cuenta-ahorro').value = saldosCuentas.cuenta_ahorro;
+
+                // Cargar detalles de cuentas
+                document.getElementById('banco-caja-general').value = accountDetails.caja_general.banco;
+                document.getElementById('numero-caja-general').value = accountDetails.caja_general.numero;
+                document.getElementById('banco-cta-corriente-1').value = accountDetails.cuenta_corriente_1.banco;
+                document.getElementById('numero-cta-corriente-1').value = accountDetails.cuenta_corriente_1.numero;
+                document.getElementById('banco-cta-corriente-2').value = accountDetails.cuenta_corriente_2.banco;
+                document.getElementById('numero-cta-corriente-2').value = accountDetails.cuenta_corriente_2.numero;
+                document.getElementById('banco-cuenta-ahorro').value = accountDetails.cuenta_ahorro.banco;
+                document.getElementById('numero-cuenta-ahorro').value = accountDetails.cuenta_ahorro.numero;
+            }
+        }
+
+        // Función para configurar cuentas iniciales
+        function configurarCuentasIniciales(e) {
+            e.preventDefault();
+            
+            if (!confirm('¿Está seguro(a) de guardar los cambios? Esta operación solo se podrá realizar una sola vez.')) {
+                return;
+            }
+            
+            // Obtener valores del formulario
+            saldosCuentas.caja_general = parseFloat(document.getElementById('saldo-caja-general').value) || 0;
+            saldosCuentas.cuenta_corriente_1 = parseFloat(document.getElementById('saldo-cta-corriente-1').value) || 0;
+            saldosCuentas.cuenta_corriente_2 = parseFloat(document.getElementById('saldo-cta-corriente-2').value) || 0;
+            saldosCuentas.cuenta_ahorro = parseFloat(document.getElementById('saldo-cuenta-ahorro').value) || 0;
+            
+            // Guardar detalles de cuentas
+            accountDetails.caja_general = {
+                banco: document.getElementById('banco-caja-general').value,
+                numero: document.getElementById('numero-caja-general').value
+            };
+            
+            accountDetails.cuenta_corriente_1 = {
+                banco: document.getElementById('banco-cta-corriente-1').value,
+                numero: document.getElementById('numero-cta-corriente-1').value
+            };
+            
+            accountDetails.cuenta_corriente_2 = {
+                banco: document.getElementById('banco-cta-corriente-2').value,
+                numero: document.getElementById('numero-cta-corriente-2').value
+            };
+            
+            accountDetails.cuenta_ahorro = {
+                banco: document.getElementById('banco-cuenta-ahorro').value,
+                numero: document.getElementById('numero-cuenta-ahorro').value
+            };
+            
+            // Guardar en localStorage
+            localStorage.setItem('saldosCuentas', JSON.stringify(saldosCuentas));
+            guardarDetallesCuentas();
+            localStorage.setItem('initialAccountsSet', 'true');
+            initialAccountsSet = true;
+            
+            // Bloquear formulario
+            const inputs = document.querySelectorAll('#cuentasInicialesForm input, #cuentasInicialesForm select');
+            inputs.forEach(input => {
+                input.disabled = true;
+            });
+            
+            mostrarNotificacion('Cuentas iniciales guardadas correctamente', 'success');
+        }
+
+        // Inicializar cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarDatosGuardados();
+            
+            // Event listener para el formulario
+            document.getElementById('cuentasInicialesForm').addEventListener('submit', configurarCuentasIniciales);
+        });
+    </script>
+</body>
+</html>

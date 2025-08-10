@@ -154,7 +154,7 @@
     }
 
     .modal-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
       color: white;
       padding: 20px 30px;
       border-radius: 12px 12px 0 0;
@@ -211,13 +211,13 @@
     .modal input:focus,
     .modal select:focus,
     .modal textarea:focus {
-      border-color: #667eea;
+      border-color: #28a745;
       outline: none;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
     }
 
     .submit-btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
       color: white;
       border: none;
       padding: 12px 24px;
@@ -235,6 +235,27 @@
     .submit-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Estilos específicos para modal de egresos */
+    .modal-header-egresos {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+    }
+
+    .submit-btn-egresos {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+    }
+
+    .submit-btn-egresos:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3) !important;
+    }
+
+    #egresosModal .modal input:focus,
+    #egresosModal .modal select:focus,
+    #egresosModal .modal textarea:focus {
+      border-color: #dc3545 !important;
+      box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
     }
 
     @media (max-width: 768px) {
@@ -269,28 +290,22 @@
           <input type="date" id="fecha-ingresos" name="fecha" required style="width: 100%;">
 
           <label for="nro-dcto-ingresos">N° Comprobante</label>
-          <input type="text" id="nro-dcto-ingresos" name="nro_dcto" placeholder="Ingrese número de comprobante" required style="width: 100%;">
+          <input type="text" id="nro-dcto-ingresos" name="nro_dcto" placeholder="Ej: ING-0001" required style="width: 100%;">
 
           <label for="categoria-ingresos">Categoría de Ingreso</label>
           <select id="categoria-ingresos" name="categoria" required style="width: 100%;">
             <option value="">-- Selecciona una categoría --</option>
-            <option value="venta_agua">Venta de Agua (Total Consumo)</option>
-            <option value="cuotas_incorporacion">Cuotas de Incorporación (Cuotas de Incorporación)</option>
-            <option value="venta_medidores">Venta de Medidores (Otros Ingresos)</option>
-            <option value="trabajos_domicilio">Trabajos en Domicilio (Otros Ingresos)</option>
-            <option value="subsidios">Subsidios (Otros Ingresos)</option>
-            <option value="otros_aportes">Otros Aportes (Otros Ingresos)</option>
-            <option value="multas_inasistencia">Multas Inasistencia (Otros Ingresos)</option>
-            <option value="otras_multas">Otras Multas (Otros Ingresos)</option>
+            @foreach($categoriasIngresos as $categoria)
+              <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+            @endforeach
           </select>
 
           <label for="cuenta-destino">Cuenta Destino</label>
           <select id="cuenta-destino" name="cuenta_destino" required style="width: 100%;">
             <option value="">-- Selecciona una cuenta --</option>
-            <option value="caja_general">Caja General</option>
-            <option value="cuenta_corriente_1">Cuenta Corriente 1</option>
-            <option value="cuenta_corriente_2">Cuenta Corriente 2</option>
-            <option value="cuenta_ahorro">Cuenta de Ahorro</option>
+            @foreach($configuracionesIniciales as $configuracion)
+              <option value="{{ $configuracion->cuenta_id }}">{{ $configuracion->banco }}</option>
+            @endforeach
           </select>
         </div>
 
@@ -317,7 +332,7 @@
 <!-- Modal de Egresos -->
 <div id="egresosModal" class="modal">
   <div class="modal-content">
-    <div class="modal-header">
+    <div class="modal-header modal-header-egresos">
       <h2><i class="bi bi-credit-card"></i> Registro de Egresos</h2>
       <button class="modal-close" id="closeEgresosModal">Cerrar</button>
     </div>
@@ -329,29 +344,22 @@
           <input type="date" id="fecha-egresos" name="fecha" required style="width: 100%;">
 
           <label for="nro-dcto-egresos">N° Boleta/Factura</label>
-          <input type="text" id="nro-dcto-egresos" name="nro_dcto" placeholder="Ingrese número de comprobante" required style="width: 100%;">
+          <input type="text" id="nro-dcto-egresos" name="nro_dcto" placeholder="Ingrese número de documento" required style="width: 100%;">
 
           <label for="categoria-egresos">Categoría de Egreso</label>
           <select id="categoria-egresos" name="categoria" required style="width: 100%;">
             <option value="">-- Selecciona una categoría --</option>
-            <option value="energia_electrica">Energía Eléctrica ->(Gastos de Operación)</option>
-            <option value="sueldos">Sueldos y Leyes Sociales ->(Gastos de Operación)</option>
-            <option value="otras_cuentas">Otras Ctas. (Agua, Int. Cel.) ->(Gastos de Operación)</option>
-            <option value="mantencion">Mantención y reparaciones Instalaciones ->(Gastos de Mantención)</option>
-            <option value="insumos_oficina">Insumos y Materiales (Oficina) ->(Gastos de Administración)</option>
-            <option value="materiales_red">Materiales e Insumos (Red) ->(Gastos de Mejoramiento)</option>
-            <option value="viaticos">Viáticos / Seguros / Movilización ->(Otros Gastos)</option>
-            <option value="trabajos_domicilio">Gastos por Trabajos en domicilio ->(Gastos de Mantención)</option>
-            <option value="mejoramiento">Mejoramiento / Inversiones ->(Gastos de Mejoramiento)</option>
+            @foreach($categoriasEgresos as $categoria)
+              <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+            @endforeach
           </select>
 
           <label for="cuenta-origen">Cuenta Origen</label>
           <select id="cuenta-origen" name="cuenta_origen" required style="width: 100%;">
             <option value="">-- Selecciona una cuenta --</option>
-            <option value="caja_general">Caja General</option>
-            <option value="cuenta_corriente_1">Cuenta Corriente 1</option>
-            <option value="cuenta_corriente_2">Cuenta Corriente 2</option>
-            <option value="cuenta_ahorro">Cuenta de Ahorro</option>
+            @foreach($configuracionesIniciales as $configuracion)
+              <option value="{{ $configuracion->cuenta_id }}">{{ $configuracion->banco }}</option>
+            @endforeach
           </select>
         </div>
 
@@ -373,7 +381,7 @@
       </div>
 
       <div style="grid-column: span 2; margin-top: 20px; display: flex; gap: 15px;">
-        <button type="submit" class="submit-btn" style="flex: 1;">
+        <button type="submit" class="submit-btn submit-btn-egresos" style="flex: 1;">
           <i class="bi bi-save"></i> Registrar Egreso
         </button>
       </div>
@@ -388,7 +396,7 @@
 
     // Funciones auxiliares
     function generarNumeroComprobante(tipo) {
-      const prefijo = tipo === 'ingreso' ? 'I-' : 'E-';
+      const prefijo = tipo === 'ingreso' ? 'ING-' : 'EGR-';
       const numero = prefijo + comprobanteCounter.toString().padStart(4, '0');
       comprobanteCounter++;
       localStorage.setItem('comprobanteCounter', comprobanteCounter.toString());
@@ -434,8 +442,9 @@
       document.getElementById('egresosModal').classList.add('show');
       const nroDctoInput = document.getElementById('nro-dcto-egresos');
       if (nroDctoInput) {
-        nroDctoInput.value = generarNumeroComprobante('egreso');
-        nroDctoInput.readOnly = true;
+        nroDctoInput.value = ''; // Limpiar el campo
+        nroDctoInput.readOnly = false; // Permitir edición manual
+        nroDctoInput.focus(); // Enfocar el campo para facilitar la entrada
       }
       const fechaInput = document.getElementById('fecha-egresos');
       if (fechaInput) {
@@ -460,80 +469,122 @@
       e.preventDefault();
       
       const formData = new FormData(this);
-      const data = Object.fromEntries(formData);
+      const data = {
+        org_id: {{ $orgId }},
+        fecha: formData.get('fecha'),
+        numero_comprobante: formData.get('nro_dcto'),
+        categoria: formData.get('categoria'),
+        cuenta_destino: formData.get('cuenta_destino'),
+        descripcion: formData.get('descripcion'),
+        monto: parseFloat(formData.get('monto'))
+      };
       
       // Validar datos
-      if (!data.fecha || !data.nro_dcto || !data.categoria || !data.cuenta_destino || !data.descripcion || !data.monto) {
+      if (!data.fecha || !data.numero_comprobante || !data.categoria || !data.cuenta_destino || !data.descripcion || !data.monto) {
         showNotification('Por favor complete todos los campos requeridos', 'error');
         return;
       }
 
-      if (parseFloat(data.monto) <= 0) {
+      if (data.monto <= 0) {
         showNotification('El monto debe ser mayor a 0', 'error');
         return;
       }
 
-      // Guardar en localStorage
-      let movimientos = JSON.parse(localStorage.getItem('movimientos')) || [];
-      const nuevoMovimiento = {
-        id: Date.now(),
-        tipo: 'ingreso',
-        fecha: data.fecha,
-        comprobante: data.nro_dcto,
-        categoria: data.categoria,
-        cuenta: data.cuenta_destino,
-        descripcion: data.descripcion,
-        monto: parseFloat(data.monto),
-        timestamp: new Date().toISOString()
-      };
-
-      movimientos.push(nuevoMovimiento);
-      localStorage.setItem('movimientos', JSON.stringify(movimientos));
-
-      showNotification('Ingreso registrado exitosamente');
-      document.getElementById('ingresosModal').classList.remove('show');
-      this.reset();
+      // Enviar al servidor
+      fetch('{{ route("procesar_ingreso") }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.success) {
+          showNotification(
+            `✅ ${result.message}\n💰 Nuevo saldo de ${result.data.cuenta_nombre}: $${result.data.nuevo_saldo.toLocaleString()}`,
+            'success'
+          );
+          
+          // Limpiar formulario y cerrar modal
+          document.getElementById('ingresosForm').reset();
+          document.getElementById('ingresosModal').classList.remove('show');
+          
+          // Recargar página para mostrar cambios
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          showNotification('❌ Error: ' + result.message, 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showNotification('❌ Error de conexión: ' + error.message, 'error');
+      });
     });
 
     document.getElementById('egresosForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
       const formData = new FormData(this);
-      const data = Object.fromEntries(formData);
+      const data = {
+        org_id: {{ $orgId }},
+        fecha: formData.get('fecha'),
+        numero_comprobante: formData.get('nro_dcto'),
+        categoria: formData.get('categoria'),
+        cuenta_origen: formData.get('cuenta_origen'),
+        descripcion: formData.get('descripcion'),
+        monto: parseFloat(formData.get('monto')),
+        razon_social: formData.get('razon_social'),
+        rut_proveedor: formData.get('rut_proveedor')
+      };
       
       // Validar datos
-      if (!data.fecha || !data.nro_dcto || !data.categoria || !data.cuenta_origen || !data.razon_social || !data.descripcion || !data.monto) {
+      if (!data.fecha || !data.numero_comprobante || !data.categoria || !data.cuenta_origen || !data.descripcion || !data.monto) {
         showNotification('Por favor complete todos los campos requeridos', 'error');
         return;
       }
 
-      if (parseFloat(data.monto) <= 0) {
+      if (data.monto <= 0) {
         showNotification('El monto debe ser mayor a 0', 'error');
         return;
       }
 
-      // Guardar en localStorage
-      let movimientos = JSON.parse(localStorage.getItem('movimientos')) || [];
-      const nuevoMovimiento = {
-        id: Date.now(),
-        tipo: 'egreso',
-        fecha: data.fecha,
-        comprobante: data.nro_dcto,
-        categoria: data.categoria,
-        cuenta: data.cuenta_origen,
-        proveedor: data.razon_social,
-        rut_proveedor: data.rut_proveedor,
-        descripcion: data.descripcion,
-        monto: parseFloat(data.monto),
-        timestamp: new Date().toISOString()
-      };
-
-      movimientos.push(nuevoMovimiento);
-      localStorage.setItem('movimientos', JSON.stringify(movimientos));
-
-      showNotification('Egreso registrado exitosamente');
-      document.getElementById('egresosModal').classList.remove('show');
-      this.reset();
+      // Enviar al servidor
+      fetch('{{ route("procesar_egreso") }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.success) {
+          showNotification(
+            `✅ ${result.message}\n💰 Nuevo saldo de ${result.data.cuenta_nombre}: $${result.data.nuevo_saldo.toLocaleString()}`,
+            'success'
+          );
+          
+          // Limpiar formulario y cerrar modal
+          document.getElementById('egresosForm').reset();
+          document.getElementById('egresosModal').classList.remove('show');
+          
+          // Recargar página para mostrar cambios
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          showNotification('❌ Error: ' + result.message, 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showNotification('❌ Error de conexión: ' + error.message, 'error');
+      });
     });
 
     // Cerrar modal al hacer clic fuera
@@ -548,6 +599,60 @@
         egresosModal.classList.remove('show');
       }
     });
+
+    // Función para verificar saldo de la cuenta
+    function verificarSaldoCuenta(cuentaId, monto) {
+      if (!cuentaId || !monto || monto <= 0) return;
+      
+      fetch('{{ route("verificar_saldo_cuenta") }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+          cuenta_id: cuentaId,
+          monto: parseFloat(monto)
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success && data.saldo_insuficiente) {
+          showNotification(
+            `⚠️ SALDO INSUFICIENTE: La cuenta "${data.cuenta_nombre}" tiene un saldo de $${data.saldo_actual.toLocaleString()}. ` +
+            `El egreso de $${data.monto_egreso.toLocaleString()} excede el saldo disponible. ` +
+            `Saldo resultante sería: $${data.saldo_resultante.toLocaleString()}`, 
+            'warning'
+          );
+        }
+      })
+      .catch(error => {
+        console.error('Error al verificar saldo:', error);
+      });
+    }
+
+    // Event listeners para verificación de saldo en modal de egresos
+    const cuentaOrigenSelect = document.getElementById('cuenta-origen');
+    const montoEgresosInput = document.getElementById('monto-egresos');
+
+    function validarSaldoEgreso() {
+      const cuentaId = cuentaOrigenSelect.value;
+      const monto = montoEgresosInput.value;
+      
+      if (cuentaId && monto) {
+        verificarSaldoCuenta(cuentaId, monto);
+      }
+    }
+
+    // Verificar saldo cuando cambia la cuenta o el monto
+    cuentaOrigenSelect?.addEventListener('change', validarSaldoEgreso);
+    montoEgresosInput?.addEventListener('blur', validarSaldoEgreso);
+    montoEgresosInput?.addEventListener('input', function() {
+      // Agregar un pequeño delay para evitar múltiples llamadas
+      clearTimeout(this.saldoTimer);
+      this.saldoTimer = setTimeout(validarSaldoEgreso, 500);
+    });
   });
 </script>
+
 @endsection

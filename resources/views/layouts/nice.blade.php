@@ -18,7 +18,7 @@
 
 
 
-    <title>{{ $title }} - {{ config('app.name', 'HydroSite') }}</title>
+    <title>{{ $title ?? 'Módulo Contable' }} - {{ config('app.name', 'HydroSite') }}</title>
 
 
 
@@ -539,7 +539,9 @@
     <aside id="sidebar" class="sidebar d-print-none">
 
         @php
-
+            // Definir variables por defecto
+            $active = $active ?? '';
+            
             $planId = Auth::user()->plan_id;
 
             $esencial = in_array($planId, [0]);
@@ -915,7 +917,7 @@
                     @php
 
                         $contableActive = in_array($active, [
-                            'libro.caja',
+                            'orgs.libro.caja',
                             'cuentas_iniciales.show',
                             'configuracion_cuentas_original.show',
                             'registro_ingresos_egresos.show'
@@ -938,10 +940,10 @@
 
                             <li>
 
-                                <a href="{{ route('libro.caja', ['id' => auth()->user()->org_id]) }}"
-                                    class="{{ $active == 'libro.caja' ? 'active' : '' }}">
+                                <a href="{{ route('orgs.libro.caja', ['id' => auth()->user()->org_id]) }}"
+                                    class="{{ $active == 'orgs.libro.caja' ? 'active' : '' }}">
 
-                                    <i class="bi bi-circle"></i><span>Gestión Contable Pro</span>
+                                    <i class="bi bi-circle"></i><span>Libro Caja</span>
 
                                 </a>
 
@@ -1543,10 +1545,10 @@
 
                             <li>
 
-                                <a href="{{ route('libro.caja', ['id' => auth()->user()->org_id]) }}"
-                                    class="{{ $active == 'libro.caja' ? 'active' : '' }}">
+                                <a href="{{ route('orgs.libro.caja', ['id' => auth()->user()->org_id]) }}"
+                                    class="{{ $active == 'orgs.libro.caja' ? 'active' : '' }}">
 
-                                    <i class="bi bi-circle"></i><span>Gestión Contable Pro</span>
+                                    <i class="bi bi-circle"></i><span>Libro Caja</span>
 
                                 </a>
 
@@ -2007,8 +2009,8 @@
 
                             <li>
 
-                                <a href="{{ route('libro.caja', ['id' => auth()->user()->org_id]) }}"
-                                    class="{{ $active == 'libro.caja' ? 'active' : '' }}">
+                                <a href="{{ route('orgs.libro.caja', ['id' => auth()->user()->org_id]) }}"
+                                    class="{{ $active == 'orgs.libro.caja' ? 'active' : '' }}">
 
                                     <i class="bi bi-circle"></i><span>Gestión Contable Pro</span>
 
@@ -2531,8 +2533,8 @@
 
                             <li>
 
-                                <a href="{{ route('libro.caja', ['id' => auth()->user()->org_id]) }}"
-                                    class="{{ $active == 'libro.caja' ? 'active' : '' }}">
+                                <a href="{{ route('orgs.libro.caja', ['id' => auth()->user()->org_id]) }}"
+                                    class="{{ $active == 'orgs.libro.caja' ? 'active' : '' }}">
 
                                     <i class="bi bi-circle"></i><span>Gestión Contable Pro</span>
 
@@ -2746,12 +2748,12 @@
             @elseif($user->isCrc() || $perfilId == 3)
   @php
 
-                    $libroCajaActive = $active === 'libro.caja';
+                    $libroCajaActive = $active === 'orgs.libro.caja';
 
                 @endphp
 
                  <li  class="nav-item">
-                    <a href="{{ route('libro.caja', ['id' => auth()->user()->org_id]) }}"
+                    <a href="{{ route('orgs.libro.caja', ['id' => auth()->user()->org_id]) }}"
                             class="nav-link {{ $libroCajaActive ? 'active' : '' }}">
                         <i class="bi bi-circle"></i><span>Gestión Contable Pro</span>
                     </a>
@@ -2809,11 +2811,11 @@
 
     <main id="main" class="main">
 
-        @if (\Session::has('success'))
+        @if (session()->has('success'))
 
             <div class="alert alert-success alert-dismissible fade show"><i class="bi bi-check-circle me-1"></i>
 
-                {!! \Session::get('success') !!}</div>
+                {!! session()->get('success') !!}</div>
 
         @endif
 
@@ -2919,6 +2921,11 @@
 
 
 </html>
+
+
+
+
+
 
 
 

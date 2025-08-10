@@ -198,6 +198,7 @@ Route::get('/servicios-por-sector/{sectorId}', [App\Http\Controllers\Org\Operato
 
 // Rutas especiales para el módulo contable (completamente fuera de cualquier grupo)
 Route::get('org/{id}/cuentas-iniciales', [App\Http\Controllers\Org\ContableController::class, 'cuentasIniciales'])->name('cuentas_iniciales.show');
+Route::post('org/{id}/cuentas-iniciales', [App\Http\Controllers\Org\ContableController::class, 'store'])->name('cuentas_iniciales.store');
 Route::get('org/{id}/registro-ingresos-egresos', [App\Http\Controllers\Org\ContableController::class, 'registroIngresosEgresos'])->name('registro_ingresos_egresos.show');
 Route::get('org/{id}/giros-depositos', [App\Http\Controllers\Org\ContableController::class, 'girosDepositos'])->name('giros_depositos.show');
 Route::get('org/{id}/libro-caja-tabular', [App\Http\Controllers\Org\ContableController::class, 'libroCajaTabular'])->name('libro_caja_tabular.show');
@@ -205,6 +206,13 @@ Route::get('org/{id}/balance', [App\Http\Controllers\Org\ContableController::cla
 Route::get('org/{id}/conciliacion-bancaria', [App\Http\Controllers\Org\ContableController::class, 'conciliacionBancaria'])->name('conciliacion_bancaria.show');
 Route::get('org/{id}/informe-rubro', [App\Http\Controllers\Org\ContableController::class, 'informePorRubro'])->name('informe_rubro.show');
 Route::get('org/{id}/movimientos', [App\Http\Controllers\Org\ContableController::class, 'movimientos'])->name('movimientos.show');
+Route::get('org/{id}/sincronizar-cuentas', [App\Http\Controllers\Org\ContableController::class, 'sincronizarCuentas'])->name('sincronizar_cuentas.show');
+Route::post('verificar-saldo-cuenta', [App\Http\Controllers\Org\ContableController::class, 'verificarSaldoCuenta'])->name('verificar_saldo_cuenta');
+Route::post('procesar-ingreso', [App\Http\Controllers\Org\ContableController::class, 'procesarIngreso'])->name('procesar_ingreso');
+Route::post('procesar-egreso', [App\Http\Controllers\Org\ContableController::class, 'procesarEgreso'])->name('procesar_egreso');
+Route::post('procesar-giro', [App\Http\Controllers\Org\ContableController::class, 'procesarGiro'])->name('procesar_giro');
+Route::post('procesar-deposito', [App\Http\Controllers\Org\ContableController::class, 'procesarDeposito'])->name('procesar_deposito');
+Route::get('org/{id}/saldos-actuales', [App\Http\Controllers\Org\ContableController::class, 'obtenerSaldosActuales'])->name('obtener_saldos_actuales');
 
 // Ruta AJAX para obtener servicios por sector
 Route::get('org/{id}/ajax/clientes-por-sector/{locationId}', [App\Http\Controllers\Org\LocationController::class, 'clientesPorSector'])->name('ajax.clientes-por-sector');
@@ -229,6 +237,7 @@ Route::prefix('org')->name('orgs.')->group(function () {
     Route::get('{id}/contable/informe-rubro', [ContableController::class, 'informePorRubro'])->name('contable.informe.rubro');
     Route::get('{id}/contable/registro-ingresos-egresos', [ContableController::class, 'registroIngresosEgresos'])->name('contable.registro.ingresos.egresos');
     Route::get('{id}/contable/cuentas-iniciales', [ContableController::class, 'cuentasIniciales'])->name('contable.cuentas.iniciales');
+    Route::post('{id}/contable/cuentas-iniciales', [ContableController::class, 'guardarCuentasIniciales'])->name('contable.cuentas.iniciales.guardar');
     Route::get('{id}/contable/cuentas-iniciales/{cuenta}', [ContableController::class, 'mostrarCuentaInicial'])->name('cuentas_iniciales.detalle');
     Route::get('{id}/contable/configuracion-cuentas', [ContableController::class, 'configuracionCuentas'])->name('contable.configuracion.cuentas');
     Route::get('{id}/contable/giros-depositos', [ContableController::class, 'girosDepositos'])->name('contable.giros.depositos');

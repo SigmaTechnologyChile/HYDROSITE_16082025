@@ -13,11 +13,13 @@ class ConfiguracionInicial extends Model
     protected $fillable = [
         'org_id',
         'cuenta_id',
+        'banco_id',
         'saldo_inicial',
         'responsable',
-        'banco_id',
+        'banco',
         'numero_cuenta',
         'tipo_cuenta',
+        'observaciones',
     ];
 
     public $timestamps = false;

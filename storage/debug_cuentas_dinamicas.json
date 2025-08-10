@@ -1,0 +1,21 @@
+{
+    "raw_data": "[{\"tipo\":\"cuenta_corriente_2\",\"saldo\":\"5000000\",\"banco\":\"null\",\"numero\":\"7373737373\",\"responsable\":\"hydrosite\"}]",
+    "is_empty": false,
+    "decoded_data": [
+        {
+            "tipo": "cuenta_corriente_2",
+            "saldo": "5000000",
+            "banco": "null",
+            "numero": "7373737373",
+            "responsable": "hydrosite"
+        }
+    ],
+    "json_error": 0,
+    "count": 1,
+    "accounts_updated": [
+        "cuenta_corriente_2"
+    ],
+    "configs_updated": [
+        "cuenta_corriente_2"
+    ]
+}

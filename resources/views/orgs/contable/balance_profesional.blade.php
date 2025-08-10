@@ -421,7 +421,7 @@
             <h1><i class="bi bi-bar-chart-line"></i> Balance Financiero</h1>
             <p>Resumen gráfico y analítico de la situación financiera</p>
         </div>
-        <a href="{{ route('orgs.contable.nice', ['id' => $orgId]) }}" class="action-button volver">
+        <a href="{{ route('orgs.dashboard', ['id' => $orgId]) }}" class="action-button volver">
             <i class="bi bi-arrow-left"></i> Volver al Panel
         </a>
     </div>
@@ -643,7 +643,7 @@
     
     <!-- Botones de acción -->
     <div style="text-align: center; margin-top: 40px;">
-        <a href="{{ route('orgs.contable.nice', ['id' => $orgId]) }}" class="btn-balance btn-secondary">
+        <a href="{{ route('orgs.dashboard', ['id' => $orgId]) }}" class="btn-balance btn-secondary">
             <i class="bi bi-arrow-left"></i> Volver al Panel
         </a>
         <button class="btn-balance btn-primary" onclick="window.print()">

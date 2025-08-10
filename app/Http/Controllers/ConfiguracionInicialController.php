@@ -187,15 +187,24 @@ class ConfiguracionInicialController extends Controller
                         'saldo_inicial' => is_numeric($data['saldo_inicial']) ? intval($data['saldo_inicial']) : 0,
                         'responsable' => $responsable,
                         'banco_id' => $data['banco_id'],
+                        'banco' => $this->obtenerNombreBanco($data['banco_id']),
                         'numero_cuenta' => $data['numero_cuenta'] ?? null,
                         'tipo_cuenta' => $tipoCuenta,
                     ]
                 );
+                
+                // Sincronizar el nombre de la cuenta con el banco
+                $nombreBanco = $this->obtenerNombreBanco($data['banco_id']);
+                if (!empty($nombreBanco)) {
+                    $cuenta->nombre = $nombreBanco;
+                    $cuenta->banco = $nombreBanco;
+                }
+                
                 // Actualizar el número de cuenta en la tabla cuentas
                 if (isset($data['numero_cuenta'])) {
                     $cuenta->numero_cuenta = $data['numero_cuenta'];
-                    $cuenta->save();
                 }
+                
                 // Sincronizar saldo_actual con saldo_inicial automáticamente
                 $cuenta->saldo_actual = $data['saldo_inicial'];
                 $cuenta->save();
@@ -212,8 +221,19 @@ class ConfiguracionInicialController extends Controller
         }
     }
 
+    /**
+     * Obtiene el nombre del banco por ID
+     */
+    private function obtenerNombreBanco($bancoId)
+    {
+        if (empty($bancoId)) {
+            return null;
+        }
 
-
+        $banco = \App\Models\Banco::find($bancoId);
+        
+        return $banco ? $banco->nombre : null;
+    }
 
     // Puedes agregar aquí el método destroy si lo necesitas en el futuro.
 }

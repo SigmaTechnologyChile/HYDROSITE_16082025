@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title }} - {{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('title', 'Sistema Contable') - {{ config('app.name', 'Laravel') }}</title>
 
     <!-- Favicons -->
     <link href="{{asset('theme/common/img/favicon.png')}}" rel="icon">

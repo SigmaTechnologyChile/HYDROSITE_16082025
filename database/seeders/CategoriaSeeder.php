@@ -8,41 +8,38 @@ class CategoriaSeeder extends Seeder
     public function run()
     {
         DB::table('categorias')->truncate();
-        $now = Carbon::now();
+        
+        // Categorías de INGRESOS
         $ingresos = [
-            'Venta de Agua (Total Consumo)',
-            'Cuotas de Incorporación (Cuotas de Incorporación)',
-            'Venta de Medidores (Otros Ingresos)',
-            'Trabajos en Domicilio (Otros Ingresos)',
-            'Subsidios (Otros Ingresos)',
-            'Otros Aportes (Otros Ingresos)',
-            'Multas Inasistencia (Otros Ingresos)',
-            'Otras Multas (Otros Ingresos)',
+            ['nombre' => 'Venta de Agua (Total Consumo)', 'tipo' => 'ingreso', 'grupo' => 'total_consumo'],
+            ['nombre' => 'Cuotas de Incorporación', 'tipo' => 'ingreso', 'grupo' => 'cuotas_incorporacion'],
+            ['nombre' => 'Venta de Medidores', 'tipo' => 'ingreso', 'grupo' => 'otros_ingresos'],
+            ['nombre' => 'Trabajos en Domicilio', 'tipo' => 'ingreso', 'grupo' => 'otros_ingresos'],
+            ['nombre' => 'Subsidios', 'tipo' => 'ingreso', 'grupo' => 'otros_ingresos'],
+            ['nombre' => 'Otros Aportes', 'tipo' => 'ingreso', 'grupo' => 'otros_ingresos'],
+            ['nombre' => 'Multas Inasistencia', 'tipo' => 'ingreso', 'grupo' => 'otros_ingresos'],
+            ['nombre' => 'Otras Multas', 'tipo' => 'ingreso', 'grupo' => 'otros_ingresos'],
         ];
+        
+        // Categorías de EGRESOS
         $egresos = [
-            'Energía Eléctrica (Gastos de Operación)',
-            'Sueldos y Leyes Sociales (Gastos de Operación)',
-            'Otras Ctas. (Agua, Int. Cel.) (Gastos de Operación)',
-            'Mantención y reparaciones Instalaciones (Gastos de Mantención)',
-            'Insumos y Materiales (Oficina) (Gastos de Administración)',
-            'Materiales e Insumos (Red) (Gastos de Mejoramiento)',
-            'Viáticos / Seguros / Movilización (Otros Gastos)',
-            'Gastos por Trabajos en domicilio (Gastos de Mantención)',
-            'Mejoramiento / Inversiones (Gastos de Mejoramiento)',
+            ['nombre' => 'Energía Eléctrica', 'tipo' => 'egreso', 'grupo' => 'energia_electrica'],
+            ['nombre' => 'Sueldos y Leyes Sociales', 'tipo' => 'egreso', 'grupo' => 'sueldos_leyes'],
+            ['nombre' => 'Otras Ctas. (Agua, Int. Cel.)', 'tipo' => 'egreso', 'grupo' => 'otros_gastos_operacion'],
+            ['nombre' => 'Mantención y reparaciones Instalaciones', 'tipo' => 'egreso', 'grupo' => 'gastos_mantencion'],
+            ['nombre' => 'Gastos por Trabajos en domicilio', 'tipo' => 'egreso', 'grupo' => 'gastos_mantencion'],
+            ['nombre' => 'Insumos y Materiales (Oficina)', 'tipo' => 'egreso', 'grupo' => 'gastos_administracion'],
+            ['nombre' => 'Materiales e Insumos (Red)', 'tipo' => 'egreso', 'grupo' => 'gastos_mejoramiento'],
+            ['nombre' => 'Mejoramiento / Inversiones', 'tipo' => 'egreso', 'grupo' => 'gastos_mejoramiento'],
+            ['nombre' => 'Viáticos / Seguros / Movilización', 'tipo' => 'egreso', 'grupo' => 'otros_egresos'],
         ];
-        foreach ($ingresos as $nombre) {
-            DB::table('categorias')->insert([
-                'nombre' => $nombre,
-                'tipo' => 'ingreso',
-                'grupo' => null,
-            ]);
+        
+        foreach ($ingresos as $categoria) {
+            DB::table('categorias')->insert($categoria);
         }
-        foreach ($egresos as $nombre) {
-            DB::table('categorias')->insert([
-                'nombre' => $nombre,
-                'tipo' => 'egreso',
-                'grupo' => null,
-            ]);
+        
+        foreach ($egresos as $categoria) {
+            DB::table('categorias')->insert($categoria);
         }
     }
 }

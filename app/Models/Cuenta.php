@@ -10,7 +10,7 @@ class Cuenta extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'nombre', 'tipo', 'saldo_actual', 'banco_id', 'numero_cuenta', 'creado_en'
+        'org_id', 'nombre', 'tipo', 'saldo_actual', 'banco_id', 'numero_cuenta', 'creado_en'
     ];
     public function banco()
     {
