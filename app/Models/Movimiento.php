@@ -19,7 +19,7 @@ class Movimiento extends Model
         // Campos de Cuentas/Bancarios
         'cuenta_origen_id', 'cuenta_destino_id', 'cuenta', 'banco_id',
         
-        // Campos Tabulares (Libro de Caja)
+        // Campos Tabulares existentes en la tabla (según estructura proporcionada)
         'total_consumo', 'cuotas_incorporacion', 'energia_electrica', 
         'giros', 'depositos', 'saldo_inicial', 'saldo_final',
         

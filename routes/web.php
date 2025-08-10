@@ -223,6 +223,10 @@ Route::post('procesar-giro', [App\Http\Controllers\Org\ContableController::class
 Route::post('procesar-deposito', [App\Http\Controllers\Org\ContableController::class, 'procesarDeposito'])->name('procesar_deposito');
 Route::get('org/{id}/saldos-actuales', [App\Http\Controllers\Org\ContableController::class, 'obtenerSaldosActuales'])->name('obtener_saldos_actuales');
 
+// API endpoints para datos dinámicos (eliminar hardcodeo)
+Route::get('api/categorias', [App\Http\Controllers\Org\ContableController::class, 'getCategorias'])->name('api.categorias');
+Route::get('api/bancos', [App\Http\Controllers\Org\ContableController::class, 'getBancos'])->name('api.bancos');
+
 // Ruta AJAX para obtener servicios por sector
 Route::get('org/{id}/ajax/clientes-por-sector/{locationId}', [App\Http\Controllers\Org\LocationController::class, 'clientesPorSector'])->name('ajax.clientes-por-sector');
 
