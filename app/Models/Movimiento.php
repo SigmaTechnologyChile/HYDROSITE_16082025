@@ -11,7 +11,7 @@ class Movimiento extends Model
 
     protected $fillable = [
         // Campos Core/Básicos
-        'org_id', 'fecha', 'tipo', 'monto', 'descripcion', 'numero_documento',
+        'org_id', 'fecha', 'tipo', 'monto', 'descripcion', 'numero_documento', 'nro_dcto',
         
         // Campos de Categorización
         'categoria_id', 'categoria', 'grupo',

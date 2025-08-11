@@ -1,3 +1,6 @@
+@section('csrf')
+  @csrf
+@endsection
 @extends('layouts.nice', ['active' => 'conciliacion-bancaria', 'title' => 'Conciliación Bancaria'])
 
 @section('content')
@@ -223,7 +226,7 @@ tbody tr:hover {
             @if(isset($movimientos) && count($movimientos) > 0)
               @foreach($movimientos->take(10) as $index => $movimiento)
               <tr>
-                <td>{{ $movimiento->fecha }}</td>
+                <td>{{ (string)$movimiento->fecha }}</td>
                 <td>{{ str_pad($index + 1, 4, '0', STR_PAD_LEFT) }}</td>
                 <td>{{ Str::limit($movimiento->descripcion ?? 'Movimiento bancario', 30) }}</td>
                 <td>{{ $movimiento->cuenta ?? 'Cta. Corriente' }}</td>
@@ -231,7 +234,11 @@ tbody tr:hover {
                   @php
                     $monto = ($movimiento->total_consumo ?? 0) + ($movimiento->cuotas_incorporacion ?? 0) - ($movimiento->giros ?? 0);
                   @endphp
-                  ${{ number_format(abs($monto), 0, ',', '.') }}
+                  @if(is_numeric($monto))
+                    ${{ number_format(abs($monto), 0, ',', '.') }}
+                  @else
+                    <span style="color: var(--warning-color);">Sin datos</span>
+                  @endif
                 </td>
                 <td>
                   @php
@@ -272,7 +279,13 @@ tbody tr:hover {
               <tr>
                 <td>{{ \Carbon\Carbon::parse($extracto->fecha)->format('d/m/Y') }}</td>
                 <td>{{ Str::limit($extracto->descripcion ?? 'Extracto bancario', 30) }}</td>
-                <td>{{ $extracto->monto >= 0 ? '$' . number_format($extracto->monto, 0, ',', '.') : '-$' . number_format(abs($extracto->monto), 0, ',', '.') }}</td>
+                <td>
+                  @if(is_numeric($extracto->monto))
+                    {{ $extracto->monto >= 0 ? '$' . number_format($extracto->monto, 0, ',', '.') : '-$' . number_format(abs($extracto->monto), 0, ',', '.') }}
+                  @else
+                    <span style="color: var(--warning-color);">Sin datos</span>
+                  @endif
+                </td>
                 <td>
                   <span style="color: {{ ($extracto->conciliado ?? false) ? 'var(--success-color)' : 'var(--warning-color)' }};">
                     {{ ($extracto->conciliado ?? false) ? 'Conciliado' : 'Pendiente' }}
@@ -289,6 +302,7 @@ tbody tr:hover {
         </table>
       </div>
       
+      @if((isset($movimientos) && count($movimientos) > 0) || (isset($extractos) && count($extractos) > 0))
       <div class="conciliacion-card" style="margin-top: 20px;">
         <h3><i class="bi bi-check-circle"></i> Estado de Conciliación</h3>
         <div class="conciliacion-status">
@@ -308,6 +322,7 @@ tbody tr:hover {
           </div>
         </div>
       </div>
+      @endif
       
       <div class="button-group" style="margin-top: 20px;">
         <button onclick="cargarExtracto()" class="action-button">
@@ -327,7 +342,31 @@ function cargarExtracto() {
 }
 
 function conciliar() {
-  alert('Funcionalidad para realizar conciliación automática');
+  const orgId = {{ $orgId }};
+  fetch(`/org/${orgId}/conciliar-movimientos`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    },
+    body: JSON.stringify({})
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      let msg = `Conciliados: ${data.conciliados}\nPendientes: ${data.pendientes}`;
+      if (data.diferencias && data.diferencias.length > 0) {
+        msg += `\nDiferencias:\n`;
+        data.diferencias.forEach(dif => {
+          msg += `ID: ${dif.id}, Fecha: ${dif.fecha}, Monto: ${dif.monto}, N° Dcto: ${dif.nro_dcto}\n`;
+        });
+      }
+      alert(msg);
+    } else {
+      alert('Error en la conciliación');
+    }
+  })
+  .catch(() => alert('Error de conexión con el servidor'));
 }
 </script>
 @endsection

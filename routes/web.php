@@ -1,4 +1,7 @@
+Route::post('org/{id}/conciliar-movimientos', [App\Http\Controllers\Org\ContableController::class, 'conciliarMovimientos'])->name('org.conciliar_movimientos');
 <?php
+// Ruta para balance completo profesional
+Route::get('orgs/contable/{id}/balance-completo', [App\Http\Controllers\Org\ContableController::class, 'balanceCompleto'])->name('orgs.contable.balanceCompleto');
 // Exportar balance PDF, Excel, CSV y extracto bancario
 Route::get('orgs/contable/{id}/exportar-pdf', [App\Http\Controllers\Org\ContableController::class, 'exportarPDF'])->name('orgs.contable.exportarPDF');
 Route::get('orgs/contable/{id}/exportar-csv', [App\Http\Controllers\Org\ContableController::class, 'exportarCSV'])->name('orgs.contable.exportarCSV');

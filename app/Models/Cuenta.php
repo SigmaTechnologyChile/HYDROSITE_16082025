@@ -39,6 +39,17 @@ class Cuenta extends Model
         return $this->hasMany(Movimiento::class, 'cuenta_destino_id');
     }
 
+    /**
+     * Devuelve todos los movimientos relacionados con la cuenta (origen o destino)
+     */
+    public function movimientos()
+    {
+        return Movimiento::where(function($q) {
+            $q->where('cuenta_origen_id', $this->id)
+              ->orWhere('cuenta_destino_id', $this->id);
+        });
+    }
+
     // Scopes
     public function scopePorOrganizacion($query, $orgId)
     {

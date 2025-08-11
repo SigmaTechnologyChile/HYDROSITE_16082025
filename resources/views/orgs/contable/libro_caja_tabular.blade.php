@@ -391,74 +391,82 @@ td {
                         <th>Otros Ingresos</th>
                         <th>Giros</th>
                         <th>TOTAL INGRESOS</th>
-                        <th>ENERGÍA ELÉCTRICA</th>
-                        <th>SUELDOS/LEYES SOCIALES</th>
-                        <th>OTROS GASTOS DE OPERACIÓN</th>
-                        <th>GASTOS MANTENCION</th>
-                        <th>GASTOS ADMINISTRACION</th>
-                        <th>GASTOS MEJORAMIENTO</th>
-                        <th>OTROS EGRESOS</th>
-                        <th>DEPÓSITOS</th>
+                        <th>Energía Eléctrica</th>
+                        <th>Sueldos y Leyes Sociales</th>
+                        <th>Gastos de Operación</th>
+                        <th>Gastos de Mantención</th>
+                        <th>Gastos de Administración</th>
+                        <th>Gastos de Mejoramiento</th>
+                        <th>Otros Gastos</th>
+                        <th>Depósitos</th>
                         <th>TOTAL EGRESOS</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($movimientos as $movimiento)
-                    <tr>
-                        <td>
-                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#editModal{{ $movimiento->id }}">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <button class="btn btn-sm btn-danger ms-1" onclick="eliminarMovimiento({{ $movimiento->id }})" title="Eliminar">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </td>
-                        <td>{{ \Carbon\Carbon::parse($movimiento->fecha)->format('d/m/Y') }}</td>
-                        <td style="text-align: left;">{{ $movimiento->descripcion }}</td>
-                        <td class="{{ $movimiento->total_consumo > 0 ? 'ingreso-cell' : '' }}">
-                            {{ $movimiento->total_consumo > 0 ? '$' . number_format($movimiento->total_consumo, 0, ',', '.') : '' }}
-                        </td>
-                        <td class="{{ $movimiento->cuotas_incorporacion > 0 ? 'ingreso-cell' : '' }}">
-                            {{ $movimiento->cuotas_incorporacion > 0 ? '$' . number_format($movimiento->cuotas_incorporacion, 0, ',', '.') : '' }}
-                        </td>
-                        <td class="{{ $movimiento->otros_ingresos > 0 ? 'ingreso-cell' : '' }}">
-                            {{ $movimiento->otros_ingresos > 0 ? '$' . number_format($movimiento->otros_ingresos, 0, ',', '.') : '' }}
-                        </td>
-                        <td class="{{ $movimiento->giros > 0 ? 'ingreso-cell' : '' }}">
-                            {{ $movimiento->giros > 0 ? '$' . number_format($movimiento->giros, 0, ',', '.') : '' }}
-                        </td>
-                        <td class="ingreso-cell" style="font-weight: bold;">
-                            ${{ number_format(($movimiento->total_consumo ?? 0) + ($movimiento->cuotas_incorporacion ?? 0) + ($movimiento->otros_ingresos ?? 0) + ($movimiento->giros ?? 0), 0, ',', '.') }}
-                        </td>
-                        <td class="{{ ($movimiento->energia_electrica ?? 0) > 0 ? 'egreso-cell' : '' }}">
-                            {{ ($movimiento->energia_electrica ?? 0) > 0 ? '$' . number_format($movimiento->energia_electrica, 0, ',', '.') : '' }}
-                        </td>
-                        <td class="{{ ($movimiento->sueldos_leyes ?? 0) > 0 ? 'egreso-cell' : '' }}">
-                            {{ ($movimiento->sueldos_leyes ?? 0) > 0 ? '$' . number_format($movimiento->sueldos_leyes, 0, ',', '.') : '' }}
-                        </td>
-                        <td class="{{ ($movimiento->otros_gastos_operacion ?? 0) > 0 ? 'egreso-cell' : '' }}">
-                            {{ ($movimiento->otros_gastos_operacion ?? 0) > 0 ? '$' . number_format($movimiento->otros_gastos_operacion, 0, ',', '.') : '' }}
-                        </td>
-                        <td class="{{ ($movimiento->gastos_mantencion ?? 0) > 0 ? 'egreso-cell' : '' }}">
-                            {{ ($movimiento->gastos_mantencion ?? 0) > 0 ? '$' . number_format($movimiento->gastos_mantencion, 0, ',', '.') : '' }}
-                        </td>
-                        <td class="{{ ($movimiento->gastos_administracion ?? 0) > 0 ? 'egreso-cell' : '' }}">
-                            {{ ($movimiento->gastos_administracion ?? 0) > 0 ? '$' . number_format($movimiento->gastos_administracion, 0, ',', '.') : '' }}
-                        </td>
-                        <td class="{{ ($movimiento->gastos_mejoramiento ?? 0) > 0 ? 'egreso-cell' : '' }}">
-                            {{ ($movimiento->gastos_mejoramiento ?? 0) > 0 ? '$' . number_format($movimiento->gastos_mejoramiento, 0, ',', '.') : '' }}
-                        </td>
-                        <td class="{{ ($movimiento->otros_egresos ?? 0) > 0 ? 'egreso-cell' : '' }}">
-                            {{ ($movimiento->otros_egresos ?? 0) > 0 ? '$' . number_format($movimiento->otros_egresos, 0, ',', '.') : '' }}
-                        </td>
-                        <td class="{{ ($movimiento->depositos ?? 0) > 0 ? 'egreso-cell' : '' }}">
-                            {{ ($movimiento->depositos ?? 0) > 0 ? '$' . number_format($movimiento->depositos, 0, ',', '.') : '' }}
-                        </td>
-                        <td class="egreso-cell" style="font-weight: bold;">
-                            ${{ number_format(($movimiento->energia_electrica ?? 0) + ($movimiento->sueldos_leyes ?? 0) + ($movimiento->otros_gastos_operacion ?? 0) + ($movimiento->gastos_mantencion ?? 0) + ($movimiento->gastos_administracion ?? 0) + ($movimiento->gastos_mejoramiento ?? 0) + ($movimiento->otros_egresos ?? 0) + ($movimiento->depositos ?? 0), 0, ',', '.') }}
-                        </td>
-                    </tr>
-                    @endforeach
+          @foreach($movimientos as $movimiento)
+          <tr>
+            <td>
+              <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#editModal{{ $movimiento->id }}">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-danger ms-1" onclick="eliminarMovimiento({{ $movimiento->id }})" title="Eliminar">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+                        <td>{{ date('d/m/Y', strtotime($movimiento->fecha)) }}</td>
+            <td style="text-align: left;">{{ $movimiento->descripcion }}</td>
+            <!-- INGRESOS -->
+            <td class="{{ ($movimiento->tipo == 'ingreso' && $movimiento->grupo == 'Total Consumo') ? 'ingreso-cell' : '' }}">
+              {{ ($movimiento->tipo == 'ingreso' && $movimiento->grupo == 'Total Consumo') ? '$' . number_format((float)$movimiento->monto, 0, ',', '.') : '' }}
+            </td>
+            <td class="{{ ($movimiento->tipo == 'ingreso' && $movimiento->grupo == 'Cuotas Incorporación') ? 'ingreso-cell' : '' }}">
+              {{ ($movimiento->tipo == 'ingreso' && $movimiento->grupo == 'Cuotas Incorporación') ? '$' . number_format((float)$movimiento->monto, 0, ',', '.') : '' }}
+            </td>
+            <td class="{{ ($movimiento->tipo == 'ingreso' && $movimiento->grupo == 'Otros Ingresos') ? 'ingreso-cell' : '' }}">
+              {{ ($movimiento->tipo == 'ingreso' && $movimiento->grupo == 'Otros Ingresos') ? '$' . number_format((float)$movimiento->monto, 0, ',', '.') : '' }}
+            </td>
+            <!-- GIROS: mostrar columna giros -->
+            <td class="ingreso-cell">
+              {{ $movimiento->giros > 0 ? '$' . number_format((float)$movimiento->giros, 0, ',', '.') : '' }}
+            </td>
+            <td class="ingreso-cell" style="font-weight: bold;">
+              @if($movimiento->tipo == 'ingreso')
+                ${{ number_format((float)$movimiento->monto, 0, ',', '.') }}
+              @endif
+            </td>
+            <!-- EGRESOS -->
+            <td class="{{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Energía Eléctrica') ? 'egreso-cell' : '' }}">
+              {{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Energía Eléctrica') ? '$' . number_format((float)$movimiento->monto, 0, ',', '.') : '' }}
+            </td>
+            <td class="{{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Sueldos y Leyes Sociales') ? 'egreso-cell' : '' }}">
+              {{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Sueldos y Leyes Sociales') ? '$' . number_format((float)$movimiento->monto, 0, ',', '.') : '' }}
+            </td>
+            <td class="{{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Gastos de Operación') ? 'egreso-cell' : '' }}">
+              {{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Gastos de Operación') ? '$' . number_format((float)$movimiento->monto, 0, ',', '.') : '' }}
+            </td>
+            <td class="{{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Gastos de Mantención') ? 'egreso-cell' : '' }}">
+              {{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Gastos de Mantención') ? '$' . number_format((float)$movimiento->monto, 0, ',', '.') : '' }}
+            </td>
+            <td class="{{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Gastos de Administración') ? 'egreso-cell' : '' }}">
+              {{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Gastos de Administración') ? '$' . number_format((float)$movimiento->monto, 0, ',', '.') : '' }}
+            </td>
+            <td class="{{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Gastos de Mejoramiento') ? 'egreso-cell' : '' }}">
+              {{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Gastos de Mejoramiento') ? '$' . number_format((float)$movimiento->monto, 0, ',', '.') : '' }}
+            </td>
+            <td class="{{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Otros Gastos') ? 'egreso-cell' : '' }}">
+              {{ ($movimiento->tipo == 'egreso' && $movimiento->grupo == 'Otros Gastos') ? '$' . number_format((float)$movimiento->monto, 0, ',', '.') : '' }}
+            </td>
+            <!-- DEPÓSITOS: mostrar columna depositos -->
+            <td class="egreso-cell">
+              {{ $movimiento->depositos > 0 ? '$' . number_format((float)$movimiento->depositos, 0, ',', '.') : '' }}
+            </td>
+            <td class="egreso-cell" style="font-weight: bold;">
+              @if($movimiento->tipo == 'egreso')
+                ${{ number_format((float)$movimiento->monto, 0, ',', '.') }}
+              @endif
+            </td>
+          </tr>
+          @endforeach
                 </tbody>
             </table>
         </div>

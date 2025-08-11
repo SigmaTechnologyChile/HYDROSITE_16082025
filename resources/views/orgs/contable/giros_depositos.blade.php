@@ -491,6 +491,7 @@
         </div>
         <div class="form-card-body-balance">
           <form id="girosForm">
+            <input type="hidden" name="grupo" value="Giros">
             <div class="form-grid-balance">
               <div class="form-group-balance">
                 <label for="fecha-giro" class="form-label-balance">
@@ -559,6 +560,7 @@
         </div>
         <div class="form-card-body-balance">
           <form id="depositosForm">
+            <input type="hidden" name="grupo" value="Depósitos">
             <div class="form-grid-balance">
               <div class="form-group-balance">
                 <label for="fecha-deposito" class="form-label-balance">
@@ -657,12 +659,41 @@
             </tr>
           </thead>
           <tbody id="historialMovimientos">
-            <tr>
-              <td colspan="6" class="text-center text-secondary" style="padding: 30px;">
-                <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 15px; opacity: 0.5;"></i>
-                Módulo de movimientos temporalmente deshabilitado
-              </td>
-            </tr>
+            @forelse($movimientos as $mov)
+              <tr>
+                <td>{{ $mov->fecha instanceof \Illuminate\Support\Carbon ? $mov->fecha->format('d/m/Y') : date('d/m/Y', strtotime((string)$mov->fecha)) }}</td>
+                <td>
+                  <span class="badge {{ $mov->subtipo == 'giro' ? 'badge-info' : 'badge-success' }}">
+                    {{ strtoupper($mov->subtipo) }}
+                  </span>
+                </td>
+                <td>
+                  @if($mov->subtipo == 'giro')
+                    {{ $mov->cuenta_origen_id ? ($cuentas->find($mov->cuenta_origen_id)->tipo ?? '-') : '-' }}
+                  @else
+                    {{ $mov->cuenta_destino_id ? ($cuentas->find($mov->cuenta_destino_id)->tipo ?? '-') : '-' }}
+                  @endif
+                </td>
+                <td>$ {{ number_format((float)$mov->monto, 0, ',', '.') }}</td>
+                <td>{{ $mov->descripcion }}</td>
+                <td>
+                  @if(!empty($mov->nro_dcto))
+                    {{ $mov->nro_dcto }}
+                  @elseif(!empty($mov->numero_documento))
+                    {{ $mov->numero_documento }}
+                  @else
+                    -
+                  @endif
+                </td>
+              </tr>
+            @empty
+              <tr>
+                <td colspan="6" class="text-center text-secondary" style="padding: 30px;">
+                  <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 15px; opacity: 0.5;"></i>
+                  No hay movimientos registrados
+                </td>
+              </tr>
+            @endforelse
           </tbody>
         </table>
       </div>
@@ -673,29 +704,6 @@
 <!-- Notification div -->
 <div id="notification" class="notification-balance"></div>
 
-/* CSS adicional para badges en la tabla */
-.badge {
-  display: inline-block;
-  padding: 6px 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  line-height: 1;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: 8px;
-  text-transform: uppercase;
-}
-
-.badge-info {
-  background: linear-gradient(135deg, var(--info-color) 0%, #2c5282 100%);
-  color: white;
-}
-
-.badge-success {
-  background: linear-gradient(135deg, var(--secondary-color) 0%, #388e3c 100%);
-  color: white;
-}
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -734,38 +742,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // El usuario ingresa el número de comprobante manualmente
     }
 
-    // Función para cargar historial de movimientos
-    function cargarHistorialMovimientos() {
-        const movimientos = JSON.parse(localStorage.getItem('girosDepositos')) || [];
-        const tbody = document.getElementById('historialMovimientos');
-        
-        if (movimientos.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="6" class="text-center text-secondary" style="padding: 30px;">
-                        <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 15px; opacity: 0.5;"></i>
-                        Módulo de movimientos temporalmente deshabilitado
-                    </td>
-                </tr>
-            `;
-            return;
-        }
-
-        tbody.innerHTML = movimientos.map(mov => `
-            <tr>
-                <td>${new Date(mov.fecha).toLocaleDateString('es-CL')}</td>
-                <td>
-                    <span class="badge ${mov.tipo === 'giro' ? 'badge-info' : 'badge-success'}">
-                        ${mov.tipo === 'giro' ? 'GIRO' : 'DEPÓSITO'}
-                    </span>
-                </td>
-                <td>${mov.tipo === 'giro' ? mov.cuenta_origen : mov.cuenta_destino}</td>
-                <td>$${mov.monto.toLocaleString('es-CL')}</td>
-                <td>${mov.detalle}</td>
-                <td>${mov.comprobante}</td>
-            </tr>
-        `).join('');
-    }
 
     // Event listeners para formularios
     document.getElementById('girosForm').addEventListener('submit', function(e) {
@@ -872,7 +848,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Inicializar al cargar la página
     inicializarCampos();
-    cargarHistorialMovimientos();
+  // cargarHistorialMovimientos(); // Eliminado: ahora la tabla usa solo datos del backend
     
     console.log('🎉 Giros y Depósitos con estilos del Balance inicializado!');
 });

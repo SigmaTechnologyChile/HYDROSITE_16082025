@@ -346,7 +346,7 @@
           <input type="date" id="fecha-egresos" name="fecha" required style="width: 100%;">
 
           <label for="nro-dcto-egresos">N° Boleta/Factura</label>
-          <input type="text" id="nro-dcto-egresos" name="nro_dcto" placeholder="Ingrese número de documento" required style="width: 100%;">
+          <input type="number" id="nro-dcto-egresos" name="nro_dcto" placeholder="Solo números" required style="width: 100%;" min="1" step="1" pattern="[0-9]+">
 
           <label for="categoria-egresos">Categoría de Egreso</label>
           <select id="categoria-egresos" name="categoria" required style="width: 100%;">
@@ -373,7 +373,7 @@
           <input type="text" id="razon_social" name="razon_social" placeholder="Razón Social" required style="width: 100%;">
 
           <label for="domicilio">R.U.T.</label>
-          <input type="text" id="rut" name="rut_proveedor" placeholder="RUT del Proveedor" style="width: 100%;">
+          <input type="text" id="rut" name="rut_proveedor" placeholder="Ej: 12345678-9" style="width: 100%;" pattern="^\d{7,8}-[\dkK]{1}$" title="Formato: 12345678-9">
 
           <label for="descripcion-egresos">Descripción</label>
             <textarea id="descripcion-egresos" name="descripcion" required
@@ -529,9 +529,12 @@
       });
     });
 
+    let egresoEnviado = false;
     document.getElementById('egresosForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      
+      if (egresoEnviado) return;
+      egresoEnviado = true;
+
       const formData = new FormData(this);
       const data = {
         org_id: {{ $orgId }},
@@ -544,15 +547,17 @@
         razon_social: formData.get('razon_social'),
         rut_proveedor: formData.get('rut_proveedor')
       };
-      
+
       // Validar datos
       if (!data.fecha || !data.numero_comprobante || !data.categoria || !data.cuenta_origen || !data.descripcion || !data.monto) {
         showNotification('Por favor complete todos los campos requeridos', 'error');
+        egresoEnviado = false;
         return;
       }
 
       if (data.monto <= 0) {
         showNotification('El monto debe ser mayor a 0', 'error');
+        egresoEnviado = false;
         return;
       }
 
@@ -567,16 +572,15 @@
       })
       .then(response => response.json())
       .then(result => {
+        egresoEnviado = false;
         if (result.success) {
           showNotification(
             `✅ ${result.message}\n💰 Nuevo saldo de ${result.data.cuenta_nombre}: $${result.data.nuevo_saldo.toLocaleString()}`,
             'success'
           );
-          
           // Limpiar formulario y cerrar modal
           document.getElementById('egresosForm').reset();
           document.getElementById('egresosModal').classList.remove('show');
-          
           // Recargar página para mostrar cambios
           setTimeout(() => {
             window.location.reload();
@@ -586,6 +590,7 @@
         }
       })
       .catch(error => {
+        egresoEnviado = false;
         console.error('Error:', error);
         showNotification('❌ Error de conexión: ' + error.message, 'error');
       });
