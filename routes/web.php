@@ -1,4 +1,10 @@
 <?php
+// Exportar balance PDF, Excel, CSV y extracto bancario
+Route::get('orgs/contable/{id}/exportar-pdf', [App\Http\Controllers\Org\ContableController::class, 'exportarPDF'])->name('orgs.contable.exportarPDF');
+Route::get('orgs/contable/{id}/exportar-csv', [App\Http\Controllers\Org\ContableController::class, 'exportarCSV'])->name('orgs.contable.exportarCSV');
+Route::get('orgs/contable/{id}/exportar-excel-balance', [App\Http\Controllers\Org\ContableController::class, 'exportarExcelBalance'])->name('orgs.contable.exportarExcelBalance');
+Route::get('orgs/contable/{id}/descargar-extracto', [App\Http\Controllers\Org\ContableController::class, 'descargarExtracto'])->name('orgs.contable.descargarExtracto');
+Route::get('orgs/contable/{id}/historial-cambios', [App\Http\Controllers\Org\ContableController::class, 'historialCambios'])->name('orgs.contable.historialCambios');
 // Exportar a Excel para contabilidad de la organización
 Route::get('orgs/contable/{id}/exportar-excel', [App\Http\Controllers\Org\ContableController::class, 'exportarExcel'])->name('orgs.contable.exportarExcel');
 

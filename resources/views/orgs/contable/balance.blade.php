@@ -414,23 +414,64 @@
 </style>
 
 @section('content')
-{{-- ALERTA: Módulo de movimientos deshabilitado --}}
-<div class="alert alert-info" role="alert">
-    <i class="bi bi-info-circle"></i>
-    <strong>Información:</strong> El módulo de movimientos está temporalmente deshabilitado.
-    Las funcionalidades de cuentas y balances básicos siguen disponibles.
-</div>
 <div class="balance-section">
-    <!-- Header -->
-    <div class="section-header">
-        <div>
-            <h1><i class="bi bi-bar-chart-line"></i> Balance Financiero</h1>
-            <p>Resumen gráfico y analítico de la situación financiera</p>
-        </div>
-        <a href="{{ route('orgs.contable.nice', ['id' => $orgId]) }}" class="action-button volver">
-            <i class="bi bi-arrow-left"></i> Volver al Panel
-        </a>
+  <!-- Header -->
+  <div class="section-header" aria-label="Encabezado Balance">
+    <div>
+      <h1><i class="bi bi-bar-chart-line"></i> Balance Financiero</h1>
+      <p>Resumen gráfico y analítico de la situación financiera</p>
     </div>
+    <a href="{{ route('orgs.contable.nice', ['id' => $orgId]) }}" class="action-button volver" aria-label="Volver al Panel">
+      <i class="bi bi-arrow-left"></i> Volver al Panel
+    </a>
+  </div>
+
+  <!-- Filtros avanzados -->
+  <form id="filtrosBalance" style="margin-bottom:30px; background:white; padding:20px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05); display:flex; flex-wrap:wrap; gap:20px; align-items:center;" aria-label="Filtros Balance">
+    <div>
+      <label for="filtroFechaInicio">Desde:</label>
+      <input type="date" id="filtroFechaInicio" name="fecha_inicio" value="{{ request('fecha_inicio') }}" />
+    </div>
+    <div>
+      <label for="filtroFechaFin">Hasta:</label>
+      <input type="date" id="filtroFechaFin" name="fecha_fin" value="{{ request('fecha_fin') }}" />
+    </div>
+    <div>
+      <label for="filtroCuenta">Cuenta:</label>
+      <select id="filtroCuenta" name="cuenta">
+        <option value="">Todas</option>
+        @foreach($cuentas as $cuenta)
+          <option value="{{ $cuenta->id }}" {{ request('cuenta') == $cuenta->id ? 'selected' : '' }}>{{ $cuenta->nombre }}</option>
+        @endforeach
+      </select>
+    </div>
+    <div>
+      <label for="filtroCategoria">Categoría:</label>
+      <select id="filtroCategoria" name="categoria">
+        <option value="">Todas</option>
+        @foreach($categorias as $cat)
+          <option value="{{ $cat->id }}" {{ request('categoria') == $cat->id ? 'selected' : '' }}>{{ $cat->nombre }}</option>
+        @endforeach
+      </select>
+    </div>
+    <div>
+      <label for="filtroTipo">Tipo:</label>
+      <select id="filtroTipo" name="tipo">
+        <option value="">Todos</option>
+        <option value="ingreso" {{ request('tipo') == 'ingreso' ? 'selected' : '' }}>Ingreso</option>
+        <option value="egreso" {{ request('tipo') == 'egreso' ? 'selected' : '' }}>Egreso</option>
+      </select>
+    </div>
+    <button type="submit" class="btn-balance btn-primary" aria-label="Filtrar"><i class="bi bi-funnel"></i> Filtrar</button>
+  </form>
+
+  <!-- Exportación y acciones -->
+  <div style="text-align:right; margin-bottom:20px;">
+    <button class="btn-balance btn-primary" onclick="exportToPDF()" aria-label="Exportar PDF"><i class="bi bi-file-pdf"></i> PDF</button>
+    <button class="btn-balance btn-primary" onclick="exportToExcel()" aria-label="Exportar Excel"><i class="bi bi-file-earmark-excel"></i> Excel</button>
+    <button class="btn-balance btn-primary" onclick="exportToCSV()" aria-label="Exportar CSV"><i class="bi bi-file-earmark-spreadsheet"></i> CSV</button>
+    <button class="btn-balance btn-secondary" onclick="descargarExtracto()" aria-label="Descargar Extracto Bancario"><i class="bi bi-download"></i> Extracto Bancario</button>
+  </div>
     
     <!-- Resumen Principal -->
     <div class="summary-card">
@@ -658,17 +699,23 @@ document.addEventListener('DOMContentLoaded', function() {
     Chart.defaults.responsive = true;
     Chart.defaults.maintainAspectRatio = false;
     Chart.defaults.plugins.legend.position = 'bottom';
+
+  // Tooltips accesibles
+  document.querySelectorAll('.summary-item, .balance-card, .ratio-card').forEach(function(card){
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', card.querySelector('h3,h4')?.innerText || 'Card');
+  });
     
-    // Datos de ejemplo (en producción vendrían del controlador)
-    const datosIngresos = {
-        labels: ['Cuotas Incorporación', 'Consumo Agua', 'Otros Ingresos', 'Multas/Recargos'],
-        data: [{{ $totalCuotasIncorporacion ?? 45000000 }}, {{ $totalConsumo ?? 78500000 }}, {{ $otrosIngresos ?? 12300000 }}, {{ $multasRecargos ?? 5600000 }}]
-    };
-    
-    const datosEgresos = {
-        labels: ['Giros/Transferencias', 'Gastos Operacionales', 'Gastos Administrativos', 'Mantenimiento'],
-        data: [{{ $totalGiros ?? 25400000 }}, {{ $gastosOperacionales ?? 18700000 }}, {{ $gastosAdministrativos ?? 12300000 }}, {{ $gastosMantenimiento ?? 8900000 }}]
-    };
+  // Datos desde el backend
+  const datosIngresos = {
+    labels: {!! json_encode($datosIngresos['labels']) !!},
+    data: {!! json_encode($datosIngresos['data']) !!}
+  };
+
+  const datosEgresos = {
+    labels: {!! json_encode($datosEgresos['labels']) !!},
+    data: {!! json_encode($datosEgresos['data']) !!}
+  };
     
     // Gráfico de Distribución de Ingresos
     new Chart(document.getElementById('ingresosChart'), {
@@ -787,7 +834,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Función para exportar a PDF
 function exportToPDF() {
-    alert('Función de exportación a PDF en desarrollo. Será implementada próximamente.');
+  // Implementación básica usando print para PDF
+  window.print();
+}
+function exportToExcel() {
+  alert('Exportación a Excel en desarrollo. Pronto disponible.');
+}
+function exportToCSV() {
+  alert('Exportación a CSV en desarrollo. Pronto disponible.');
+}
+function descargarExtracto() {
+  alert('Descarga de extracto bancario en desarrollo. Pronto disponible.');
 }
 </script>
 @endsection
+<!-- Integración y auditoría (placeholders) -->
+<script>
+// Placeholder para integración con APIs externas y alertas automáticas
+function enviarAlertaAnomalia(mensaje) {
+  // Aquí se integraría con correo o notificaciones
+  console.log('Alerta enviada:', mensaje);
+}
+// Placeholder historial de cambios y control de acceso
+// Se recomienda implementar en backend y mostrar aquí
+</script>

@@ -223,7 +223,7 @@ tbody tr:hover {
             @if(isset($movimientos) && count($movimientos) > 0)
               @foreach($movimientos->take(10) as $index => $movimiento)
               <tr>
-                <td>{{ \Carbon\Carbon::parse($movimiento->fecha)->format('d/m/Y') }}</td>
+                <td>{{ $movimiento->fecha }}</td>
                 <td>{{ str_pad($index + 1, 4, '0', STR_PAD_LEFT) }}</td>
                 <td>{{ Str::limit($movimiento->descripcion ?? 'Movimiento bancario', 30) }}</td>
                 <td>{{ $movimiento->cuenta ?? 'Cta. Corriente' }}</td>
@@ -267,30 +267,24 @@ tbody tr:hover {
             </tr>
           </thead>
           <tbody id="tablaExtracto">
-            <tr>
-              <td>05/08/2025</td>
-              <td>Transferencia Electrónica</td>
-              <td>$2,500,000</td>
-              <td><span style="color: var(--success-color);">Conciliado</span></td>
-            </tr>
-            <tr>
-              <td>06/08/2025</td>
-              <td>Pago Proveedor</td>
-              <td>-$850,000</td>
-              <td><span style="color: var(--warning-color);">Pendiente</span></td>
-            </tr>
-            <tr>
-              <td>07/08/2025</td>
-              <td>Depósito en Efectivo</td>
-              <td>$1,200,000</td>
-              <td><span style="color: var(--success-color);">Conciliado</span></td>
-            </tr>
-            <tr>
-              <td>08/08/2025</td>
-              <td>Comisión Bancaria</td>
-              <td>-$25,000</td>
-              <td><span style="color: var(--warning-color);">Pendiente</span></td>
-            </tr>
+            @if(isset($extractos) && count($extractos) > 0)
+              @foreach($extractos as $extracto)
+              <tr>
+                <td>{{ \Carbon\Carbon::parse($extracto->fecha)->format('d/m/Y') }}</td>
+                <td>{{ Str::limit($extracto->descripcion ?? 'Extracto bancario', 30) }}</td>
+                <td>{{ $extracto->monto >= 0 ? '$' . number_format($extracto->monto, 0, ',', '.') : '-$' . number_format(abs($extracto->monto), 0, ',', '.') }}</td>
+                <td>
+                  <span style="color: {{ ($extracto->conciliado ?? false) ? 'var(--success-color)' : 'var(--warning-color)' }};">
+                    {{ ($extracto->conciliado ?? false) ? 'Conciliado' : 'Pendiente' }}
+                  </span>
+                </td>
+              </tr>
+              @endforeach
+            @else
+              <tr>
+                <td colspan="4" style="text-align: center; color: #718096;">No hay extractos bancarios registrados</td>
+              </tr>
+            @endif
           </tbody>
         </table>
       </div>

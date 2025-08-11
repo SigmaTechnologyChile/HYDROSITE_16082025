@@ -11,10 +11,10 @@ class Movimiento extends Model
 
     protected $fillable = [
         // Campos Core/Básicos
-        'org_id', 'fecha', 'tipo', 'monto', 'descripcion', 'nro_dcto',
+        'org_id', 'fecha', 'tipo', 'monto', 'descripcion', 'numero_documento',
         
         // Campos de Categorización
-        'categoria_id', 'categoria',
+        'categoria_id', 'categoria', 'grupo',
         
         // Campos de Cuentas/Bancarios
         'cuenta_origen_id', 'cuenta_destino_id', 'cuenta', 'banco_id',
@@ -22,6 +22,9 @@ class Movimiento extends Model
         // Campos Tabulares existentes en la tabla (según estructura proporcionada)
         'total_consumo', 'cuotas_incorporacion', 'energia_electrica', 
         'giros', 'depositos', 'saldo_inicial', 'saldo_final',
+        
+        // Campos de Proveedor
+        'proveedor', 'rut_proveedor',
         
         // Campos de Estado y Control
         'estado', 'conciliado', 'observaciones',

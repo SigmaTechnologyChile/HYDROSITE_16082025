@@ -482,12 +482,6 @@
 </style>
 
 @section('content')
-{{-- ALERTA: Módulo de movimientos deshabilitado --}}
-<div class="alert alert-info" role="alert">
-    <i class="bi bi-info-circle"></i>
-    <strong>Información:</strong> El módulo de movimientos está temporalmente deshabilitado.
-    Las funcionalidades de cuentas y balances básicos siguen disponibles.
-</div>
 <div class="contable-container">
   <div class="balance-section">
     <!-- Header de la sección estilo balance -->
@@ -558,10 +552,12 @@
                 <i class="bi bi-gear-fill" style="color: var(--primary-color);"></i>
                 Operaciones vs. Administración
               </div>
-              <div class="rubro-value-balance">$<span id="operacionesTotal">0</span> / $<span id="administracionTotal">0</span></div>
+              <div class="rubro-value-balance">
+                ${{ number_format($operacionesTotal, 0, ',', '.') }} / ${{ number_format($administracionTotal, 0, ',', '.') }}
+              </div>
             </div>
             <div class="progress-balance">
-              <div class="progress-bar-balance" id="operacionesBar" style="width: 50%"></div>
+              <div class="progress-bar-balance" style="width: {{ $ingresosTotales > 0 ? round($operacionesTotal / $ingresosTotales * 100) : 50 }}%"></div>
             </div>
             <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.85rem; color: #718096;">
               <span>Operaciones</span>
@@ -581,11 +577,30 @@
               </h4>
             </div>
             <div class="card-body-balance">
-              <div id="ingresosRubro" class="rubro-list-balance">
-                <div class="empty-state-balance">
-                  <i class="bi bi-inbox"></i>
-                  <p>No hay datos disponibles</p>
-                </div>
+              <div class="rubro-list-balance">
+                @if(count($rubrosIngresos) === 0)
+                  <div class="empty-state-balance">
+                    <i class="bi bi-inbox"></i>
+                    <p>No hay ingresos registrados</p>
+                  </div>
+                @else
+                  @foreach($rubrosIngresos as $rubro)
+                    <div class="rubro-item-balance">
+                      <div class="rubro-header-balance">
+                        <div class="rubro-title-balance">
+                          <i class="bi bi-tag-fill" style="color: var(--success-color);"></i>
+                          {{ $rubro['nombre'] }}
+                        </div>
+                        <div class="rubro-value-balance" style="color: var(--success-color);">
+                          ${{ number_format($rubro['total'], 0, ',', '.') }}
+                        </div>
+                      </div>
+                      <div style="font-size: 0.85rem; color: #718096;">
+                        {{ count($rubro['movimientos']) }} movimiento{{ count($rubro['movimientos']) !== 1 ? 's' : '' }}
+                      </div>
+                    </div>
+                  @endforeach
+                @endif
               </div>
             </div>
           </div>
@@ -599,11 +614,30 @@
               </h4>
             </div>
             <div class="card-body-balance">
-              <div id="egresosRubro" class="rubro-list-balance">
-                <div class="empty-state-balance">
-                  <i class="bi bi-inbox"></i>
-                  <p>No hay datos disponibles</p>
-                </div>
+              <div class="rubro-list-balance">
+                @if(count($rubrosEgresos) === 0)
+                  <div class="empty-state-balance">
+                    <i class="bi bi-inbox"></i>
+                    <p>No hay egresos registrados</p>
+                  </div>
+                @else
+                  @foreach($rubrosEgresos as $rubro)
+                    <div class="rubro-item-balance">
+                      <div class="rubro-header-balance">
+                        <div class="rubro-title-balance">
+                          <i class="bi bi-tag-fill" style="color: var(--danger-color);"></i>
+                          {{ $rubro['nombre'] }}
+                        </div>
+                        <div class="rubro-value-balance" style="color: var(--danger-color);">
+                          ${{ number_format($rubro['total'], 0, ',', '.') }}
+                        </div>
+                      </div>
+                      <div style="font-size: 0.85rem; color: #718096;">
+                        {{ count($rubro['movimientos']) }} movimiento{{ count($rubro['movimientos']) !== 1 ? 's' : '' }}
+                      </div>
+                    </div>
+                  @endforeach
+                @endif
               </div>
             </div>
           </div>
@@ -613,217 +647,5 @@
   </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar fechas por defecto
-    const hoy = new Date();
-    const primerDiaMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-    
-    document.getElementById('fechaDesde').value = primerDiaMes.toISOString().split('T')[0];
-    document.getElementById('fechaHasta').value = hoy.toISOString().split('T')[0];
-    
-    cargarDatosRubros();
-    
-    // Event listeners para filtros
-    document.getElementById('fechaDesde').addEventListener('change', cargarDatosRubros);
-    document.getElementById('fechaHasta').addEventListener('change', cargarDatosRubros);
-    document.getElementById('tipoRubro').addEventListener('change', cargarDatosRubros);
-});
-
-function cargarDatosRubros() {
-    const fechaDesde = document.getElementById('fechaDesde').value;
-    const fechaHasta = document.getElementById('fechaHasta').value;
-    const tipoRubro = document.getElementById('tipoRubro').value;
-    
-    // Obtener movimientos del localStorage
-    const movimientos = JSON.parse(localStorage.getItem('movimientos')) || [];
-    const ingresos = JSON.parse(localStorage.getItem('ingresos')) || [];
-    const egresos = JSON.parse(localStorage.getItem('egresos')) || [];
-    
-    // Filtrar por fechas
-    const movimientosFiltrados = [...movimientos, ...ingresos, ...egresos].filter(mov => {
-        if (!mov.fecha) return false;
-        const fechaMov = new Date(mov.fecha);
-        const desde = new Date(fechaDesde);
-        const hasta = new Date(fechaHasta);
-        return fechaMov >= desde && fechaMov <= hasta;
-    });
-    
-    // Procesar rubros
-    const rubrosIngresos = procesarRubrosPorTipo(movimientosFiltrados, 'ingreso');
-    const rubrosEgresos = procesarRubrosPorTipo(movimientosFiltrados, 'egreso');
-    
-    // Actualizar interfaz
-    actualizarResumenRubros(rubrosIngresos, rubrosEgresos);
-    mostrarRubrosIngresos(rubrosIngresos);
-    mostrarRubrosEgresos(rubrosEgresos);
-    
-    console.log('📊 Datos de rubros actualizados:', { rubrosIngresos, rubrosEgresos });
-}
-
-function procesarRubrosPorTipo(movimientos, tipo) {
-    const rubros = {};
-    
-    movimientos.forEach(mov => {
-        if (mov.tipo === tipo || (tipo === 'ingreso' && mov.monto > 0) || (tipo === 'egreso' && mov.monto < 0)) {
-            const rubro = mov.rubro || mov.categoria || 'Sin categoría';
-            if (!rubros[rubro]) {
-                rubros[rubro] = {
-                    nombre: rubro,
-                    total: 0,
-                    movimientos: []
-                };
-            }
-            rubros[rubro].total += Math.abs(mov.monto || 0);
-            rubros[rubro].movimientos.push(mov);
-        }
-    });
-    
-    // Convertir a array y ordenar por total
-    return Object.values(rubros).sort((a, b) => b.total - a.total);
-}
-
-function actualizarResumenRubros(rubrosIngresos, rubrosEgresos) {
-    const totalIngresos = rubrosIngresos.reduce((sum, rubro) => sum + rubro.total, 0);
-    const totalEgresos = rubrosEgresos.reduce((sum, rubro) => sum + rubro.total, 0);
-    
-    // Actualizar totales (ejemplo con operaciones/administración)
-    const operacionesTotal = Math.floor(totalIngresos * 0.7); // 70% operaciones
-    const administracionTotal = totalIngresos - operacionesTotal;
-    
-    document.getElementById('operacionesTotal').textContent = operacionesTotal.toLocaleString('es-CL');
-    document.getElementById('administracionTotal').textContent = administracionTotal.toLocaleString('es-CL');
-    
-    // Actualizar barra de progreso
-    const porcentajeOperaciones = totalIngresos > 0 ? (operacionesTotal / totalIngresos) * 100 : 50;
-    document.getElementById('operacionesBar').style.width = porcentajeOperaciones + '%';
-}
-
-function mostrarRubrosIngresos(rubros) {
-    const container = document.getElementById('ingresosRubro');
-    
-    if (rubros.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state-balance">
-                <i class="bi bi-inbox"></i>
-                <p>No hay ingresos registrados</p>
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = rubros.map(rubro => `
-        <div class="rubro-item-balance">
-            <div class="rubro-header-balance">
-                <div class="rubro-title-balance">
-                    <i class="bi bi-tag-fill" style="color: var(--success-color);"></i>
-                    ${rubro.nombre}
-                </div>
-                <div class="rubro-value-balance" style="color: var(--success-color);">
-                    $${rubro.total.toLocaleString('es-CL')}
-                </div>
-            </div>
-            <div style="font-size: 0.85rem; color: #718096;">
-                ${rubro.movimientos.length} movimiento${rubro.movimientos.length !== 1 ? 's' : ''}
-            </div>
-        </div>
-    `).join('');
-}
-
-function mostrarRubrosEgresos(rubros) {
-    const container = document.getElementById('egresosRubro');
-    
-    if (rubros.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state-balance">
-                <i class="bi bi-inbox"></i>
-                <p>No hay egresos registrados</p>
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = rubros.map(rubro => `
-        <div class="rubro-item-balance">
-            <div class="rubro-header-balance">
-                <div class="rubro-title-balance">
-                    <i class="bi bi-tag-fill" style="color: var(--danger-color);"></i>
-                    ${rubro.nombre}
-                </div>
-                <div class="rubro-value-balance" style="color: var(--danger-color);">
-                    $${rubro.total.toLocaleString('es-CL')}
-                </div>
-            </div>
-            <div style="font-size: 0.85rem; color: #718096;">
-                ${rubro.movimientos.length} movimiento${rubro.movimientos.length !== 1 ? 's' : ''}
-            </div>
-        </div>
-    `).join('');
-}
-
-function actualizarDatos() {
-    cargarDatosRubros();
-    
-    // Mostrar notificación
-    const notification = document.createElement('div');
-    notification.className = 'notification-balance success';
-    notification.innerHTML = '<i class="bi bi-check-circle"></i> Datos actualizados correctamente';
-    notification.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 9999;
-        min-width: 350px;
-        padding: 20px 25px;
-        background: var(--success-color);
-        color: white;
-        border-radius: 12px;
-        font-size: 1.1rem;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-    `;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        document.body.removeChild(notification);
-    }, 3000);
-}
-
-function exportarInforme() {
-    const notification = document.createElement('div');
-    notification.className = 'notification-balance success';
-    notification.innerHTML = '<i class="bi bi-download"></i> Funcionalidad de exportación próximamente';
-    notification.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 9999;
-        min-width: 350px;
-        padding: 20px 25px;
-        background: var(--info-color);
-        color: white;
-        border-radius: 12px;
-        font-size: 1.1rem;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-    `;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        document.body.removeChild(notification);
-    }, 3000);
-}
-
-console.log('📊 Informe por Rubro con estilos del Balance inicializado!');
-</script>
+<!-- Eliminado: toda la lógica JS y localStorage. Ahora los datos se muestran desde el backend usando Blade. -->
 @endsection

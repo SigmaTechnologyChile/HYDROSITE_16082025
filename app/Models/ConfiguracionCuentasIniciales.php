@@ -17,7 +17,8 @@ class ConfiguracionCuentasIniciales extends Model
         'nombre_banco', // ← NUEVO CAMPO
         'numero_cuenta',
         'observaciones',
-        'copiado_a_cuentas'
+        'copiado_a_cuentas',
+        'cuenta_id'
     ];
 
     protected $casts = [

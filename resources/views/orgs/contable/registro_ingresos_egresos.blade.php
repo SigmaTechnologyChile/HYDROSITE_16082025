@@ -4,12 +4,6 @@
 @include('orgs.contable.partials.contable-styles')
 
 @section('content')
-{{-- ALERTA: Módulo de movimientos deshabilitado --}}
-<div class="alert alert-info" role="alert">
-    <i class="bi bi-info-circle"></i>
-    <strong>Información:</strong> El módulo de movimientos está temporalmente deshabilitado.
-    Las funcionalidades de cuentas y balances básicos siguen disponibles.
-</div>
 <div class="contable-container">
     <!-- Breadcrumbs modernos -->
     <nav class="contable-breadcrumb">
@@ -307,10 +301,12 @@
           </select>
 
           <label for="cuenta-destino">Cuenta Destino</label>
-          <select id="cuenta-destino" name="cuenta_destino" required style="width: 100%;">
+          <select id="cuenta-destino" name="cuenta_destino" required style="width: 450px; max-width: 100%;">
             <option value="">-- Selecciona una cuenta --</option>
-            @foreach($configuracionesIniciales as $configuracion)
-              <option value="{{ $configuracion->cuenta_id }}">{{ $configuracion->banco }}</option>
+            @foreach($cuentas as $cuenta)
+                <option value="{{ $cuenta->id }}">
+                  {{ $cuenta->tipo }} - {{ $cuenta->nombre_banco }} - {{ $cuenta->numero_cuenta }}
+                </option>
             @endforeach
           </select>
         </div>
@@ -361,10 +357,12 @@
           </select>
 
           <label for="cuenta-origen">Cuenta Origen</label>
-          <select id="cuenta-origen" name="cuenta_origen" required style="width: 100%;">
+          <select id="cuenta-origen" name="cuenta_origen" required style="width: 450px; max-width: 100%;">
             <option value="">-- Selecciona una cuenta --</option>
-            @foreach($configuracionesIniciales as $configuracion)
-              <option value="{{ $configuracion->cuenta_id }}">{{ $configuracion->banco }}</option>
+            @foreach($cuentas as $cuenta)
+                <option value="{{ $cuenta->id }}">
+                  {{ $cuenta->tipo }} - {{ $cuenta->nombre_banco }} - {{ $cuenta->numero_cuenta }}
+                </option>
             @endforeach
           </select>
         </div>

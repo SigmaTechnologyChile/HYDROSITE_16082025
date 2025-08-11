@@ -1,3 +1,6 @@
+@php
+    use Carbon\Carbon;
+@endphp
 @extends('layouts.nice', ['active' => 'movimientos', 'title' => 'Movimientos'])
 
 {{-- Incluir estilos modernos del módulo contable --}}
@@ -99,8 +102,40 @@
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaMovimientos">
-                                <!-- Se generará dinámicamente -->
+                            <tbody>
+                                @forelse($movimientos as $mov)
+                                    <tr>
+                                            <td>{{ $mov->fecha ? Carbon::parse($mov->fecha)->format('d-m-Y') : '' }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ strtolower($mov->tipo) === 'ingreso' ? 'success' : (strtolower($mov->tipo) === 'egreso' ? 'danger' : 'secondary') }}">
+                                                {{ ucfirst($mov->tipo) }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $mov->descripcion ?? $mov->detalle ?? '' }}</td>
+                                        <td>
+                                            @if($mov->categoria instanceof \App\Models\Categoria)
+                                                {{ $mov->categoria->nombre }}
+                                            @else
+                                                {{ $mov->categoria ?? $mov->rubro ?? '' }}
+                                            @endif
+                                        </td>
+                                        <td class="{{ strtolower($mov->tipo) === 'ingreso' ? 'text-success' : (strtolower($mov->tipo) === 'egreso' ? 'text-danger' : '') }}">
+                                            ${{ number_format((float)$mov->monto, 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" title="Editar movimiento">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" title="Eliminar movimiento">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">No hay movimientos registrados</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -130,59 +165,5 @@
 }
 </style>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    cargarMovimientos();
-});
-
-function cargarMovimientos() {
-    const movimientos = JSON.parse(localStorage.getItem('movimientos')) || [];
-    const tbody = document.getElementById('tablaMovimientos');
-    tbody.innerHTML = '';
-    
-    movimientos.forEach(mov => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${mov.fecha}</td>
-            <td><span class="badge bg-${mov.tipo === 'ingreso' ? 'success' : 'danger'}">${mov.tipo}</span></td>
-            <td>${mov.descripcion || mov.detalle}</td>
-            <td>${mov.categoria}</td>
-            <td class="${mov.tipo === 'ingreso' ? 'text-success' : 'text-danger'}">
-                ${formatCurrency(mov.monto)}
-            </td>
-            <td>
-                <button class="btn btn-sm btn-outline-primary" onclick="editarMovimiento('${mov.id}')">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger" onclick="eliminarMovimiento('${mov.id}')">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-function filtrarMovimientos() {
-    // Implementar filtros
-    cargarMovimientos();
-}
-
-function editarMovimiento(id) {
-    // Implementar edición
-}
-
-function eliminarMovimiento(id) {
-    if (confirm('¿Eliminar este movimiento?')) {
-        let movimientos = JSON.parse(localStorage.getItem('movimientos')) || [];
-        movimientos = movimientos.filter(m => m.id !== id);
-        localStorage.setItem('movimientos', JSON.stringify(movimientos));
-        cargarMovimientos();
-    }
-}
-
-function formatCurrency(value) {
-    return parseFloat(value).toLocaleString('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
-}
-</script>
+<!-- Eliminado: toda la lógica JS y localStorage. Ahora los movimientos se muestran desde el backend usando Blade. -->
 @endsection

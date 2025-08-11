@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 @extends('layouts.nice', ['active' => 'giros_depositos'])
 
 @section('title', 'Giros y Depósitos')
@@ -464,12 +465,7 @@
 </style>
 
 @section('content')
-{{-- ALERTA: Módulo de movimientos deshabilitado --}}
-<div class="alert alert-info" role="alert">
-    <i class="bi bi-info-circle"></i>
-    <strong>Información:</strong> El módulo de movimientos está temporalmente deshabilitado.
-    Las funcionalidades de cuentas y balances básicos siguen disponibles.
-</div>
+{{-- Módulo de movimientos habilitado --}}
 <div class="contable-container">
   <div class="balance-section">
     <!-- Header de la sección estilo balance -->
@@ -519,18 +515,12 @@
                 </label>
                 <select id="cuenta-giro" name="cuenta_origen" required class="form-select-balance">
                   <option value="">-- Seleccione cuenta origen --</option>
-                  @foreach($configuracionesIniciales as $configuracion)
-                    <option value="{{ $configuracion->cuenta_id }}">{{ $configuracion->banco }}</option>
+                  @foreach($cuentas as $cuenta)
+                    @if($cuenta->tipo !== 'caja_general')
+                      <option value="{{ $cuenta->id }}">{{ $cuenta->tipo }}</option>
+                    @endif
                   @endforeach
                 </select>
-              </div>
-              
-              <div class="form-group-balance">
-                <label for="beneficiario-giro" class="form-label-balance">
-                  <i class="bi bi-person"></i>
-                  Beneficiario
-                </label>
-                <input type="text" id="beneficiario-giro" name="beneficiario" placeholder="Nombre del beneficiario" class="form-input-balance">
               </div>
               
               <div class="form-group-balance">
@@ -546,7 +536,7 @@
                   <i class="bi bi-receipt"></i>
                   N° Comprobante
                 </label>
-                <input type="text" id="nro-dcto-giro" name="nro_dcto" required class="form-input-balance" readonly>
+                <input type="number" id="nro-dcto-giro" name="nro_dcto" required class="form-input-balance" placeholder="Solo número de comprobante" min="1" step="1">
               </div>
             </div>
 
@@ -593,18 +583,12 @@
                 </label>
                 <select id="cuenta-deposito" name="cuenta_destino" required class="form-select-balance">
                   <option value="">-- Seleccione cuenta destino --</option>
-                  @foreach($configuracionesIniciales as $configuracion)
-                    <option value="{{ $configuracion->cuenta_id }}">{{ $configuracion->banco }}</option>
+                  @foreach($cuentas as $cuenta)
+                    @if($cuenta->tipo !== 'caja_general')
+                      <option value="{{ $cuenta->id }}">{{ $cuenta->tipo }}</option>
+                    @endif
                   @endforeach
                 </select>
-              </div>
-              
-              <div class="form-group-balance">
-                <label for="origen-deposito" class="form-label-balance">
-                  <i class="bi bi-person"></i>
-                  Origen
-                </label>
-                <input type="text" id="origen-deposito" name="origen" placeholder="Origen del depósito" class="form-input-balance">
               </div>
               
               <div class="form-group-balance">
@@ -620,7 +604,7 @@
                   <i class="bi bi-receipt"></i>
                   N° Comprobante
                 </label>
-                <input type="text" id="nro-dcto-deposito" name="nro_dcto" required class="form-input-balance" readonly>
+                <input type="number" id="nro-dcto-deposito" name="nro_dcto" required class="form-input-balance" placeholder="Solo número de comprobante" min="1" step="1">
               </div>
             </div>
 
@@ -715,23 +699,12 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Variables globales
-    let comprobanteCounter = parseInt(localStorage.getItem('comprobanteCounter')) || 1;
+  // Funciones auxiliares
+  function obtenerFechaActual() {
+    return new Date().toISOString().split('T')[0];
+  }
 
-    // Funciones auxiliares
-    function generarNumeroComprobante(tipo) {
-        const prefijo = tipo === 'giro' ? 'G-' : 'D-';
-        const numero = prefijo + comprobanteCounter.toString().padStart(4, '0');
-        comprobanteCounter++;
-        localStorage.setItem('comprobanteCounter', comprobanteCounter.toString());
-        return numero;
-    }
-
-    function obtenerFechaActual() {
-        return new Date().toISOString().split('T')[0];
-    }
-
-    function showNotification(message, type = 'success') {
+  function showNotification(message, type = 'success') {
         const notification = document.getElementById('notification');
         notification.innerHTML = `<i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> ${message}`;
         notification.className = `notification-balance ${type}`;
@@ -747,24 +720,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Giros
         const fechaGiro = document.getElementById('fecha-giro');
         const nroDctoGiro = document.getElementById('nro-dcto-giro');
-        if (fechaGiro) {
-            fechaGiro.value = obtenerFechaActual();
-            fechaGiro.readOnly = true;
-        }
-        if (nroDctoGiro) {
-            nroDctoGiro.value = generarNumeroComprobante('giro');
-        }
-
-        // Depósitos
-        const fechaDeposito = document.getElementById('fecha-deposito');
-        const nroDctoDeposito = document.getElementById('nro-dcto-deposito');
-        if (fechaDeposito) {
-            fechaDeposito.value = obtenerFechaActual();
-            fechaDeposito.readOnly = true;
-        }
-        if (nroDctoDeposito) {
-            nroDctoDeposito.value = generarNumeroComprobante('deposito');
-        }
+    if (fechaGiro) {
+      fechaGiro.value = obtenerFechaActual();
+      fechaGiro.readOnly = true;
+    }
+    // El usuario ingresa el número de comprobante manualmente
+    // Depósitos
+    const fechaDeposito = document.getElementById('fecha-deposito');
+    if (fechaDeposito) {
+      fechaDeposito.value = obtenerFechaActual();
+      fechaDeposito.readOnly = true;
+    }
+    // El usuario ingresa el número de comprobante manualmente
     }
 
     // Función para cargar historial de movimientos

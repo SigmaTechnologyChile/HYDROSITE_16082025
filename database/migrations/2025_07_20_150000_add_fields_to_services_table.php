@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('services', function (Blueprint $table) {
-            $table->unsignedBigInteger('location_id')->nullable()->after('member_id');
-            $table->string('nombre')->nullable()->after('location_id');
-            $table->string('telefono')->nullable()->after('nombre');
-            $table->integer('order_by')->nullable()->after('telefono');
-            $table->string('numero')->nullable()->after('order_by');
+            $table->unsignedBigInteger('location_id')->nullable();
+            $table->string('nombre')->nullable();
+            $table->string('telefono')->nullable();
+            $table->integer('order_by')->nullable();
+            $table->string('numero')->nullable();
         });
     }
 

@@ -68,14 +68,14 @@
 
 .saldo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
 }
 
 .saldo-item {
   background: rgba(255, 255, 255, 0.15);
-  padding: 20px;
-  border-radius: 10px;
+  padding: 15px;
+  border-radius: 8px;
   backdrop-filter: blur(5px);
 }
 
@@ -90,9 +90,9 @@
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 600;
-  padding: 12px;
+  padding: 10px;
   width: 100%;
   border-radius: 6px;
 }
@@ -114,7 +114,7 @@
   text-align: center;
   transition: transform 0.3s ease;
   flex: 1;
-  min-width: 280px;
+  min-width: 250px;
 }
 
 .total-card:hover {
@@ -131,6 +131,10 @@
 
 .total-card.saldo {
   border-top: 5px solid var(--primary-color);
+}
+
+.total-card.ahorro {
+  border-top: 5px solid var(--purple-color);
 }
 
 .total-card h3 {
@@ -154,6 +158,10 @@
 
 .total-card.saldo .value {
   color: var(--primary-color);
+}
+
+.total-card.ahorro .value {
+  color: var(--purple-color);
 }
 
 .table-container {
@@ -308,19 +316,23 @@ td {
         <div class="saldo-grid">
             <div class="saldo-item">
                 <label>Saldo Caja General</label>
-                <input type="text" value="${{ number_format($cuentaCajaGeneral->saldo_inicial ?? 0, 0, ',', '.') }}" readonly>
+                <input type="text" value="${{ number_format($saldoCajaGeneral ?? 0, 0, ',', '.') }}" readonly>
             </div>
             <div class="saldo-item">
                 <label>Saldo Cuenta Corriente 1</label>
-                <input type="text" value="${{ number_format($cuentaCorriente1->saldo_inicial ?? 0, 0, ',', '.') }}" readonly>
+                <input type="text" value="${{ number_format($saldoCuentaCorriente1 ?? 0, 0, ',', '.') }}" readonly>
             </div>
             <div class="saldo-item">
                 <label>Saldo Cuenta Corriente 2</label>
-                <input type="text" value="${{ number_format($cuentaCorriente2->saldo_inicial ?? 0, 0, ',', '.') }}" readonly>
+                <input type="text" value="${{ number_format($saldoCuentaCorriente2 ?? 0, 0, ',', '.') }}" readonly>
+            </div>
+            <div class="saldo-item">
+                <label>Saldo Cuenta Ahorro</label>
+                <input type="text" value="${{ number_format($saldoCuentaAhorro ?? 0, 0, ',', '.') }}" readonly>
             </div>
             <div class="saldo-item">
                 <label>Saldo Total</label>
-                <input type="text" value="${{ number_format($saldoFinal ?? 0, 0, ',', '.') }}" readonly>
+                <input type="text" value="${{ number_format($saldoTotal ?? 0, 0, ',', '.') }}" readonly>
             </div>
         </div>
     </div>
@@ -396,6 +408,9 @@ td {
                         <td>
                             <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#editModal{{ $movimiento->id }}">
                                 <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger ms-1" onclick="eliminarMovimiento({{ $movimiento->id }})" title="Eliminar">
+                                <i class="bi bi-trash"></i>
                             </button>
                         </td>
                         <td>{{ \Carbon\Carbon::parse($movimiento->fecha)->format('d/m/Y') }}</td>
