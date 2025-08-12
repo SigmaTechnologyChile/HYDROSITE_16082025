@@ -12,7 +12,7 @@ $response = $kernel->handle(
 
 // Probar conexión a base de datos
 try {
-    $pdo = new PDO('mysql:host=localhost;dbname=hydrosite', 'root', '');
+    $pdo = new PDO('mysql:host=localhost;dbname=hydrosite_db', 'root', '');
     echo "✅ Conexión a base de datos exitosa\n";
     
     // Verificar si tabla rutas existe

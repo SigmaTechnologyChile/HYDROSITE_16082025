@@ -1,4 +1,3 @@
-Route::post('org/{id}/conciliar-movimientos', [App\Http\Controllers\Org\ContableController::class, 'conciliarMovimientos'])->name('org.conciliar_movimientos');
 <?php
 // Ruta para balance completo profesional
 Route::get('orgs/contable/{id}/balance-completo', [App\Http\Controllers\Org\ContableController::class, 'balanceCompleto'])->name('orgs.contable.balanceCompleto');

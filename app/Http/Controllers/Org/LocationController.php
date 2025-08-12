@@ -243,8 +243,18 @@ class LocationController extends Controller
                 ->orderBy('services.id', 'ASC') // Fallback para servicios sin orden
                 ->get();
 
+            // Ajustar para frontend: agregar array 'members' por servicio
+            $serviciosConOrden = $serviciosConOrden->map(function($servicio) {
+                return [
+                    'numero' => $servicio->numero,
+                    'rut' => $servicio->rut,
+                    'full_name' => $servicio->full_name,
+                    'orden' => $servicio->orden,
+                    'members' => $servicio->full_name ? [ ['name' => $servicio->full_name] ] : [],
+                ];
+            });
+
             return response()->json($serviciosConOrden);
-            
         } catch (\Exception $e) {
             \Log::error("Error al obtener servicios con orden: " . $e->getMessage());
             return response()->json([

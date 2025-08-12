@@ -1,3 +1,11 @@
+<style>
+    .service-members {
+        color: #444;
+        font-size: 13px;
+        margin-left: 10px;
+        font-style: italic;
+    }
+</style>
 @extends('layouts.nice', ['active'=>'orgs.locations.panelcontrolrutas', 'title'=>'Panel Control Rutas'])
 
 @section('content')
@@ -742,13 +750,13 @@ document.addEventListener('DOMContentLoaded', function() {
             // Obtener el nombre del sector seleccionado
             const sectorName = sectorSelect.options[sectorSelect.selectedIndex].textContent;
             
-            // Mostrar servicios en filas
+            // Mostrar servicios en filas con miembros
             let html = `
                 <div class="service-count">
                     <strong>✅ ${servicios.length} servicio(s)</strong> encontrado(s) en <strong>${sectorName}</strong>
                 </div>
             `;
-            
+
             servicios.forEach(servicio => {
                 html += `
                     <div class="service-row">
@@ -756,10 +764,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="service-name">${servicio.full_name || 'Sin nombre'}</span>
                         <span class="service-rut">${servicio.rut || 'Sin RUT'}</span>
                         <span class="sector-badge">${sectorName}</span>
+                        <span class="service-members">
+                            ${servicio.members && servicio.members.length > 0
+                                ? '<strong>Miembros:</strong> ' + servicio.members.map(m => m.name).join(', ')
+                                : '<em>Sin miembros</em>'}
+                        </span>
                     </div>
                 `;
             });
-            
+
             serviciosContainer.innerHTML = html;
             
         } catch (error) {
