@@ -384,8 +384,8 @@ Route::prefix('org')->name('orgs.')->group(function () {
 
 
 
-    //Export Excel
 
+    //Export Excel
     Route::get('{id}/tramos/export', [App\Http\Controllers\Org\SectionController::class, 'export'])->name('sections.export');
 
 

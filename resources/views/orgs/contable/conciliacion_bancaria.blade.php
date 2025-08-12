@@ -208,7 +208,7 @@ tbody tr:hover {
   </div>
   
   <div class="conciliacion-grid">
-    <div class="conciliacion-card">
+                    ${{ number_format((float)$movimiento->monto, 0, ',', '.') }}
       <h3><i class="bi bi-journal-check"></i> Movimientos Registrados</h3>
       <div class="table-container">
         <table>
@@ -1086,14 +1086,11 @@ function conciliar() {
                                     {{ Str::limit($movimiento->descripcion ?? 'Movimiento bancario', 30) }}
                                 </td>
                                 <td>{{ $movimiento->cuenta ?? 'Cta. Corriente' }}</td>
-                                <td>
-                                    @php
-                                        $monto = ($movimiento->total_consumo ?? 0) + ($movimiento->cuotas_incorporacion ?? 0) - ($movimiento->giros ?? 0);
-                                    @endphp
-                                    <span class="{{ $monto >= 0 ? 'monto-positivo' : 'monto-negativo' }}">
-                                        ${{ number_format(abs($monto), 0, ',', '.') }}
-                                    </span>
-                                </td>
+                <td>
+                  <span class="{{ $movimiento->monto >= 0 ? 'monto-positivo' : 'monto-negativo' }}">
+                                        ${{ number_format((float)$movimiento->monto, 2, ',', '.') }}
+                  </span>
+                </td>
                                 <td>
                                     @php
                                         $estados = ['conciliado', 'pendiente'];

@@ -341,7 +341,7 @@
                     </div>
                     <!-- Botón Exportar -->
                     <div class="col-md-auto d-flex align-items-center ms-2">
-                        <a href="#" class="btn btn-primary pulse-btn p-1 px-2 rounded-2 enhanced-btn disabled" tabindex="-1" aria-disabled="true">
+                        <a href="#" id="exportBtn" class="btn btn-primary pulse-btn p-1 px-2 rounded-2 enhanced-btn disabled" tabindex="-1" aria-disabled="true">
                             <i class="bi bi-box-arrow-right me-2"></i>Exportar
                         </a>
                     </div>
@@ -1753,6 +1753,20 @@ document.addEventListener('DOMContentLoaded', function() {
         if (countText) {
             countText.textContent = filasConLectura + '/' + totalFilas;
         }
+        
+        // Habilitar/deshabilitar el botón Exportar
+        const exportBtn = document.getElementById('exportBtn');
+        if (exportBtn) {
+            if (filasConLectura > 0) {
+                exportBtn.classList.remove('disabled');
+                exportBtn.removeAttribute('aria-disabled');
+                exportBtn.setAttribute('tabindex', '0');
+            } else {
+                exportBtn.classList.add('disabled');
+                exportBtn.setAttribute('aria-disabled', 'true');
+                exportBtn.setAttribute('tabindex', '-1');
+            }
+        }
     }
 
     // Función para actualizar los contadores del modal de facturación
@@ -1851,8 +1865,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Exportar tabla visible a Excel
+    document.getElementById('exportBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (this.classList.contains('disabled')) return;
+        // Selecciona la tabla principal de lecturas
+        var table = document.querySelector('table.table-bordered');
+        if (!table) {
+            alert('No se encontró la tabla de lecturas.');
+            return;
+        }
+        // Convierte la tabla HTML a una hoja de Excel usando SheetJS
+        var wb = XLSX.utils.table_to_book(table, {sheet: 'Lecturas'});
+        XLSX.writeFile(wb, 'lecturas_exportadas.xlsx');
+    });
 });
-
 </script>
 
 @endsection
