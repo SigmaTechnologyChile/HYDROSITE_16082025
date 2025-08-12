@@ -79,6 +79,15 @@
                     <td class="text-end">@money($service->total_sum)</td>
                     <td>
                         <input type="checkbox" class="service-checkbox" data-total="{{ $service->total_sum }}" value="{{ $service->reading_id }}" name="services[]">
+                        <style>
+                        .service-checkbox {
+                          width: 28px;
+                          height: 28px;
+                          accent-color: #3498db;
+                          margin-right: 8px;
+                          cursor: pointer;
+                        }
+                        </style>
                     </td>
                   </tr>
                   @endforeach
@@ -106,8 +115,10 @@
                   <label class="btn btn-outline-primary" for="efectivo">Efectivo</label>
                 </div>
                 <div>
-                  <input type="radio" class="btn-check" name="payment_method_id" id="transferencia" value="3" autocomplete="off" required>
-                  <label class="btn btn-outline-primary" for="transferencia">Transferencia</label>
+                  <div style="display:none">
+                    <input type="radio" class="btn-check" name="payment_method_id" id="transferencia" value="3" autocomplete="off" required>
+                    <label class="btn btn-outline-primary" for="transferencia">Transferencia</label>
+                  </div>
                 </div>
               </div>
             </div>

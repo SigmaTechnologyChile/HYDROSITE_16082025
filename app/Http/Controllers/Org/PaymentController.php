@@ -185,6 +185,42 @@ class PaymentController extends Controller
 
             $reading->payment_status = $payment_status;
             $reading->save();
+
+            // --- Registro automático en contabilidad ---
+            $conceptos_map = [
+                'vcf_water'        => ['categoria' => 'agua', 'grupo' => 'servicio'],
+                'vc_water'         => ['categoria' => 'agua', 'grupo' => 'servicio'],
+                'vs_consumption'   => ['categoria' => 'agua', 'grupo' => 'servicio'],
+                'vcf_alca'         => ['categoria' => 'cargo_fijo', 'grupo' => 'servicio'],
+                'vc_alca'          => ['categoria' => 'cargo_fijo', 'grupo' => 'servicio'],
+                'vcfa_serv'        => ['categoria' => 'cargo_fijo', 'grupo' => 'servicio'],
+                'vca_serv'         => ['categoria' => 'cargo_fijo', 'grupo' => 'servicio'],
+                'v_subs'           => ['categoria' => 'subsidio', 'grupo' => 'descuento'],
+                'vc_social'        => ['categoria' => 'subsidio', 'grupo' => 'descuento'],
+                'multas_vencidas'  => ['categoria' => 'multas', 'grupo' => 'penalización'],
+                'other'            => ['categoria' => 'otros', 'grupo' => 'otros'],
+                'corte_reposicion' => ['categoria' => 'corte_reposicion', 'grupo' => 'penalización'],
+                'v_admin'          => ['categoria' => 'administrativo', 'grupo' => 'servicio'],
+                's_previous'       => ['categoria' => 'saldo_anterior', 'grupo' => 'otros'],
+                'tax'              => ['categoria' => 'iva', 'grupo' => 'impuesto'],
+            ];
+
+            foreach ($conceptos_map as $campo => $info) {
+                $monto = $reading->$campo ?? 0;
+                if ($monto > 0) {
+                    \App\Models\ContableIngreso::create([
+                        'order_id'   => $order->id,
+                        'reading_id' => $reading->id,
+                        'fecha'      => now(),
+                        'monto'      => $monto,
+                        'categoria'  => $info['categoria'],
+                        'tipo'       => ($info['categoria'] == 'subsidio' ? 'descuento' : 'ingreso'),
+                        'grupo'      => $info['grupo'],
+                        'detalle'    => $info['categoria'] . ' - ' . $monto,
+                        'usuario_id' => $user->id,
+                    ]);
+                }
+            }
         }
 
         $orderU = Order::findOrFail($order_id);
@@ -203,9 +239,66 @@ class PaymentController extends Controller
         ]);
 
             // Se utiliza el parámetro $id en lugar de $org_id
+
             $reading = Reading::findOrFail($reading_id);
             $reading->current_reading = $request->current_reading;
+            $reading->payment_status = 1; // Pagado
+
+            // Actualizar montos desde el request si están presentes
+            $campos_montos = [
+                'vcf_water', 'vc_water', 'vs_consumption', 'vcf_alca', 'vc_alca', 'vcfa_serv', 'vca_serv',
+                'v_subs', 'vc_social', 'multas_vencidas', 'other', 'corte_reposicion', 'v_admin',
+                's_previous', 'tax', 'total_mounth', 'total', 'sub_total'
+            ];
+            foreach ($campos_montos as $campo) {
+                if ($request->has($campo)) {
+                    $reading->$campo = $request->input($campo);
+                }
+            }
             $reading->save();
+
+            // --- Registro automático en contabilidad ---
+            $conceptos_map = [
+                'vcf_water'        => ['categoria' => 'agua', 'grupo' => 'servicio'],
+                'vc_water'         => ['categoria' => 'agua', 'grupo' => 'servicio'],
+                'vs_consumption'   => ['categoria' => 'agua', 'grupo' => 'servicio'],
+                'vcf_alca'         => ['categoria' => 'cargo_fijo', 'grupo' => 'servicio'],
+                'vc_alca'          => ['categoria' => 'cargo_fijo', 'grupo' => 'servicio'],
+                'vcfa_serv'        => ['categoria' => 'cargo_fijo', 'grupo' => 'servicio'],
+                'vca_serv'         => ['categoria' => 'cargo_fijo', 'grupo' => 'servicio'],
+                'v_subs'           => ['categoria' => 'subsidio', 'grupo' => 'descuento'],
+                'vc_social'        => ['categoria' => 'subsidio', 'grupo' => 'descuento'],
+                'multas_vencidas'  => ['categoria' => 'multas', 'grupo' => 'penalización'],
+                'other'            => ['categoria' => 'otros', 'grupo' => 'otros'],
+                'corte_reposicion' => ['categoria' => 'corte_reposicion', 'grupo' => 'penalización'],
+                'v_admin'          => ['categoria' => 'administrativo', 'grupo' => 'servicio'],
+                's_previous'       => ['categoria' => 'saldo_anterior', 'grupo' => 'otros'],
+                'tax'              => ['categoria' => 'iva', 'grupo' => 'impuesto'],
+            ];
+
+            $user = null;
+            if (auth()->check()) {
+                $user = auth()->user();
+            } else if ($reading->member_id) {
+                $user = \App\Models\Member::find($reading->member_id);
+            }
+
+            foreach ($conceptos_map as $campo => $info) {
+                $monto = $reading->$campo ?? 0;
+                if ($monto > 0) {
+                    \App\Models\ContableIngreso::create([
+                        'order_id'   => null,
+                        'reading_id' => $reading->id,
+                        'fecha'      => now(),
+                        'monto'      => $monto,
+                        'categoria'  => $info['categoria'],
+                        'tipo'       => ($info['categoria'] == 'subsidio' ? 'descuento' : 'ingreso'),
+                        'grupo'      => $info['grupo'],
+                        'detalle'    => $info['categoria'] . ' - ' . $monto,
+                        'usuario_id' => $user ? $user->id : null,
+                    ]);
+                }
+            }
 
         return response()->json([
             'success' => true,

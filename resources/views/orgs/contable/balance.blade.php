@@ -475,128 +475,153 @@
     
     <!-- Resumen Principal -->
     <div class="summary-card">
-        <div class="summary-grid">
-            <div class="summary-item ingresos">
-                <div class="label">Total Ingresos</div>
-                <div class="value" id="balanceTotalIngresos">
-                    ${{ number_format($totalIngresos ?? 0, 0, ',', '.') }}
-                </div>
-            </div>
-            <div class="summary-item egresos">
-                <div class="label">Total Egresos</div>
-                <div class="value" id="balanceTotalEgresos">
-                    ${{ number_format($totalEgresos ?? 0, 0, ',', '.') }}
-                </div>
-            </div>
-            <div class="summary-item saldo">
-                <div class="label">Saldo Final</div>
-                <div class="value" id="balanceSaldoFinal">
-                    ${{ number_format($saldoFinal ?? 0, 0, ',', '.') }}
-                </div>
-            </div>
+    <div class="summary-grid">
+      <div class="summary-item ingresos">
+        <div class="label">Total Ingresos</div>
+        <div class="value" id="balanceTotalIngresos">
+          @if(isset($totalIngresos))
+            ${{ number_format($totalIngresos, 0, ',', '.') }}
+          @else
+            <span class="text-muted">Sin datos</span>
+          @endif
         </div>
+      </div>
+      <div class="summary-item egresos">
+        <div class="label">Total Egresos</div>
+        <div class="value" id="balanceTotalEgresos">
+          @if(isset($totalEgresos))
+            ${{ number_format($totalEgresos, 0, ',', '.') }}
+          @else
+            <span class="text-muted">Sin datos</span>
+          @endif
+        </div>
+      </div>
+      <div class="summary-item saldo">
+        <div class="label">Saldo Final</div>
+        <div class="value" id="balanceSaldoFinal">
+          @if(isset($saldoFinal))
+            ${{ number_format($saldoFinal, 0, ',', '.') }}
+          @else
+            <span class="text-muted">Sin datos</span>
+          @endif
+        </div>
+      </div>
+    </div>
     </div>
 
     <!-- Ratios Financieros Profesionales -->
-    <div class="ratios-grid">
-        <div class="ratio-card">
-            <h4><i class="bi bi-droplet"></i> Liquidez Corriente</h4>
-            <div class="ratio-value">{{ number_format($ratioLiquidez ?? 1.5, 2) }}</div>
-            <div class="ratio-description">
-                Capacidad de pago a corto plazo
-                @if(($ratioLiquidez ?? 1.5) >= 1.5)
-                    <span style="color: var(--success-color);">✓ Saludable</span>
-                @else
-                    <span style="color: var(--warning-color);">⚠ Revisar</span>
-                @endif
-            </div>
-        </div>
-        
-        <div class="ratio-card">
-            <h4><i class="bi bi-graph-up"></i> ROE</h4>
-            <div class="ratio-value">{{ number_format($roe ?? 12.5, 1) }}%</div>
-            <div class="ratio-description">Rentabilidad del patrimonio</div>
-        </div>
-        
-        <div class="ratio-card">
-            <h4><i class="bi bi-shield-check"></i> Endeudamiento</h4>
-            <div class="ratio-value">{{ number_format($ratioEndeudamiento ?? 35, 1) }}%</div>
-            <div class="ratio-description">
-                Proporción de deuda sobre activos
-                @if(($ratioEndeudamiento ?? 35) <= 40)
-                    <span style="color: var(--success-color);">✓ Bajo riesgo</span>
-                @else
-                    <span style="color: var(--danger-color);">⚠ Alto riesgo</span>
-                @endif
-            </div>
-        </div>
-        
-        <div class="ratio-card">
-            <h4><i class="bi bi-percent"></i> Margen Operacional</h4>
-            <div class="ratio-value">{{ number_format($margenOperacional ?? 18.3, 1) }}%</div>
-            <div class="ratio-description">Eficiencia operacional</div>
-        </div>
+  @if(isset($ratioLiquidez) || isset($roe) || isset($ratioEndeudamiento) || isset($margenOperacional))
+  <div class="ratios-grid">
+    @if(isset($ratioLiquidez))
+    <div class="ratio-card">
+      <h4><i class="bi bi-droplet"></i> Liquidez Corriente</h4>
+      <div class="ratio-value">{{ number_format($ratioLiquidez, 2) }}</div>
+      <div class="ratio-description">
+        Capacidad de pago a corto plazo
+        @if($ratioLiquidez >= 1.5)
+          <span style="color: var(--success-color);">✓ Saludable</span>
+        @else
+          <span style="color: var(--warning-color);">⚠ Revisar</span>
+        @endif
+      </div>
     </div>
+    @endif
+    @if(isset($roe))
+    <div class="ratio-card">
+      <h4><i class="bi bi-graph-up"></i> ROE</h4>
+      <div class="ratio-value">{{ number_format($roe, 1) }}%</div>
+      <div class="ratio-description">Rentabilidad del patrimonio</div>
+    </div>
+    @endif
+    @if(isset($ratioEndeudamiento))
+    <div class="ratio-card">
+      <h4><i class="bi bi-shield-check"></i> Endeudamiento</h4>
+      <div class="ratio-value">{{ number_format($ratioEndeudamiento, 1) }}%</div>
+      <div class="ratio-description">
+        Proporción de deuda sobre activos
+        @if($ratioEndeudamiento <= 40)
+          <span style="color: var(--success-color);">✓ Bajo riesgo</span>
+        @else
+          <span style="color: var(--danger-color);">⚠ Alto riesgo</span>
+        @endif
+      </div>
+    </div>
+    @endif
+    @if(isset($margenOperacional))
+    <div class="ratio-card">
+      <h4><i class="bi bi-percent"></i> Margen Operacional</h4>
+      <div class="ratio-value">{{ number_format($margenOperacional, 1) }}%</div>
+      <div class="ratio-description">Eficiencia operacional</div>
+    </div>
+    @endif
+  </div>
+  @else
+  <div class="ratios-grid">
+    <div class="ratio-card">
+      <div class="ratio-description text-muted">Sin datos de ratios financieros</div>
+    </div>
+  </div>
+  @endif
     
     <!-- Dashboard con Gráficos -->
-    <div class="dashboard-grid">
-        <div class="chart-card">
-            <h3><i class="bi bi-pie-chart"></i> Distribución de Ingresos</h3>
-            <canvas id="ingresosChart"></canvas>
-        </div>
-        <div class="chart-card">
-            <h3><i class="bi bi-pie-chart-fill"></i> Distribución de Egresos</h3>
-            <canvas id="egresosChart"></canvas>
-        </div>
-        <div class="chart-card">
-            <h3><i class="bi bi-graph-up"></i> Flujo Mensual</h3>
-            <canvas id="flujoChart"></canvas>
-        </div>
-        <div class="chart-card">
-            <h3><i class="bi bi-bank"></i> Conciliación Bancaria</h3>
-            <canvas id="conciliacionChart"></canvas>
-        </div>
+  @if(isset($datosIngresos) && isset($datosEgresos))
+  <div class="dashboard-grid">
+    <div class="chart-card">
+      <h3><i class="bi bi-pie-chart"></i> Distribución de Ingresos</h3>
+      <canvas id="ingresosChart"></canvas>
     </div>
+    <div class="chart-card">
+      <h3><i class="bi bi-pie-chart-fill"></i> Distribución de Egresos</h3>
+      <canvas id="egresosChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3><i class="bi bi-graph-up"></i> Flujo Mensual</h3>
+      <canvas id="flujoChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3><i class="bi bi-bank"></i> Conciliación Bancaria</h3>
+      <canvas id="conciliacionChart"></canvas>
+    </div>
+  </div>
+  @else
+  <div class="dashboard-grid">
+    <div class="chart-card">
+      <div class="ratio-description text-muted">Sin datos para gráficos</div>
+    </div>
+  </div>
+  @endif
     
     <!-- Grid de Cards de Análisis -->
     <div class="balance-grid">
         <div class="balance-card">
             <h3><i class="bi bi-arrow-up-circle"></i> Ingresos por Categoría</h3>
             <ul id="balanceIngresos">
-                @php
-                    $categoriasIngresos = [
-                        'Cuotas de Incorporación' => $totalCuotasIncorporacion ?? 45000000,
-                        'Consumo de Agua' => $totalConsumo ?? 78500000,
-                        'Otros Ingresos' => $otrosIngresos ?? 12300000,
-                        'Multas y Recargos' => $multasRecargos ?? 5600000
-                    ];
-                @endphp
-                @foreach($categoriasIngresos as $categoria => $monto)
-                <li>
-                    <span class="category">{{ $categoria }}</span>
-                    <span class="amount ingreso">${{ number_format($monto, 0, ',', '.') }}</span>
-                </li>
-                @endforeach
+        @if(isset($categoriasIngresos) && count($categoriasIngresos))
+          @foreach($categoriasIngresos as $categoria => $monto)
+          <li>
+            <span class="category">{{ $categoria }}</span>
+            <span class="amount ingreso">${{ number_format($monto, 0, ',', '.') }}</span>
+          </li>
+          @endforeach
+        @else
+          <li><span class="text-muted">Sin datos de ingresos por categoría</span></li>
+        @endif
             </ul>
         </div>
         
         <div class="balance-card">
             <h3><i class="bi bi-arrow-down-circle"></i> Egresos por Categoría</h3>
             <ul id="balanceEgresos">
-                @php
-                    $categoriasEgresos = [
-                        'Giros y Transferencias' => $totalGiros ?? 25400000,
-                        'Gastos Operacionales' => $gastosOperacionales ?? 18700000,
-                        'Gastos Administrativos' => $gastosAdministrativos ?? 12300000,
-                        'Mantenimiento' => $gastosMantenimiento ?? 8900000
-                    ];
-                @endphp
-                @foreach($categoriasEgresos as $categoria => $monto)
-                <li>
-                    <span class="category">{{ $categoria }}</span>
-                    <span class="amount egreso">${{ number_format($monto, 0, ',', '.') }}</span>
-                </li>
-                @endforeach
+        @if(isset($categoriasEgresos) && count($categoriasEgresos))
+          @foreach($categoriasEgresos as $categoria => $monto)
+          <li>
+            <span class="category">{{ $categoria }}</span>
+            <span class="amount egreso">${{ number_format($monto, 0, ',', '.') }}</span>
+          </li>
+          @endforeach
+        @else
+          <li><span class="text-muted">Sin datos de egresos por categoría</span></li>
+        @endif
             </ul>
         </div>
         

@@ -70,19 +70,17 @@
                 <table class="table table-bordered table-hover">
                     <thead class="table-light">
                         <tr>
-    <th scope="col" class="text-center">ID</th>
+    <!-- Columnas eliminadas: ID, RUT, ID Servicio -->
     <th scope="col" class="text-center">RUT</th>
     <th scope="col" class="text-center">Nombre</th>
     <th scope="col" class="text-center">Dirección</th>
-    <th scope="col" class="text-center">Tipo</th>
-    <th scope="col" class="text-center">Servicios</th>
     <th scope="col" class="text-center">Acciones</th>
 </tr>
 </thead>
 <tbody>
     @foreach($members as $member)
     <tr>
-        <td class="text-center">{{ $member->id }}</td>
+        <!-- Columnas eliminadas: ID, RUT, ID Servicio -->
         <td class="text-center"><a href="{{route('orgs.members.edit',[$org->id,$member->id])}}">{{ $member->rut }}</a></td>
         <td class="text-center">
             <div class="d-flex align-items-center justify-content-center">

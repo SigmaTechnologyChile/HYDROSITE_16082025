@@ -20,7 +20,7 @@
                 <form action="" method="GET" id="filterForm">
                     <div class="row g-3 align-items-end">
                         <!-- Sector -->
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label fw-semibold">Sector</label>
                             <select name="sector" id="sector" class="form-select rounded-3">
                                 @if($locations->isNotEmpty())
@@ -37,7 +37,7 @@
                         </div>
 
                         <!-- N° Servicio -->
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label fw-semibold">N° ID Servicio</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-hash"></i></span>
@@ -45,18 +45,27 @@
                             </div>
                         </div>
 
+                        <!-- Buscador único por Nombre / RUT -->
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Nombre / RUT</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="text" class="form-control" name="search" id="search" placeholder="Nombre / RUT" value="{{ request()->search }}">
+                            </div>
+                        </div>
+
                         <!-- Botón Filtrar -->
                         <div class="col-md-auto d-flex align-items-center">
-                        <button type="submit" class="btn btn-primary pulse-btn p-1 px-2 rounded-2">
-                            <i class="bi bi-funnel-fill me-2"></i>Filtrar
-                        </button>
-                    </div>
-                    <!-- Botón Exportar -->
+                            <button type="submit" class="btn btn-primary pulse-btn p-1 px-2 rounded-2">
+                                <i class="bi bi-funnel-fill me-2"></i>Filtrar
+                            </button>
+                        </div>
+                        <!-- Botón Exportar -->
                         <div class="col-md-auto d-flex align-items-center ms-2">
-                        <a href="{{route('orgs.readings.export',$org->id)}}" class="btn btn-primary pulse-btn p-1 px-2 rounded-2">
-                            <i class="bi bi-box-arrow-right me-2"></i>Exportar
-                        </a>
-                    </div>
+                            <a href="{{route('orgs.readings.export',$org->id)}}" class="btn btn-primary pulse-btn p-1 px-2 rounded-2">
+                                <i class="bi bi-box-arrow-right me-2"></i>Exportar
+                            </a>
+                        </div>
                     </div>
                 </form>
             </div>

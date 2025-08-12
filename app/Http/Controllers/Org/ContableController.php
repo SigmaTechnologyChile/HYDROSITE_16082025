@@ -154,7 +154,57 @@ class ContableController extends Controller
     public function balanceCompleto($id)
     {
         $resumen = $this->getResumenSaldos($id);
+
         $movimientos = Movimiento::where('org_id', $id)->orderBy('fecha', 'desc')->get();
+        $contableIngresos = \App\Models\ContableIngreso::whereHas('order', function($q) use ($id) {
+            $q->where('org_id', $id);
+        })->get();
+
+        // Unificar ingresos de movimientos y contable_ingresos
+        $ingresos = collect();
+        foreach ($movimientos as $m) {
+            if ($m->monto > 0) {
+                $ingresos->push([
+                    'fecha' => $m->fecha,
+                    'monto' => $m->monto,
+                    'categoria' => $m->categoria,
+                    'detalle' => $m->detalle ?? '',
+                ]);
+            }
+        }
+        foreach ($contableIngresos as $ci) {
+            $ingresos->push([
+                'fecha' => $ci->fecha,
+                'monto' => $ci->monto,
+                'categoria' => $ci->categoria,
+                'detalle' => $ci->detalle ?? '',
+            ]);
+        }
+
+        // Agrupar por categoría
+        $categoriasIngresos = [
+            'Cuotas de Incorporación' => $ingresos->where('categoria', 'Cuotas de Incorporación')->sum('monto'),
+            'Consumo de Agua' => $ingresos->where('categoria', 'agua')->sum('monto'),
+            'Cargo Fijo' => $ingresos->where('categoria', 'cargo_fijo')->sum('monto'),
+            'Multas y Recargos' => $ingresos->where('categoria', 'multas')->sum('monto'),
+            'Otros Ingresos' => $ingresos->where('categoria', 'otros')->sum('monto'),
+        ];
+
+        $datosIngresos = [
+            'labels' => array_keys($categoriasIngresos),
+            'data' => array_values($categoriasIngresos),
+        ];
+
+        // Flujo mensual
+        $flujoLabels = [];
+        $flujoIngresos = [];
+        $agrupados = $ingresos->groupBy(function($m) {
+            return \Carbon\Carbon::parse($m['fecha'])->format('Y-m');
+        });
+        foreach ($agrupados as $mes => $items) {
+            $flujoLabels[] = $mes;
+            $flujoIngresos[] = collect($items)->sum('monto');
+        }
 
         // Si no hay movimientos ni saldos, todos los indicadores serán null
         $hayDatos = $movimientos->count() > 0 && isset($resumen['totalSaldoActual']) && isset($resumen['totalEgresos']) && isset($resumen['saldoFinal']) && isset($resumen['totalSaldoInicial']) && isset($resumen['totalIngresos']);
@@ -1169,7 +1219,7 @@ class ContableController extends Controller
 
         $cuentas = Cuenta::where('org_id', $id)->get();
         $categorias = Categoria::all();
-        return view('orgs.contable.balance', array_merge([
+    return view('orgs.contable.balance', array_merge([
             'orgId' => $id,
             'movimientos' => $movimientos,
             'categoriasIngresos' => $categoriasIngresos,

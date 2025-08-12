@@ -77,6 +77,13 @@ class ServiceController extends Controller
             ->when(request('nro'), function ($query) {
                 return $query->where('services.nro', 'like', '%' . request('nro') . '%');
             })
+            ->when(request('search'), function ($query) {
+                $search = request('search');
+                return $query->where(function($q) use ($search) {
+                    $q->where('members.full_name', 'like', "%$search%")
+                      ->orWhere('members.rut', 'like', "%$search%");
+                });
+            })
             ->select(
                 'services.*',
                 'members.full_name as member_name',

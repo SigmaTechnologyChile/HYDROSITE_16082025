@@ -57,6 +57,7 @@ class MemberController extends Controller
                 'members.created_at',
                 'members.updated_at',
                 'members.deleted_at',
+                'services.id as service_id',
                 DB::raw('COUNT(*) as qrx_serv')
             )
             ->groupBy(
@@ -76,7 +77,8 @@ class MemberController extends Controller
                 'members.active',
                 'members.created_at',
                 'members.updated_at',
-                'members.deleted_at'
+                'members.deleted_at',
+                'services.id'
             )
             ->paginate(20);
 

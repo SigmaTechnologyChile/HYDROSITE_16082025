@@ -173,6 +173,42 @@ class OrdersController extends Controller
                 // Marcar la lectura como pagada
                 $reading->payment_status = $payment_status;
                 $reading->save();
+                    // Registrar ingreso contable por cada lectura pagada
+                    \App\Models\ContableIngreso::create([
+                        'fecha' => now(),
+                        'monto' => $montoReal,
+                        'concepto' => $orderItem->description ?? 'Pago',
+                        'detalle' => 'Pago registrado desde OrdersController',
+                        'order_id' => $order->id,
+                        'user_id' => auth()->id(),
+                        'reading_id' => $reading->id,
+                        'categoria' => 'ingreso',
+                        'tipo' => ((string)$payment_method_id === '1' ? 'pos' : ((string)$payment_method_id === '2' ? 'efectivo' : 'otro')),
+                        'grupo' => 'general', // Ajusta el valor si necesitas algo específico
+                    ]);
+                    // Registrar movimiento para el libro de caja tabular
+                    // Determinar la cuenta destino según el método de pago
+                    $cuentaDestinoId = ((string)$payment_method_id === '1') ? 6 : 5; // 1=POS→6, 2=Efectivo→5
+
+                    // Abonar el monto a la cuenta destino correspondiente
+                    $cuentaDestino = \App\Models\Cuenta::find($cuentaDestinoId);
+                    if ($cuentaDestino) {
+                        $cuentaDestino->saldo_actual += $montoReal;
+                        $cuentaDestino->save();
+                    }
+
+                    \App\Models\Movimiento::create([
+                        'org_id' => $reading->org_id,
+                        'fecha' => now()->toDateString(),
+                        'tipo' => 'ingreso',
+                        'subtipo' => ((string)$payment_method_id === '1' ? 'pos' : ((string)$payment_method_id === '2' ? 'efectivo' : 'otro')),
+                        'monto' => $montoReal,
+                        'descripcion' => ((string)$payment_method_id === '1' ? 'VTA POS' : 'VTA EFECTIVO'),
+                        'grupo' => 'Total Consumo',
+                        'estado' => 'confirmado',
+                        'categoria_id' => 1,
+                        'cuenta_destino_id' => $cuentaDestinoId,
+                    ]);
                 
             } catch (\Exception $e) {
                 \Log::error('Error saving OrderItem', [
