@@ -228,8 +228,8 @@
       }
       .card {
         background: var(--card-bg);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(37,99,235,0.12), 0 2px 8px rgba(37,99,235,0.07);
         border: 1px solid var(--border);
         overflow: hidden;
         position: relative;
@@ -242,11 +242,11 @@
       /* Tarjetas flotantes adicionales */
       .float-card {
         background: var(--card-bg);
-        border-radius: var(--radius);
+        border-radius: 18px;
         box-shadow: 0 8px 32px rgba(37,99,235,0.15), 0 2px 8px rgba(37,99,235,0.07);
         border: 1px solid var(--border);
-        padding: 24px 20px;
-        margin-bottom: 28px;
+        padding: 28px 24px;
+        margin-bottom: 32px;
         position: relative;
       }
       .float-card:hover {
@@ -429,23 +429,25 @@
         margin-top: 32px;
       }
       .action-button {
-        background: var(--primary);
+        background: linear-gradient(135deg, #2563eb 0%, #4f8cff 100%);
         color: #fff;
         border: none;
-        border-radius: 8px;
-        padding: 15px 32px;
-        font-size: 1.1rem;
+        border-radius: 12px;
+        padding: 16px 36px;
+        font-size: 1.12rem;
         font-weight: 600;
-        box-shadow: 0 2px 8px rgba(37,99,235,0.07);
+        box-shadow: 0 4px 16px rgba(37,99,235,0.10);
         cursor: pointer;
         transition: background 0.2s, transform 0.2s;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
+        letter-spacing: 0.02em;
       }
       .action-button:hover {
-        background: var(--secondary);
+        background: linear-gradient(135deg, #22c55e 0%, #4f8cff 100%);
         transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(37,99,235,0.18);
       }
       
       /* Estilo específico para el botón Guardar Lecturas */
@@ -550,10 +552,10 @@
       
       /* Estilos para la tabla de registros */
       .table-responsive {
-        border-radius: 12px;
+        border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-        margin-bottom: 24px;
+        box-shadow: 0 8px 32px rgba(37,99,235,0.10);
+        margin-bottom: 32px;
       }
       
       .table {
@@ -562,28 +564,34 @@
       }
       
       .table thead th {
-        background: var(--primary);
-        color: white;
+        background: linear-gradient(90deg, #2563eb 0%, #4f8cff 100%);
+        color: #fff;
         border: none;
-        padding: 16px 12px;
-        font-weight: 600;
+        padding: 18px 14px;
+        font-weight: 700;
         text-align: center;
         white-space: nowrap;
+        font-size: 1.05rem;
+        letter-spacing: 0.01em;
+        box-shadow: 0 2px 8px rgba(37,99,235,0.08);
       }
       
       .table tbody td {
-        padding: 12px;
+        padding: 14px 10px;
         vertical-align: middle;
         text-align: center;
         border-color: #e5e7eb;
+        font-size: 0.98rem;
+        background: #f8fafc;
       }
       
       .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(37, 99, 235, 0.03);
+        background-color: #e6f0ff;
       }
       
       .table-hover tbody tr:hover {
-        background-color: rgba(37, 99, 235, 0.08);
+        background-color: #dbeafe;
+        transition: background 0.2s;
       }
       
       .btn-sm {
@@ -625,6 +633,8 @@
       }
     </style>
 <body>
+
+@include('orgs.contable.partials.contable-styles')
 
 <!-- Botón Volver -->
 <button class="btn-volver" onclick="window.history.back()" title="Volver a la página anterior">
