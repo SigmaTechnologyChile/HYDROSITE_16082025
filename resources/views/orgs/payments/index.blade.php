@@ -1,10 +1,10 @@
-    @page {
-        size: landscape;
-    }
 
 @extends('layouts.nice', ['active' => 'orgs.payments.index', 'title' => 'Ingresar un Pago'])
 @push('styles')
 <style>
+    @page {
+        size: landscape;
+    }
     @media print {
         body * {
             visibility: hidden;
@@ -217,19 +217,51 @@
                 <table class="table table-bordered table-hover">
                     <thead class="table-light">
                         <tr>
-                            <th scope="col" class="text-center">N° Cliente</th>
-                            <th scope="col" class="text-center">RUT/RUN</th>
-                            <th scope="col" class="text-center">Nombres</th>
-                            <th scope="col" class="text-center">Apellidos</th>
-                            <th scope="col" class="text-center">Servicios</th>
-                            <th scope="col" class="text-center">Períodos Pendientes</th>
-                            <th scope="col" class="text-center">Estado</th>
-                            <th scope="col" class="text-center">TOTAL ($)</th>
+                            <th scope="col" class="text-center">
+                                N° Cliente
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'id', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'id', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+                            </th>
+                            <th scope="col" class="text-center">
+                                RUT/RUN
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'rut', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'rut', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+                            </th>
+                            <th scope="col" class="text-center">
+                                Nombres
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'first_name', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'first_name', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+                            </th>
+                            <th scope="col" class="text-center">
+                                Apellidos
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'last_name', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'last_name', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+                            </th>
+                            <th scope="col" class="text-center">
+                                Servicios
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'qrx_serv', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'qrx_serv', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+                            </th>
+                            <th scope="col" class="text-center">
+                                Períodos Pendientes
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'pending_periods', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'pending_periods', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+                            </th>
+                            <th scope="col" class="text-center">
+                                Estado
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'total_amount', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'total_amount', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+                            </th>
+                            <th scope="col" class="text-center">
+                                TOTAL ($)
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'total_amount', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+                                <a href="{{ request()->fullUrlWithQuery(['sort' => 'total_amount', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+                            </th>
                             <th scope="col" class="text-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($members as $member)
+                            @foreach($members as $member)
                         <tr data-id="{{ $member->id }}">
                             <td class="text-center">{{ $member->id }}</td>
                             <td class="text-center">
@@ -287,10 +319,7 @@
                     </tbody>
                 </table>
             </div>
-
-            <div class="card-footer">
-                {!! $members->render('pagination::bootstrap-4') !!}
-            </div>
+            <!-- Paginación eliminada -->
         </div>
     </div>
 </section>

@@ -78,16 +78,56 @@
                 <table class="table table-bordered table-hover">
                     <thead class="table-light">
                         <tr>
-    <th scope="col" class="text-center">Lec.</th>
-    <th scope="col" class="text-center">Periodo</th>
-    <th scope="col" class="text-center">Sector</th>
-    <th scope="col" class="text-center">nro Servicio</th>
-    <th scope="col" class="text-center">RUT/RUN</th>
-    <th scope="col" class="text-center">Nombre/Apellido</th>
-    <th scope="col" class="text-center">Fecha Reg.</th>
-    <th scope="col" class="text-center">Lectura</th>
-    <th scope="col" class="text-center">Consumo Mes</th>
-    <th scope="col" class="text-center">Monto Mes</th>
+    <th scope="col" class="text-center">
+        Lec.
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'id', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'id', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+    </th>
+    <th scope="col" class="text-center">
+        Periodo
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'period', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'period', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+    </th>
+    <th scope="col" class="text-center">
+        Sector
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'location_name', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'location_name', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+    </th>
+    <th scope="col" class="text-center">
+        nro Servicio
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'nro', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'nro', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+    </th>
+    <th scope="col" class="text-center">
+        RUT/RUN
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'rut', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'rut', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+    </th>
+    <th scope="col" class="text-center">
+        Nombre/Apellido
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'full_name', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'full_name', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+    </th>
+    <th scope="col" class="text-center">
+        Fecha Reg.
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'period', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'period', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+    </th>
+    <th scope="col" class="text-center">
+        Lectura
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'current_reading', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'current_reading', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+    </th>
+    <th scope="col" class="text-center">
+        Consumo Mes
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'cm3', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'cm3', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+    </th>
+    <th scope="col" class="text-center">
+        Monto Mes
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'total', 'order' => 'asc']) }}"><i class="bi bi-arrow-up"></i></a>
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'total', 'order' => 'desc']) }}"><i class="bi bi-arrow-down"></i></a>
+    </th>
     <th scope="col" class="text-center">Documento</th>
 </tr>
 </thead>
@@ -150,7 +190,7 @@
                 </table>
             </div>
         </div>
-        <div class="card-footer">{!! $readings->render('pagination::bootstrap-4') !!}</div>
+    <!-- Paginación eliminada -->
     </div>
 </section>
 

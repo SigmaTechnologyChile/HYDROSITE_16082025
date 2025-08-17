@@ -316,6 +316,18 @@
                     </button>
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
+                    <button id="imprimirBtn" class="btn btn-primary w-100">
+                        <i class="bi bi-printer"></i> Imprimir
+                    </button>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('imprimirBtn').addEventListener('click', function() {
+        window.print();
+    });
+});
+</script>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
                     <div class="text-muted">
                         <small>Total sectores: {{ isset($locations) ? count($locations) : 0 }}</small>
                     </div>
