@@ -1,0 +1,6 @@
+{"type":"info","name":"no-virus","data":{"description":"No virus detected in upload “hydrosite_1.zip”.","file":"hydrosite_1.zip"}}
+{"type":"info","data":{"file":"hydrosite_1.zip","archive":"/home2/hydrosite/tmp/Cpanel_Form_file.upload.754428b0","description":"The system is extracting the “/home2/hydrosite/tmp/Cpanel_Form_file.upload.754428b0” archive file."},"name":"untar"}
+{"type":"error","name":"restore_failed","data":{"description":"Failed to restore files to the home directory. The provided file is not an archive, or the archive is empty.","file":"hydrosite_1.zip"}}
+{"type":"done","name":"restore_done","data":{"description":"The system successfully restored the “/home2/hydrosite” directory from the backup file “hydrosite_1.zip”.","file":"hydrosite_1.zip"}}
+{"type":"info","name":"processed","data":{"file":"hydrosite_1.zip"}}
+{"type":"close"}

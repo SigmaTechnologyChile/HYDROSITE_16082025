@@ -1,0 +1,5 @@
+{"type":"info","data":{"description":"No virus detected in upload “backup-2025.08.06_00-00-00_hydrosite (1).tar.gz”.","file":"backup-2025.08.06_00-00-00_hydrosite (1).tar.gz"},"name":"no-virus"}
+{"data":{"file":"backup-2025.08.06_00-00-00_hydrosite (1).tar.gz","description":"The system is extracting the “/home2/hydrosite/tmp/Cpanel_Form_file.upload.23251416” archive file.","archive":"/home2/hydrosite/tmp/Cpanel_Form_file.upload.23251416"},"name":"untar","type":"info"}
+{"type":"done","data":{"file":"backup-2025.08.06_00-00-00_hydrosite (1).tar.gz","description":"The system successfully restored the “/home2/hydrosite” directory from the backup file “backup-2025.08.06_00-00-00_hydrosite (1).tar.gz”."},"name":"restore_done"}
+{"type":"info","name":"processed","data":{"file":"backup-2025.08.06_00-00-00_hydrosite (1).tar.gz"}}
+{"type":"close"}

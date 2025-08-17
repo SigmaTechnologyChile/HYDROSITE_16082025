@@ -1,0 +1,1170 @@
+AWSTATS DATA FILE 7.9 (build 20230108)
+# If you remove this file, all statistics for date 202508 will be lost/reset.
+# Last config file used to build this data file was /home2/hydrosite/tmp/awstats/ssl/awstats.hydrosite.cl.conf.
+
+# Position (offset in bytes) in this file for beginning of each section for
+# direct I/O access. If you made changes somewhere in this file, you should
+# also remove completely the MAP section (AWStats will rewrite it at next
+# update).
+BEGIN_MAP 28
+POS_GENERAL 2049                
+POS_TIME 2723                
+POS_VISITOR 23501               
+POS_DAY 25701               
+POS_DOMAIN 3587                
+POS_LOGIN 3952                
+POS_ROBOT 4107                
+POS_WORMS 4649                
+POS_EMAILSENDER 4780                
+POS_EMAILRECEIVER 4923                
+POS_SESSION 26147               
+POS_FILESIZE 63183               
+POS_SIDER 26354               
+POS_FILETYPES 5058                
+POS_DOWNLOADS 5468                
+POS_OS 5956                
+POS_BROWSER 6137                
+POS_SCREENSIZE 6609                
+POS_UNKNOWNREFERER 6683                
+POS_UNKNOWNREFERERBROWSER 7026                
+POS_ORIGIN 7364                
+POS_SEREFERRALS 7509                
+POS_PAGEREFS 7672                
+POS_SEARCHWORDS 21896               
+POS_KEYWORDS 22076               
+POS_MISC 2386                
+POS_ERRORS 22165               
+POS_CLUSTER 3808                
+POS_SIDER_404 22377               
+END_MAP
+
+# LastLine    = Date of last record processed - Last record line number in last log - Last record offset in last log - Last record signature value
+# FirstTime   = Date of first visit for history file
+# LastTime    = Date of last visit for history file
+# LastUpdate  = Date of last update - Nb of parsed records - Nb of parsed old records - Nb of parsed new records - Nb of parsed corrupted - Nb of parsed dropped
+# TotalVisits = Number of visits
+# TotalUnique = Number of unique visitors
+# MonthHostsKnown   = Number of hosts known
+# MonthHostsUnKnown = Number of hosts unknown
+BEGIN_GENERAL 8
+LastLine 20250814073234 2122 646544 12244440013516
+FirstTime 0
+LastTime 20250814002139
+LastUpdate 20250814081555 2122 0 2122 0 0
+TotalVisits 87                  
+TotalUnique 51                  
+MonthHostsKnown 0                   
+MonthHostsUnknown 52                  
+END_GENERAL
+
+# Misc ID - Pages - Hits - Bandwidth
+BEGIN_MISC 10
+RealPlayerSupport 0 0 0
+WindowsMediaPlayerSupport 0 0 0
+JavascriptDisabled 0 0 0
+TotalMisc 0 0 0
+QuickTimeSupport 0 0 0
+JavaEnabled 0 0 0
+FlashSupport 0 0 0
+PDFSupport 0 0 0
+DirectorSupport 0 0 0
+AddToFavourites 0 87 0
+END_MISC
+
+# Hour - Pages - Hits - Bandwidth - Not viewed Pages - Not viewed Hits - Not viewed Bandwidth
+BEGIN_TIME 24
+0 835 1831 35260633 26 63 507651
+1 373 994 23429193 22 44 120259
+2 22 56 1418517 8 28 223365
+3 4 5 175018 12 43 500240
+4 2 2 7410 5 41 640602
+5 21 69 1491785 8 53 552969
+6 1 2 158549 4 59 818032
+7 0 0 0 35 59 444359
+8 1 1 14647 15 18 31916
+9 175 251 2616084 17 19 8400
+10 64 355 16112045 18 19 110152
+11 152 490 595891803 13 19 65817
+12 157 482 537652457 33 37 370664
+13 241 422 597654326 29 33 134575
+14 275 730 17917709 37 81 819831
+15 159 469 539839253 24 27 386020
+16 80 192 530562132 12 17 169013
+17 123 318 9671656 17 18 19209
+18 96 219 4793861 14 36 244317
+19 280 798 262087200 25 74 613434
+20 292 584 3159132787 18 68 1613726
+21 393 1428 146760541 45 67 994294
+22 209 611 16986935 59 138 4111103
+23 363 683 17087031 28 35 654885
+END_TIME
+
+# Domain - Pages - Hits - Bandwidth
+# The 25 first Pages must be first (order not required for others)
+BEGIN_DOMAIN 9
+cl 3900 9671 6483969642
+ma 242 659 17970018
+ar 107 403 7294493
+us 32 151 3523981
+ch 30 78 2501080
+ie 3 23 931536
+se 2 4 317108
+gb 1 2 158549
+ca 1 1 55165
+END_DOMAIN
+
+# Cluster ID - Pages - Hits - Bandwidth
+BEGIN_CLUSTER 0
+END_CLUSTER
+
+# Login - Pages - Hits - Bandwidth - Last visit
+# The 10 first Pages must be first (order not required for others)
+BEGIN_LOGIN 0
+END_LOGIN
+
+# Robot ID - Hits - Bandwidth - Last visit - Hits on robots.txt
+# The 25 first Hits must be first (order not required for others)
+BEGIN_ROBOT 10
+bingbot/ 175 2754544 20250814062152 10
+Googlebot/ 169 1579358 20250813233142 11
+bot[\s_+:,\.\;\/\\-] 110 3163562 20250814072427 20
+Googlebot\-Image/ 12 529275 20250813191404 0
+facebookexternalhit/ 10 1622476 20250814070300 1
+unknown 6 144 20250813180142 6
+survey 5 241374 20250811103024 0
+no_user_agent 4 110300 20250808185826 0
+[\s_+:,\.\;\/\\-]bot 4 40907 20250801190709 0
+Applebot/ 2 3657 20250812021719 1
+END_ROBOT
+
+# Worm ID - Hits - Bandwidth - Last visit
+# The 5 first Hits must be first (order not required for others)
+BEGIN_WORMS 0
+END_WORMS
+
+# EMail - Hits - Bandwidth - Last visit
+# The 20 first Hits must be first (order not required for others)
+BEGIN_EMAILSENDER 0
+END_EMAILSENDER
+
+# EMail - Hits - Bandwidth - Last visit
+# The 20 first hits must be first (order not required for others)
+BEGIN_EMAILRECEIVER 0
+END_EMAILRECEIVER
+
+# Files type - Hits - Bandwidth - Bandwidth without compression - Bandwidth after compression
+BEGIN_FILETYPES 17
+svg 77 1054910 0 0
+png 1888 50863904 0 0
+woff 100 5925378 0 0
+jpeg 5 392196 0 0
+jpg 361 3466370 0 0
+phtml 5 2101 0 0
+js 2697 103159415 0 0
+css 1515 17177096 0 0
+php 1329 7639280 0 0
+cgi 33 623 0 0
+map 10 3954344 0 0
+html 481 2421254314 0 0
+gif 122 232522 0 0
+woff2 234 26790217 0 0
+ptt 8 25812 0 0
+gz 9 3678513732 0 0
+Unknown 2118 196269358 0 0
+END_FILETYPES
+
+# Downloads - Hits - Bandwidth
+BEGIN_DOWNLOADS 6
+/cpsess3936246605/getbackup/backup-hydrosite.cl-8-8-2025.tar.gz 2 0 1051077460
+/cpsess1933428523/getbackup/backup-hydrosite.cl-8-7-2025.tar.gz 2 0 1050602321
+/cpsess0895084681/getbackup/backup-hydrosite.cl-8-12-2025.tar.gz 2 0 1051260358
+/cpsess0895084681/getsqlbackup/hydrosite_db.sql.gz 1 0 237593
+/cpsess3209824803/getsqlbackup/hydrosite_db.sql.gz 1 0 237592
+/cpsess3209824803/getbackup/backup-hydrosite.cl-8-8-2025.tar.gz 1 0 525098408
+END_DOWNLOADS
+
+# OS ID - Hits
+BEGIN_OS ID - Hits - Pages 7
+ios_iphone 273 57
+macosx15 279 87
+androidmarshmallow 83 6
+android10 242 50
+linux 34 9
+Unknown 10 6
+win10 10071 4103
+END_OS
+
+# Browser ID - Hits - Pages
+BEGIN_BROWSER 21
+mozilla 1 0
+chrome131.0.0.0 2 2
+chrome129.0.0.0 1 1
+chrome83.0.4103.97 1 1
+safari18.5 121 35
+firefox139.0 1 1
+chrome105.0.0.0 4 2
+chrome134.0.6998.205 22 3
+chrome138.0.0.0 2275 780
+chrome109.0.0.0 1 1
+chrome66.0.3359.181 4 4
+chrome136.0.0.0 1 1
+chrome138.0.7204.23 24 2
+chrome137.0.0.0 5 3
+Unknown 10 6
+chrome130.0.0.0 4 4
+firefox137.0 2 1
+safari 229 52
+chrome121.0.0.0 77 6
+chrome139.0.0.0 7973 3349
+firefox141.0 234 64
+END_BROWSER
+
+# Screen size - Hits
+BEGIN_SCREENSIZE 0
+END_SCREENSIZE
+
+# Unknown referer OS - Last visit date
+BEGIN_UNKNOWNREFERER 4
+Hello_from_Palo_Alto_Networks,_find_out_more_about_our_scans_in_https://docs-cortex.paloaltonetworks.com/r/1/Cortex-Xpanse/Scanning-activity 20250807183050
+WhatsApp/2.23.20.0 20250813142241
+okhttp/4.9.2 20250810055452
+python-requests/2.31.0 20250809005611
+END_UNKNOWNREFERER
+
+# Unknown referer Browser - Last visit date
+BEGIN_UNKNOWNREFERERBROWSER 4
+WhatsApp/2.23.20.0 20250813142241
+okhttp/4.9.2 20250810055452
+Hello_from_Palo_Alto_Networks,_find_out_more_about_our_scans_in_https://docs-cortex.paloaltonetworks.com/r/1/Cortex-Xpanse/Scanning-activity 20250807183050
+python-requests/2.31.0 20250809005611
+END_UNKNOWNREFERERBROWSER
+
+# Origin - Pages - Hits 
+BEGIN_ORIGIN 6
+From0 156 270
+From1 1 1
+From2 7 7
+From3 3196 6586
+From4 958 4128
+From5 0 0
+END_ORIGIN
+
+# Search engine referers ID - Pages - Hits
+BEGIN_SEREFERRALS 1
+www_google_com 7 7
+END_SEREFERRALS
+
+# External page referers - Pages - Hits
+# The 25 first Pages must be first (order not required for others)
+BEGIN_PAGEREFS 146
+https://cpanel.hydrosite.cl/cpsess0895084681/3rdparty/phpMyAdmin/index.php 946 1384
+https://cpanel.hydrosite.cl 738 1350
+https://cpanel.hydrosite.cl 212 311
+https://cpanel.hydrosite.cl/cpsess8621236300/frontend/jupiter/filemanager/index.html 144 148
+https://cpanel.hydrosite.cl/cpsess0895084681/frontend/jupiter/filemanager/index.html 99 114
+https://cpanel.hydrosite.cl/cpsess4246259904/frontend/jupiter/filemanager/index.html 69 86
+https://cpanel.hydrosite.cl/cpsess9582390826/frontend/jupiter/filemanager/index.html 69 73
+https://cpanel.hydrosite.cl/cpsess2726720942/frontend/jupiter/index.html 60 66
+https://cpanel.hydrosite.cl/cpsess8621236300/frontend/jupiter/filemanager/upload-ajax.html 47 47
+https://cpanel.hydrosite.cl/cpsess9582390826/3rdparty/phpMyAdmin/index.php 44 97
+https://cpanel.hydrosite.cl/cpsess1804149751/frontend/jupiter/filemanager/index.html 42 46
+https://cpanel.hydrosite.cl/cpsess8621236300/3rdparty/phpMyAdmin/index.php 37 132
+https://cpanel.hydrosite.cl/cpsess8615465375/3rdparty/phpMyAdmin/index.php 34 83
+https://cpanel.hydrosite.cl/cpsess3528188837/3rdparty/phpMyAdmin/index.php 33 124
+https://cpanel.hydrosite.cl/cpsess4246259904/3rdparty/phpMyAdmin/index.php 32 80
+https://cpanel.hydrosite.cl/cpsess0405802465/frontend/jupiter/filemanager/index.html 29 33
+https://cpanel.hydrosite.cl/cpsess1933428523/3rdparty/phpMyAdmin/index.php 28 76
+https://cpanel.hydrosite.cl/cpsess1929331173/frontend/jupiter/filemanager/index.html 26 30
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1688574318/frontend/jupiter/_assets/css/master-ltr.cmb.min.css 26 26
+https://cpanel.hydrosite.cl/cpsess9718933289/frontend/jupiter/filemanager/index.html 26 30
+https://cpanel.hydrosite.cl/cpsess5093342720/3rdparty/phpMyAdmin/index.php 24 72
+https://cpanel.hydrosite.cl/cpsess3962335966/frontend/jupiter/filemanager/index.html 23 27
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1648610195/unprotected/cpanel/fonts/open_sans/open_sans.min.css 21 21
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1688574261/frontend/jupiter/styles/fonts.min.css 21 21
+https://cpanel.hydrosite.cl/cpsess1929331173/3rdparty/phpMyAdmin/index.php 19 64
+https://cpanel.hydrosite.cl/cpsess0354563854/frontend/jupiter/filemanager/editit.html 1 1
+https://cpanel.hydrosite.cl/cpsess1273118399/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 47
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1754977779/frontend/jupiter/assets/application_icons/sprites/icon_spritemap.css 0 4
+https://cpanel.hydrosite.cl/cpsess3962335966/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess1933428523/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 53
+https://cpanel.hydrosite.cl/cpsess3936246605/3rdparty/phpMyAdmin/index.php 15 60
+https://cpanel.hydrosite.cl/cpsess9684696267/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1754106233/frontend/jupiter/assets/application_icons/sprites/icon_spritemap.css 0 2
+https://cpanel.hydrosite.cl/cpsess1273118399/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess9684696267/frontend/jupiter/filemanager/index.html 10 14
+https://webmail.hydrosite.cl/cPanel_magic_revision_1726627391/webmail/jupiter/_assets/css/master-legacy-ltr.cmb.min.css 6 6
+https://cpanel.hydrosite.cl/cpsess0895084681/frontend/jupiter/terminal/index.html 2 5
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1755056625/frontend/jupiter/assets/application_icons/sprites/icon_spritemap.css 0 2
+https://cpanel.hydrosite.cl/cpsess3936246605/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess3979785835/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess1929331173/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess2185459792/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess0405802465/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1754545794/frontend/jupiter/assets/application_icons/sprites/icon_spritemap.css 0 4
+https://cpanel.hydrosite.cl/cpsess3528188837/frontend/jupiter/filemanager/editit.html 1 1
+https://cpanel.hydrosite.cl/cpsess5093342720/frontend/jupiter/sql/PhpMyAdmin.html 2 5
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1648610195/frontend/jupiter/libraries/ui-fonts/open_sans/optimized/open_sans.min.css 10 10
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1648610219/yui/datatable/assets/skins/sam/datatable.css 0 1
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1754200177/frontend/jupiter/assets/application_icons/sprites/icon_spritemap.css 0 2
+https://cpanel.hydrosite.cl/cpsess0354563854/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess0935162374/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess4246259904/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess3936246605/frontend/jupiter/filemanager/index.html 13 17
+https://cpanel.hydrosite.cl/cpsess3936246605/frontend/jupiter/backup/fullbackup.html 2 2
+https://cpanel.hydrosite.cl/cpsess5093342720/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 54
+https://cpanel.hydrosite.cl/cpsess3979785835/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 47
+https://cpanel.hydrosite.cl/cpsess3979785835/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess9684696267/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess0895084681/3rdparty/phpMyAdmin/themes/pmahomme/jquery/jquery-ui.css 0 2
+https://cpanel.hydrosite.cl/cpsess0354563854/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1688574317/unprotected/cpanel/style_v2_optimized.css 0 49
+https://cpanel.hydrosite.cl/cpsess8621236300/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess1273118399/3rdparty/phpMyAdmin/index.php 7 51
+https://webmail.hydrosite.cl 1 27
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1731984227/frontend/jupiter/styles/preload_styles.min.css 3 3
+https://cpanel.hydrosite.cl/cpsess3528188837/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess9582390826/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess8621236300/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 83
+https://cpanel.hydrosite.cl/cpsess0156035368/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 57
+https://cpanel.hydrosite.cl/cpsess0935162374/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess0156035368/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess4846527004/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess1929331173/frontend/jupiter/filemanager/upload-ajax.html 3 3
+https://cpanel.hydrosite.cl/cpsess3962335966/frontend/jupiter/filemanager/editit.html 3 3
+https://cpanel.hydrosite.cl/cpsess1933428523/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess3936246605/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 50
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1754027381/frontend/jupiter/assets/application_icons/sprites/icon_spritemap.css 0 2
+https://cpanel.hydrosite.cl/cpsess8615465375/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 45
+https://cpanel.hydrosite.cl/cpsess9718933289/frontend/jupiter/filemanager/editit.html 5 5
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1702953806/frontend/jupiter/filemanager/css/tree_styles2_optimized.css 0 2
+http://127.0.0.1:8000 2 275
+https://cpanel.hydrosite.cl/cpsess3979785835/frontend/jupiter/filemanager/index.html 3 6
+https://cpanel.hydrosite.cl/cpsess1933428523/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess0895084681/frontend/jupiter/filemanager/upload-ajax.html 9 9
+https://cpanel.hydrosite.cl/cpsess0335818504/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess1933428523/frontend/jupiter/filemanager/index.html 19 35
+https://cpanel.hydrosite.cl/cpsess9582390826/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess3936246605/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess0895084681/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 2 2
+https://cpanel.hydrosite.cl/cpsess1273118399/frontend/jupiter/filemanager/index.html 18 21
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1688574318/frontend/jupiter/_assets/css/master-legacy-ltr.cmb.min.css 19 19
+https://cpanel.hydrosite.cl/cpsess9582390826/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 57
+https://cpanel.hydrosite.cl/cpsess1929331173/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess2185459792/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1754372972/frontend/jupiter/assets/application_icons/sprites/icon_spritemap.css 0 2
+https://cpanel.hydrosite.cl/cpsess3979785835/3rdparty/phpMyAdmin/index.php 14 59
+https://cpanel.hydrosite.cl/cpsess0895084681/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 332
+https://cpanel.hydrosite.cl/cpsess0156035368/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess4846527004/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess5093342720/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess1849243932/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess4246259904/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess9718933289/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess4846527004/frontend/jupiter/filemanager/index.html 7 10
+https://cpanel.hydrosite.cl/cpsess4246259904/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 49
+https://cpanel.hydrosite.cl/cpsess9582390826/frontend/jupiter/filemanager/editit.html 17 17
+https://cpanel.hydrosite.cl/cpsess1804149751/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess4246259904/frontend/jupiter/filemanager/editit.html 4 15
+https://mail.hydrosite.cl 0 1
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1754459416/frontend/jupiter/assets/application_icons/sprites/icon_spritemap.css 0 4
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1648609965/frontend/jupiter/libraries/bootstrap/optimized/css/bootstrap.min.css 4 4
+https://cpanel.hydrosite.cl/cpsess0354563854/frontend/jupiter/filemanager/index.html 17 21
+https://cpanel.hydrosite.cl/cpsess1804149751/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess8621236300/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess9718933289/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess0156035368/3rdparty/phpMyAdmin/index.php 11 61
+https://cpanel.hydrosite.cl/cpsess8621236300/frontend/jupiter/filemanager/editit.html 5 5
+https://cpanel.hydrosite.cl/cpsess5093342720/frontend/jupiter/filemanager/index.html 6 9
+https://cpanel.hydrosite.cl/cpsess0895084681/frontend/jupiter/filemanager/editit.html 5 22
+https://cpanel.hydrosite.cl/cpsess8615465375/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess3528188837/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess3962335966/frontend/jupiter/index.html 2 3
+https://cpanel.hydrosite.cl/cpsess4246259904/frontend/jupiter/filemanager/upload-ajax.html 12 12
+https://webmail.hydrosite.cl/cPanel_magic_revision_1688574261/webmail/jupiter/styles/fonts.min.css 1 1
+https://cpanel.hydrosite.cl/cpsess0335818504/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess3528188837/frontend/jupiter/filemanager/index.html 19 36
+https://cpanel.hydrosite.cl/cpsess1849243932/frontend/jupiter/filemanager/index.html 11 15
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1656366623/frontend/jupiter/libraries/chosen/1.5.1/chosen.min.css 0 5
+https://cpanel.hydrosite.cl/unprotected/redirect.html 3 3
+https://cpanel.hydrosite.cl/cpsess9582390826/frontend/jupiter/terminal/index.html 2 2
+https://cpanel.hydrosite.cl/cpsess0895084681/frontend/jupiter/index.html 0 2
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1656537159/frontend/jupiter/libraries/fontawesome/css/all.min.css 8 8
+https://cpanel.hydrosite.cl/cpsess1929331173/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 47
+https://cpanel.hydrosite.cl/cpsess5093342720/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1754632265/frontend/jupiter/assets/application_icons/sprites/icon_spritemap.css 0 2
+https://cpanel.hydrosite.cl/cpsess3209824803/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess1273118399/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/cpsess3209824803/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1755064189/frontend/jupiter/assets/application_icons/sprites/icon_spritemap.css 0 2
+https://cpanel.hydrosite.cl/cpsess3528188837/3rdparty/phpMyAdmin/themes/pmahomme/css/theme.css 0 82
+https://cpanel.hydrosite.cl/cpsess0405802465/frontend/jupiter/index.html 0 1
+https://cpanel.hydrosite.cl/unprotected/loader.html 3 3
+https://cpanel.hydrosite.cl/cpsess0156035368/frontend/jupiter/filemanager/editit.html 2 2
+https://cpanel.hydrosite.cl/cpsess1849243932/frontend/jupiter/softaculous/themes/default/css/font-awesome-5.css 1 1
+https://cpanel.hydrosite.cl/cpsess0156035368/frontend/jupiter/filemanager/index.html 14 18
+https://cpanel.hydrosite.cl/cPanel_magic_revision_1755143034/frontend/jupiter/assets/application_icons/sprites/icon_spritemap.css 0 2
+END_PAGEREFS
+
+# Search keyphrases - Number of search
+# The 10 first number of search must be first (order not required for others)
+BEGIN_SEARCHWORDS 1
+https+//www.hydrosite.cl/ 1
+END_SEARCHWORDS
+
+# Search keywords - Number of search
+# The 25 first number of search must be first (order not required for others)
+BEGIN_KEYWORDS 2
+//www.hydrosite.cl/ 1
+https 1
+END_KEYWORDS
+
+# Errors - Hits - Bandwidth
+BEGIN_ERRORS 11
+206 4 63384
+302 181 41869
+301 4 3180
+401 32 216269
+419 1 2003
+500 66 3254029
+101 16 0
+308 74 11412
+307 1 166
+403 1 2051
+404 132 279138
+END_ERRORS
+
+# URL with 404 errors - Hits - Last URL referrer
+BEGIN_SIDER_404 22
+/INDEX.php 1 -
+/favicon.png 1 -
+/.well-known/security.txt 1 -
+/servicios-por-sector/5 1 https://www.hydrosite.cl/org/864/operator
+/servicios-por-sector/13 1 https://www.hydrosite.cl/org/864/operator
+/public/forms/newsletter.php 1 -
+/public/public/theme/resi/assets/css/home.css 5 -
+/.well-known/apple-app-site-association 8 -
+/sitemap.txt 2 -
+/wordpress_4/wp-cron.php 25 -
+/servicios-por-sector/1 1 https://www.hydrosite.cl/org/864/operator
+/android-chrome-192x192.png 38 -
+/org/864/aguapotable/macromedidor/listar 3 https://www.hydrosite.cl/org/864/aguapotable/macromedidor
+/servicios-por-sector/9 1 https://www.hydrosite.cl/org/864/operator
+/service-details.html 2 -
+/wordpress/wp-cron.php 27 -
+/public/org 1 -
+/wp-login.php 1 -
+/public/deudas 1 -
+/sitemap.xml 2 -
+/localhost 2 -
+/apple-app-site-association 7 -
+END_SIDER_404
+
+# Host - Pages - Hits - Bandwidth - Last visit date - [Start date of last visit] - [Last page of last visit]
+# [Start date of last visit] and [Last page of last visit] are saved only if session is not finished
+# The 25 first Hits must be first (order not required for others)
+BEGIN_VISITOR 52
+179.61.103.96 1642 4211 3154100670 20250808111604
+179.61.103.121 1637 3755 1128160468 20250813101335
+45.232.92.55 242 659 17970018 20250813142241
+179.61.103.115 236 638 13959077 20250814002139
+179.61.103.103 181 349 2165323249 20250809192051
+201.246.75.174 70 145 4650767 20250801175635
+186.189.107.93 66 236 3294728 20250813005044
+201.188.157.4 45 118 3951164 20250813143929
+158.220.78.20 30 78 2501080 20250801163059
+179.61.103.97 29 76 3004380 20250812165827
+201.246.70.176 21 171 4956918 20250808205120
+201.219.233.84 18 69 1483382 20250806212119
+186.189.75.143 16 75 2361887 20250812220515
+186.189.71.31 14 77 1554477 20250802172703
+191.114.93.113 11 73 2614537 20250811010408
+3.145.121.194 8 79 971153 20250809005618
+186.189.77.55 7 7 54367 20250813165414
+54.221.136.51 3 29 1152792 20250810055512
+186.189.71.107 3 3 16442 20250803030044
+181.161.104.68 3 21 785535 20250801163237
+173.252.127.63 2 22 931242 20250811220434
+190.208.14.7 2 21 483455 20250813014311
+190.208.14.9 2 21 483435 20250801172353
+190.208.14.68 2 2 0 20250813014307
+15.204.183.221 2 2 7410 20250805041528
+205.210.31.70 1 1 55165 20250807183050
+31.13.127.2 1 11 352820 20250803225025
+173.252.127.20 1 1 263 20250811220434
+31.13.127.3 0 10 565861 
+190.98.205.35 1 1 12605 20250813152418
+5.133.192.135 1 2 158559 20250810020450
+54.187.240.182 1 1 14647 20250806080334
+31.13.127.8 1 1 12592 20250803225017
+54.184.112.230 1 1 14647 20250806174526
+64.23.152.167 1 2 158561 20250802205601
+159.203.46.221 1 2 158576 20250807033409
+174.138.58.171 1 1 3314 20250804220604
+31.13.127.115 1 1 263 20250803225027
+138.197.123.2 1 1 3694 20250804182923
+165.227.216.109 1 1 3930 20250804174237
+137.184.238.144 1 1 12431 20250811140645
+68.183.146.155 1 1 6520 20250805012250
+52.10.121.131 1 1 14657 20250809143045
+128.199.39.91 1 2 158549 20250802062351
+157.245.9.12 1 1 12569 20250805001721
+93.158.91.12 1 2 158549 20250802175033
+167.71.12.155 1 1 12435 20250803234125
+34.215.139.202 1 1 14657 20250812134812
+157.245.112.206 1 1 3267 20250804172018
+165.227.117.140 1 1 12569 20250801202652
+54.190.4.244 1 1 14647 20250803112934
+186.189.71.36 1 5 12592 20250803123106
+END_VISITOR
+
+# Date - Pages - Hits - Bandwidth - Visits
+BEGIN_DAY 14
+20250801 562 1366 100627506 10
+20250802 81 317 5309211 6
+20250803 73 214 65145519 8
+20250804 11 223 12739132 6
+20250805 84 169 4100195 6
+20250806 446 1139 333235203 6
+20250807 604 1488 2125175946 8
+20250808 176 475 2694078717 6
+20250809 44 120 1465173 4
+20250810 4 31 1311351 2
+20250811 17 103 3934411 5
+20250812 747 1876 1086554465 6
+20250813 1460 3459 82896493 13
+20250814 9 12 148250 1
+END_DAY
+
+# Session range - Number of visits
+BEGIN_SESSION 7
+5mn-15mn 6
+1h+ 11
+2mn-5mn 4
+30mn-1h 6
+15mn-30mn 5
+0s-30s 49
+30s-2mn 6
+END_SESSION
+
+# URL - Pages - Bandwidth - Entry - Exit
+# The 25 first Pages must be first (order not required for others)
+BEGIN_SIDER 607
+/cpsess0895084681/3rdparty/phpMyAdmin/index.php 874 3882456 0 1
+/cpsess8621236300/json-api/cpanel 141 384180 0 0
+/ 104 1245659 42 22
+/cpsess0895084681/json-api/cpanel 93 381752 0 0
+/theme/nice/assets/vendor/bootstrap-icons/fonts/bootstrap-icons.woff2 85 10953264 0 3
+/cpsess9582390826/json-api/cpanel 76 72310 0 0
+/cpsess0895084681/3rdparty/phpMyAdmin/js/messages.php 75 675300 0 0
+/org/864/lecturas 70 1558953 3 1
+/org/864/notificaciones 64 499347 1 1
+/cpsess4246259904/json-api/cpanel 59 31340 0 0
+/org/864/dashboard 59 487876 1 4
+/orgs 59 304048 0 2
+/login 58 185010 3 0
+/cpsess9582390826/3rdparty/phpMyAdmin/index.php 44 309921 0 0
+/cpsess1804149751/json-api/cpanel 39 25937 0 0
+/org/864/pagos 39 330933 0 0
+/cpsess8621236300/execute/Fileman/upload_files 38 15988 0 0
+/cpsess0895084681/execute/Notifications/get_notifications_count 37 3034 0 0
+/cpsess8621236300/3rdparty/phpMyAdmin/index.php 35 169356 0 1
+/login/ 35 4383 1 0
+/cpsess8615465375/3rdparty/phpMyAdmin/index.php 34 85858 1 2
+/theme/resi/assets/vendor/bootstrap-icons/fonts/bootstrap-icons.woff2 31 3911880 1 6
+/cpsess2726720942/frontend/jupiter/ 30 377688 10 0
+/cpsess4246259904/3rdparty/phpMyAdmin/index.php 30 423019 0 0
+/cpsess3528188837/3rdparty/phpMyAdmin/index.php 30 149162 0 0
+/cpsess0895084681/3rdparty/phpMyAdmin/clearcache.php 1 43 0 0
+/cpsess3936246605/execute/SSL/installed_host 2 1417 0 0
+/cpsess9582390826/frontend/jupiter/mail/clientconf.html 1 33638 0 0
+/ajax/check-rut 4 80 0 0
+/ajax/9/comunas-por-region 4 1312 0 0
+/cpsess8621236300/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess1929331173/frontend/jupiter/ 5 262978 0 0
+/cPanel_magic_revision_1688574318/frontend/jupiter/libraries/fontawesome/webfonts/fa-regular-400.woff2 2 26448 0 0
+/cpsess3209824803/frontend/jupiter/ 1 52645 0 0
+/servicios-por-sector/10 1 1063 0 0
+/cPanel_magic_revision_1656537159/frontend/jupiter/libraries/fontawesome/webfonts/fa-regular-400.woff2 4 52896 0 0
+/cpsess0895084681/execute/Mysql/rename_database 1 85 0 0
+/cpsess9582390826/execute/SSL/installed_host 5 3526 0 0
+/cpsess0156035368/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess4846527004/execute/Notifications/get_notifications_count 2 164 0 0
+/cpsess1804149751/execute/ResourceUsage/get_usages 1 651 0 0
+/cpsess9718933289/frontend/jupiter/filemanager/ 1 18988 0 0
+/cpsess1804149751/execute/Themes/list 1 107 0 0
+/unprotected/redirect.html 3 1539 0 0
+/cpsess3962335966/execute/UserManager/edit_user 1 482 0 0
+/cpsess1273118399/download 1 62632676 0 0
+/cPanel_magic_revision_1731984227/frontend/jupiter/styles/jupiter-styles/dist/scss/fonts/open-sans-700-normal.woff2 2 109152 0 1
+/org/864/libro-caja-tabular 8 62441 0 0
+/cpsess8621236300/execute/Themes/list 4 428 0 0
+/cpsess1929331173/execute/Notifications/get_notifications_count 8 656 0 0
+/cpsess3979785835/frontend/jupiter/softaculous/index.live.php 3 8568 0 0
+/cpsess9582390826/frontend/jupiter/terminal/ 2 57346 0 0
+/cpsess8615465375/3rdparty/phpMyAdmin/js/messages.php 1 9004 0 0
+/public/org/864/pagos 1 9519 0 1
+/cpsess1929331173/frontend/jupiter/backup/ 2 62697 0 0
+/public/org/864/operator 1 10367 0 0
+/cPanel_magic_revision_1648610195/webmail/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-Semibold-webfont.woff 1 22908 0 0
+/cpsess1849243932/execute/Resellers/list_accounts 1 155 0 0
+/cpsess1929331173/execute/Personalization/get 10 1805 0 0
+/cpsess0895084681/frontend/jupiter/terminal/ 4 98585 0 0
+/cpsess3528188837/execute/Notifications/get_notifications_count 3 246 0 0
+/org/864/movimientos 8 87024 0 0
+/cpsess1804149751/frontend/jupiter/filemanager/ 2 38008 0 0
+/cpsess2185459792/execute/Notifications/get_notifications_count 1 82 0 0
+/cpsess0895084681/execute/Fileman/upload_files 3 1230 0 0
+/cpsess3979785835/3rdparty/phpMyAdmin/index.php 13 342883 0 1
+/cpsess0354563854/frontend/jupiter/filemanager/editit.html 1 11359 0 0
+/cpsess3936246605/frontend/jupiter/backup/ 2 62619 0 0
+/cpsess3936246605/3rdparty/phpMyAdmin/js/messages.php 2 18008 0 0
+/cpsess0935162374/frontend/jupiter/softaculous/index.live.php 1 2856 0 0
+/cpsess1849243932/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess9582390826/execute/Personalization/get 16 2797 0 0
+/cpsess3979785835/3rdparty/phpMyAdmin/js/messages.php 2 18008 0 0
+/theme/common/img/site.webmanifest 17 4208 2 3
+/org/864/lecturas/104/dte/boleta 11 103369 0 0
+/cpsess3962335966/execute/Email/list_pops_with_disk 5 1913 0 0
+/cpsess4846527004/execute/Themes/list 1 107 0 0
+/servicios-por-sector/6 5 2145 0 0
+/cpsess9684696267/json-api/cpanel 9 9185 0 0
+/org/864/balance 6 57684 0 0
+/org/864/sectores/1/servicios-con-orden 1 783 0 0
+/cpsess3962335966/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess0156035368/frontend/jupiter/filemanager/ 2 38027 0 0
+/org/864/voucher/CXF3I6YK1 1 5750 0 0
+/cpsess0895084681/execute/Fileman/list_files 3 690 0 0
+/cpsess0895084681/execute/Mysql/set_privileges_on_database 2 170 0 0
+/cpsess1929331173/3rdparty/phpMyAdmin/index.php 18 350224 0 0
+/cpsess5093342720/execute/SSL/installed_host 2 1409 0 0
+/public/dashboard 1 0 1 1
+/cpsess1929331173/frontend/jupiter/filemanager/upload-ajax.html 1 2373 0 0
+/cpsess4246259904/execute/ResourceUsage/get_usages 5 3215 0 0
+/cpsess3962335966/execute/Batch/strict 1 320 0 0
+/cPanel_magic_revision_1688574318/frontend/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-Italic-webfont.woff 4 92752 0 0
+/cPanel_magic_revision_1688574261/frontend/jupiter/styles/jupiter-styles/dist/scss/fonts/open-sans-regular.woff2 6 338088 0 0
+/cpsess4246259904/frontend/jupiter/filemanager/ 6 114114 0 0
+/cpsess9684696267/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess3979785835/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess0156035368/execute/Themes/list 1 107 0 0
+/cPanel_magic_revision_1648610195/webmail/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-Bold-webfont.woff 1 22432 0 0
+/cpsess8615465375/frontend/jupiter/sql/PhpMyAdmin.html 1 28337 0 0
+/cpsess4246259904/execute/Notifications/get_notifications_count 19 1558 0 0
+/procesar-egreso 2 250 0 0
+/cpsess9684696267/frontend/jupiter/ 2 105220 0 0
+/org/864/orders/0VKUMVDGN 2 11558 0 0
+/cpsess1273118399/execute/ResourceUsage/get_usages 8 5153 0 0
+/cPanel_magic_revision_1688574318/frontend/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-Bold-webfont.woff 7 157024 0 0
+/cpsess8621236300/execute/Personalization/get 10 1768 0 0
+/cpsess0895084681/frontend/jupiter/sql/repairdb.html 2 56937 0 0
+/cpsess3528188837/frontend/jupiter/softaculous/index.live.php 1 2856 0 0
+/cpsess3962335966/frontend/jupiter/user_manager/directives/webdiskServiceConfig.ptt 1 2706 0 0
+/org/864/lecturas/3/dte/boleta 1 9388 0 1
+/cpsess8621236300/download 1 1218 0 0
+/cpsess3936246605/frontend/jupiter/filemanager/editit.html 1 10509 0 0
+/cpsess5093342720/execute/Resellers/list_accounts 2 310 0 0
+/org/864/pagos/servicios/13352327-8 2 12321 0 0
+/cpsess4246259904/frontend/jupiter/backup/fullbackup.html 5 152494 0 0
+/cpsess1933428523/getbackupdate/ 2 1048731004 0 0
+/cpsess0335818504/execute/SSL/installed_host 1 702 0 0
+/cpsess0405802465/download 1 96114 0 0
+/cpsess1273118399/execute/Personalization/get 22 3860 0 0
+/cpsess2185459792/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 1
+/cpsess1929331173/frontend/jupiter/filemanager/ 5 95069 0 0
+/cpsess4846527004/execute/ResourceUsage/get_usages 1 637 0 0
+/cpsess0895084681/frontend/jupiter/softaculous/index.live.php 5 14280 0 0
+/org/864/orders/WYLVTVJEE 1 5786 0 0
+/cpsess0935162374/frontend/jupiter/passwd/ 1 31325 0 0
+/cpsess3936246605/frontend/jupiter/sql/PhpMyAdmin.html 1 28231 0 0
+/cpsess8621236300/frontend/jupiter/filemanager/editit.html 3 42165 0 0
+/cpsess2185459792/frontend/jupiter/ 1 52666 0 0
+/cpsess3936246605/execute/Themes/list 2 214 0 0
+/cpsess1929331173/execute/ResourceUsage/get_usages 5 3228 0 0
+/cpsess0935162374/execute/Themes/list 1 107 0 0
+/org/864/orders/UZNH7OMJX 1 5785 0 0
+/dashboard 1 0 1 1
+/cpsess1273118399/frontend/jupiter/softaculous/index.live.php 8 22848 0 0
+/cpsess1273118399/frontend/jupiter/backup/fullbackup.html 2 61166 0 0
+/cpsess3979785835/execute/ResourceUsage/get_usages 3 1919 0 0
+/cpsess0935162374/execute/Personalization/get 3 523 0 0
+/cpsess8615465375/execute/Themes/list 1 107 0 0
+/cpsess0405802465/frontend/jupiter/filemanager/ 1 19017 0 0
+/cpsess0405802465/execute/ResourceUsage/get_usages 1 630 0 0
+/cPanel_magic_revision_1688574261/frontend/jupiter/styles/jupiter-styles/dist/scss/fonts/open-sans-500-normal.woff2 5 283340 0 0
+/cpsess0935162374/execute/SSL/installed_host 1 705 0 0
+/guardar-lecturas 1 65 0 0
+/theme/resi/assets/vendor/swiper/swiper-bundle.min.js.map 1 207856 0 0
+/theme/resi/assets/vendor/bootstrap/css/bootstrap.min.css.map 1 589892 0 0
+/cpsess4246259904/frontend/jupiter/terminal/ 2 57461 0 0
+/cpsess0895084681/execute/Personalization/get 17 2939 0 0
+/deudas/5090607-8 1 3629 0 0
+/cpsess4246259904/execute/Resellers/list_accounts 5 775 0 0
+/cpsess1933428523/execute/ResourceUsage/get_usages 3 1941 0 0
+/cPanel_magic_revision_1648610195/unprotected/cpanel/fonts/open_sans/OpenSans-Regular-webfont.woff 7 158620 0 0
+/cpsess8621236300/execute/SSL/installed_host 4 2817 0 0
+/cpsess1273118399/getbackupdate/ 2 250488750 0 0
+/cpsess8615465375/execute/Resellers/list_accounts 1 155 0 0
+/cpsess0935162374/execute/Resellers/list_accounts 1 155 0 0
+/cpsess4246259904/execute/Fileman/list_files 4 1062 0 0
+/cpsess0895084681/frontend/jupiter/sql/ 16 713768 0 0
+/cpsess0895084681/frontend/jupiter/sql/userrights/ 4 119155 0 0
+/org/864/pagos/servicios/7728560-1 2 13479 0 0
+/cPanel_magic_revision_1648610195/unprotected/cpanel/fonts/open_sans/OpenSans-Semibold-webfont.woff 7 160356 0 1
+/cpsess0354563854/frontend/jupiter/filemanager/ 1 19007 0 0
+/org/864/pagos/servicios/3047304-3 1 6744 0 0
+/org/864/socios/258/editar 1 6676 0 0
+/org/864/tramos 1 6295 0 0
+/public/theme/nice/assets/vendor/remixicon/remixicon.woff2 2 353624 0 0
+/cpsess1933428523/json-api/cpanel 19 26195 0 0
+/cpsess3962335966/execute/Themes/list 5 535 0 0
+/cpsess9718933289/execute/Personalization/get 5 884 0 0
+/cpsess0335818504/execute/ResourceUsage/get_usages 1 647 0 0
+/cpsess3962335966/backend/passwordstrength.cgi 13 253 0 0
+/cpsess1849243932/execute/ResourceUsage/get_usages 1 650 0 0
+/cpsess9684696267/frontend/jupiter/softaculous/index.live.php 2 5712 0 0
+/cpsess1273118399/frontend/jupiter/backup/ 2 62631 0 0
+/cpsess1849243932/execute/Themes/list 1 107 0 0
+/cPanel_magic_revision_1688574318/frontend/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-BoldItalic-webfont.woff 1 23048 0 0
+/cpsess1849243932/frontend/jupiter/filemanager/editit.html 1 17641 0 0
+/cPanel_magic_revision_1731984227/frontend/jupiter/styles/jupiter-styles/dist/scss/fonts/remixicon.woff2 1 125268 0 0
+/cpsess0156035368/frontend/jupiter/ 1 52570 0 0
+/cpsess4846527004/execute/Resellers/list_accounts 1 155 0 0
+/public/password/reset 3 9237 1 1
+/public/theme/common/img/site.webmanifest 7 1841 0 0
+/cpsess3979785835/frontend/jupiter/version_control/ 1 39513 0 0
+/cpsess3962335966/execute/ResourceUsage/get_usages 9 3976 0 0
+/servicios-por-sector/12 1 6 0 0
+/cpsess1933428523/execute/Resellers/list_accounts 3 465 0 0
+/cpsess1804149751/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess9684696267/execute/Resellers/list_accounts 2 310 0 0
+/cpsess0895084681/frontend/jupiter/sql/addb.html 2 56830 0 0
+/public/password/reset/b58602536fbd1fa114f8d5b4f51ca6b677c8fa377a318a21241cb80b38ff477c 1 3251 0 0
+/theme/nice/assets/vendor/quill/quill.snow.css.map 1 21255 0 0
+/cpsess8621236300/frontend/jupiter/softaculous/index.live.php 4 11424 0 0
+/cpsess4246259904/frontend/jupiter/sql/PhpMyAdmin.html 2 56594 0 0
+/cpsess2185459792/execute/SSL/installed_host 1 703 0 0
+/cpsess8621236300/execute/Fileman/list_files 4 2332 0 0
+/servicios-por-sector/25 2 171 0 0
+/cpsess8615465375/execute/SSL/installed_host 1 703 0 0
+/org/864/giros-depositos 3 38770 0 0
+/cpsess3962335966/frontend/jupiter/email_accounts/ 4 180483 0 0
+/cpsess1804149751/execute/Notifications/get_notifications_count 1 82 0 0
+/cpsess4846527004/getbackupdate/ 1 524394466 0 1
+/cpsess0156035368/execute/SSL/installed_host 1 706 0 0
+/theme/resi/assets/vendor/bootstrap/js/bootstrap.bundle.min.js.map 1 332090 0 0
+/cpsess3979785835/frontend/jupiter/ 3 157913 0 0
+/cpsess1804149751/execute/Resellers/list_accounts 1 155 0 0
+/org/864/orders/GBWKQHX9W 1 7060 0 0
+/cpsess3936246605/json-api/cpanel 12 13965 0 0
+/org/864/orders/UFFGM4VKN 1 5786 0 0
+/cpsess3962335966/frontend/jupiter/terminal/ 1 28691 0 0
+/cpsess1273118399/frontend/jupiter/ 8 420960 0 0
+/public/theme/nice/assets/vendor/bootstrap-icons/fonts/bootstrap-icons.woff 24 4196198 0 5
+/cpsess1804149751/download 1 37127 0 0
+/cpsess9582390826/frontend/jupiter/email_accounts/ 2 90225 0 0
+/quienes-somos 2 13024 1 1
+/cpsess8615465375/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/org/864/lecturas/85/dte/boleta 2 18782 0 0
+/cpsess3528188837/json-api/cpanel 16 17079 0 0
+/org/864/inventarios/categories 4 22492 0 0
+/cpsess1273118399/execute/VersionControl/retrieve 3 294 0 0
+/cpsess4246259904/frontend/jupiter/version_control/views/listRepositoriesView.ptt 1 3816 0 0
+/org/864/pagos/servicios/4191587-0 1 6746 0 0
+/cpsess0354563854/execute/SSL/installed_host 2 1408 0 0
+/org/864/socios/387/editar 1 6692 0 1
+/cpsess3936246605/execute/Notifications/get_notifications_count 7 574 0 1
+/cpsess1933428523/3rdparty/phpMyAdmin/js/messages.php 3 27012 0 0
+/cpsess1933428523/execute/Themes/list 3 321 0 0
+/org/864/pagos/servicios/8083809-3 1 6159 0 0
+/cpsess1849243932/json-api/cpanel 10 10504 0 0
+/org/864/voucher/UFFGM4VKN 1 5535 0 0
+/public/org/864/libro-caja-tabular 1 8239 0 0
+/cpsess1933428523/execute/Personalization/get 6 1083 0 0
+/cpsess4246259904/frontend/jupiter/libraries/cjt2/directives/pagination.phtml 1 416 0 0
+/org/864/pagos/servicios/7242187-6 7 43063 0 0
+/cpsess3979785835/execute/Personalization/get 7 1245 0 0
+/payment/WCJRQJA7V 1 1047 0 0
+/procesar-ingreso 1 120 0 0
+/cpsess5093342720/frontend/jupiter/filemanager/ 1 19010 0 0
+/cpsess1929331173/json-api/cpanel 25 113104 0 1
+/cpsess0895084681/frontend/jupiter/ 5 263038 0 0
+/cpsess4846527004/frontend/jupiter/backup/ 1 31369 0 0
+/cpsess8621236300/execute/Resellers/list_accounts 4 620 0 0
+/cpsess1929331173/execute/Fileman/upload_files 1 411 0 0
+/cpsess3962335966/frontend/jupiter/filemanager/ 1 19021 0 0
+/cpsess9582390826/frontend/jupiter/filemanager/ 2 38047 0 0
+/org/864/socios 14 96871 0 0
+/org/864/orders/HTOTXJR3O 1 5785 0 0
+/cpsess8621236300/execute/ResourceUsage/get_usages 4 2540 0 0
+/org/864/inventarios 1 6441 0 1
+/cPanel_magic_revision_1648610195/frontend/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-Bold-webfont.woff 4 89728 0 0
+/cpsess4846527004/frontend/jupiter/filemanager/ 1 19010 0 0
+/cPanel_magic_revision_1656537159/frontend/jupiter/libraries/fontawesome/webfonts/fa-solid-900.woff2 4 313040 0 0
+/cpsess2185459792/frontend/jupiter/softaculous/index.live.php 1 2856 0 0
+/cpsess1929331173/execute/Fileman/list_files 1 234 0 0
+/cpsess1933428523/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess0156035368/execute/Resellers/list_accounts 1 155 0 0
+/org/864/aguapotable/macromedidor 7 73742 0 0
+/cpsess0895084681/frontend/jupiter/filemanager/ 5 95054 0 0
+/theme/nice/assets/vendor/remixicon/remixicon.woff2 14 2475368 0 0
+/cpsess9684696267/execute/Notifications/get_notifications_count 3 246 0 0
+/cpsess1929331173/frontend/jupiter/sql/PhpMyAdmin.html 1 28265 0 0
+/org/864/registro-ingresos-egresos 10 139532 1 0
+/cpsess5093342720/frontend/jupiter/ 2 105241 0 0
+/org/864/socios/nuevo 3 28893 0 0
+/cPanel_magic_revision_1688574318/frontend/jupiter/libraries/bootstrap/optimized/fonts/glyphicons-halflings-regular.woff 3 69960 0 0
+/cpsess5093342720/execute/Notifications/get_notifications_count 4 328 0 0
+/cpsess1273118399/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/theme/nice/assets/vendor/bootstrap/js/bootstrap.bundle.min.js.map 1 332090 0 0
+/cpsess3209824803/execute/ResourceUsage/get_usages 1 640 0 0
+/cpsess9582390826/download 1 516875 0 0
+/cpsess0935162374/execute/ResourceUsage/get_usages 1 633 0 0
+/cpsess0156035368/json-api/cpanel 14 9930 0 0
+/cpsess9582390826/execute/Resellers/list_accounts 5 775 0 0
+/cpsess9718933289/execute/Themes/list 2 214 0 0
+/cpsess5093342720/execute/CPDAVD/list_users 1 260 0 0
+/servicios-por-sector/9 1 674 0 0
+/org/864/pagos/historial 2 16903 0 0
+/faq 1 3694 1 1
+/cPanel_magic_revision_1648610195/frontend/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-ExtraBold-webfont.woff 2 47528 0 0
+/cpsess3936246605/download 1 62733157 0 0
+/cpsess8615465375/frontend/jupiter/softaculous/index.live.php 2 5712 0 0
+/servicios-por-sector/5 1 6 0 0
+/cpsess3936246605/frontend/jupiter/softaculous/index.live.php 2 5712 0 0
+/org/864/orders/LFTKKHEV1 1 7042 0 0
+/checkout/WCJRQJA7V 1 3422 0 0
+/cpsess3962335966/frontend/jupiter/user_manager/directives/limit.phtml 1 437 0 0
+/servicios-por-sector/8 1 6 0 0
+/cpsess0895084681/execute/Resellers/list_accounts 5 775 0 0
+/cpsess1929331173/execute/Resellers/list_accounts 5 775 0 0
+/org/864/aguapotable/macromedidor/guardar 1 20 0 0
+/cpsess0895084681/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 2 156392 0 0
+/cpsess3528188837/frontend/jupiter/filemanager/ 1 19013 0 0
+/cpsess1849243932/frontend/jupiter/ 1 52540 0 0
+/cpsess1933428523/execute/SSL/installed_host 3 2125 0 0
+/cpsess3962335966/frontend/jupiter/user_manager/directives/ftpServiceConfig.ptt 1 2118 0 0
+/cpsess8621236300/frontend/jupiter/terminal/ 4 82622 1 0
+/servicios-por-sector/15 2 1828 0 1
+/cpsess0405802465/execute/SSL/installed_host 1 703 0 0
+/cpsess1273118399/json-api/cpanel 18 24381 0 0
+/cpsess1273118399/frontend/jupiter/backup/dofullbackup.html 1 28410 0 0
+/cpsess4246259904/execute/VersionControl/retrieve 2 196 0 0
+/cpsess3528188837/execute/Resellers/list_accounts 1 155 0 0
+/cpsess8621236300/execute/Backup/restore_files 1 326 0 0
+/org/864/pagos/servicios/8078376-0 3 18465 0 0
+/cpsess5093342720/frontend/jupiter/sql/PhpMyAdmin.html 2 40878 0 0
+/cpsess0335818504/frontend/jupiter/ 1 52668 0 0
+/cpsess4246259904/frontend/jupiter/version_control/ 1 39403 0 0
+/deudas/6667957-8 1 3733 0 0
+/cpsess9718933289/execute/Notifications/get_notifications_count 4 328 0 0
+/cpsess0405802465/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess9718933289/frontend/jupiter/ 2 105193 0 0
+/cpsess3528188837/execute/Themes/list 1 107 0 0
+/cpsess1929331173/execute/SSL/installed_host 5 3520 0 0
+/cpsess3962335966/execute/Notifications/get_notifications_count 13 1066 0 0
+/org/864/panel-control-rutas 5 51071 0 1
+/cpsess9684696267/frontend/jupiter/backup/ 1 31364 0 0
+/cpsess9684696267/execute/Personalization/get 4 722 0 0
+/cpsess4246259904/frontend/jupiter/softaculous/index.live.php 5 14280 0 0
+/cpsess1273118399/execute/Backup/restore_databases 2 472 0 0
+/cpsess3979785835/frontend/jupiter/backup/ 2 62570 0 0
+/contacto 4 13954 2 2
+/cpsess1929331173/execute/Themes/list 5 535 0 0
+/cpsess1273118399/frontend/jupiter/filemanager/ 5 95023 0 0
+/cpsess3209824803/execute/Personalization/get 2 361 0 0
+/cpsess8615465375/execute/ResourceUsage/get_usages 1 657 0 0
+/cpsess9582390826/execute/Batch/strict 1 315 0 0
+/cPanel_magic_revision_1688574318/frontend/jupiter/libraries/fontawesome/webfonts/fa-solid-900.woff2 7 547820 0 0
+/cpsess3528188837/frontend/jupiter/filemanager/editit.html 4 41936 0 0
+/org/864/informe-rubro 6 78871 0 0
+/public/dashboard-mis-organizaciones 1 6017 0 0
+/cpsess3979785835/execute/Themes/list 3 321 0 0
+/cpsess1933428523/frontend/jupiter/sql/PhpMyAdmin.html 2 56631 0 0
+/cpsess4246259904/frontend/jupiter/backup/ 3 93899 0 0
+/servicios-por-sector/2 2 356 0 0
+/theme/nice/assets/vendor/bootstrap/css/bootstrap.min.css.map 1 589892 0 0
+/cpsess1933428523/frontend/jupiter/filemanager/ 5 95051 0 0
+/cpsess4246259904/3rdparty/phpMyAdmin/js/messages.php 4 36016 0 0
+/org/11/dashboard 1 7474 0 0
+/cpsess0156035368/execute/ResourceUsage/get_usages 1 655 0 0
+/cpsess0354563854/execute/Notifications/get_notifications_count 2 164 0 0
+/cpsess3962335966/frontend/jupiter/libraries/cjt2/directives/pagination.phtml 1 416 0 0
+/cpsess5093342720/execute/Themes/list 2 214 0 0
+/cpsess0895084681/frontend/jupiter/sql/checkdb.html 1 28846 0 0
+/cpsess9718933289/execute/Resellers/list_accounts 2 310 0 0
+/cpsess1933428523/3rdparty/phpMyAdmin/index.php 27 144519 0 0
+/cpsess3209824803/frontend/jupiter/softaculous/index.live.php 1 2856 0 0
+/cpsess1849243932/frontend/jupiter/softaculous/index.live.php 1 2856 0 0
+/cpsess9582390826/frontend/jupiter/ 5 263046 0 0
+/cpsess9684696267/execute/SSL/installed_host 2 1408 0 0
+/cpsess4246259904/execute/Personalization/get 13 2291 0 0
+/org/864/pagos/servicios/5943328-8 1 6740 0 0
+/pago-cuenta 5 16287 0 0
+/cpsess0405802465/frontend/jupiter/softaculous/index.live.php 1 2856 0 0
+/cpsess1849243932/execute/SSL/installed_host 1 706 0 0
+/cpsess3979785835/execute/Resellers/list_accounts 3 465 0 0
+/cpsess0405802465/execute/Personalization/get 2 361 0 0
+/cpsess9582390826/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess3979785835/download 1 62632676 0 0
+/cpsess1929331173/3rdparty/phpMyAdmin/js/messages.php 2 18008 0 0
+/cpsess0895084681/frontend/jupiter/sql/deldbconfirm.html 1 28470 0 0
+/cpsess9582390826/frontend/jupiter/sql/PhpMyAdmin.html 1 28242 0 0
+/cpsess3209824803/execute/Resellers/list_accounts 1 155 0 0
+/cpsess4846527004/execute/SSL/installed_host 1 700 0 0
+/cpsess3979785835/execute/SSL/installed_host 3 2117 0 0
+/cpsess3209824803/execute/Notifications/get_notifications_count 2 164 0 0
+/cpsess0156035368/execute/Personalization/get 3 523 0 0
+/cpsess4246259904/frontend/jupiter/ 5 263042 0 0
+/cpsess8573744946/execute/Email/list_pops_with_disk 1 293 0 0
+/verificar-saldo-cuenta 9 1057 0 0
+/cpsess9582390826/execute/Themes/list 5 535 0 0
+/cpsess1273118399/execute/Notifications/get_notifications_count 20 1640 0 0
+/cPanel_magic_revision_1688574318/frontend/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-Light-webfont.woff 7 155736 0 0
+/cpsess0335818504/frontend/jupiter/softaculous/index.live.php 1 2856 0 0
+/cpsess0354563854/json-api/cpanel 17 18209 0 0
+/cpsess0895084681/download 1 598 0 0
+/org/864/readings/update-current 2 96 0 0
+/org/864/lecturas/107/dte/boleta 1 9675 0 0
+/cpsess4246259904/frontend/jupiter/backup/dofullbackup.html 1 28460 0 0
+/org/864/servicios-por-sector/3 1 460 0 0
+/cpsess1273118399/frontend/jupiter/version_control/views/listRepositoriesView.ptt 3 11448 0 0
+/cpsess1273118399/frontend/jupiter/sql/PhpMyAdmin.html 1 28289 0 0
+/cpsess9684696267/getbackupdate/ 1 524394466 0 0
+/cpsess0895084681/backend/passwordstrength.cgi 14 252 0 0
+/cpsess5093342720/3rdparty/phpMyAdmin/js/messages.php 2 18008 0 0
+/public/orgs 12 61597 0 0
+/cpsess8621236300/frontend/jupiter/filemanager/upload-ajax.html 4 9474 0 0
+/cpsess3979785835/json-api/cpanel 3 3490 0 0
+/cpsess0354563854/frontend/jupiter/ 2 105172 1 0
+/cpsess4846527004/execute/Personalization/get 2 361 0 0
+/cpsess0354563854/execute/Personalization/get 4 722 0 0
+/org/864/voucher/UZNH7OMJX 1 5542 0 0
+/cpsess3936246605/frontend/jupiter/filemanager/ 3 57045 0 0
+/theme/nice/assets/vendor/chart.js/chart.umd.js.map 1 955799 0 0
+/theme/nice/assets/vendor/quill/quill.bubble.css.map 1 21600 0 0
+/cPanel_magic_revision_1688574261/frontend/jupiter/styles/jupiter-styles/dist/scss/fonts/open-sans-700-normal.woff2 3 163728 0 0
+/cpsess3528188837/execute/Personalization/get 3 523 0 0
+/cpsess9718933289/frontend/jupiter/filemanager/editit.html 3 41688 0 0
+/public/org/864/notificaciones 3 24990 0 1
+/org/864/conciliacion-bancaria 7 60576 0 0
+/cpsess3962335966/execute/Personalization/get 20 3465 0 0
+/cpsess9718933289/json-api/cpanel 28 20964 0 0
+/cpsess1273118399/frontend/jupiter/terminal/ 3 86195 0 0
+/cpsess0335818504/execute/Notifications/get_notifications_count 1 82 0 0
+/cpsess5093342720/execute/ResourceUsage/get_usages 2 1301 0 0
+/cpsess0895084681/frontend/jupiter/sql/PhpMyAdmin.html 2 56533 0 0
+/cpsess3936246605/execute/ResourceUsage/get_usages 2 1269 0 0
+/politicas-de-privacidad 2 11924 0 0
+/cpsess0895084681/frontend/jupiter/sql/deldb.html 1 28410 0 0
+/cpsess0156035368/3rdparty/phpMyAdmin/index.php 11 134931 0 0
+/cpsess4246259904/frontend/jupiter/filemanager/upload-ajax.html 5 12070 0 0
+/cpsess9582390826/execute/Notifications/get_notifications_count 11 902 0 0
+/cpsess1933428523/frontend/jupiter/backup/ 2 62616 0 0
+/cpsess9718933289/execute/ResourceUsage/get_usages 2 1269 0 0
+/cpsess4246259904/getbackupdate/ 1 62754884 0 0
+/cpsess9684696267/frontend/jupiter/filemanager/ 2 38017 0 0
+/cPanel_magic_revision_1648610195/unprotected/cpanel/fonts/open_sans/OpenSans-Bold-webfont.woff 7 157024 0 0
+/cpsess0935162374/execute/Notifications/get_notifications_count 2 164 0 0
+/cpsess0405802465/frontend/jupiter/filemanager/editit.html 6 83132 0 1
+/cpsess3962335966/frontend/jupiter/user_manager/ 1 42051 0 0
+/cuenta/perfil 2 7468 0 0
+/org/864/orders/MPB72DTFA 1 5768 0 0
+/public/login 22 70809 3 2
+/org/864/pagos/servicios/4090304-6 1 6698 0 0
+/cpsess3962335966/execute/Resellers/list_accounts 5 775 0 0
+/dashboard-mis-organizaciones 4 24068 0 1
+/theme/nice/assets/vendor/quill/quill.js.map 1 879120 0 0
+/org/864/operator 21 199723 0 0
+/cpsess8621236300/frontend/jupiter/backup/ 2 62629 0 0
+/terminos-y-condiciones 1 3930 1 1
+/cpsess9718933289/frontend/jupiter/softaculous/index.live.php 2 5712 0 0
+/cpsess1804149751/frontend/jupiter/softaculous/index.live.php 1 2856 0 0
+/cpsess4846527004/frontend/jupiter/softaculous/index.live.php 1 2856 0 0
+/org/864/socios/289/editar 1 6684 0 0
+/cpsess0895084681/execute/ResourceUsage/get_usages 5 3210 0 0
+/cpsess4846527004/json-api/cpanel 7 11367 0 0
+/cPanel_magic_revision_1648610195/frontend/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-Regular-webfont.woff 4 90640 0 0
+/cpsess3979785835/frontend/jupiter/libraries/cjt2/directives/pagination.phtml 1 416 0 0
+/cpsess8621236300/frontend/jupiter/filemanager/ 11 202697 0 0
+/org/864/pagos/servicios/5167318-2 1 6222 0 0
+/cpsess3528188837/execute/ResourceUsage/get_usages 1 631 0 0
+/public/org/864/lecturas 4 96218 0 1
+/org/864/lecturas/export 2 19679 0 0
+/cpsess3979785835/execute/Notifications/get_notifications_count 8 656 0 0
+/cpsess1273118399/execute/Resellers/list_accounts 8 1240 0 0
+/cpsess5093342720/frontend/jupiter/softaculous/index.live.php 2 5712 0 0
+/cpsess0405802465/frontend/jupiter/ 1 52640 0 0
+/cpsess3209824803/execute/Themes/list 1 107 0 0
+/cpsess9582390826/3rdparty/phpMyAdmin/js/messages.php 2 18008 0 0
+/org/864/servicios 10 71531 0 0
+/ajax/7/comunas-por-region 1 562 0 0
+/cpsess0405802465/execute/Themes/list 1 107 0 0
+/cpsess0895084681/frontend/jupiter/filemanager/editit.html 7 139179 0 0
+/cpsess3936246605/frontend/jupiter/backup/fullbackup.html 2 61028 0 0
+/cPanel_magic_revision_1688574261/frontend/jupiter/styles/jupiter-styles/dist/scss/fonts/remixicon.woff2 7 876876 0 0
+/public/org/864/dashboard 8 66439 0 3
+/cpsess4246259904/execute/SSL/installed_host 5 3526 0 0
+/cpsess3962335966/frontend/jupiter/user_manager/directives/emailServiceConfig.ptt 1 1908 0 0
+/servicios-por-sector/7 1 642 0 0
+/cpsess2185459792/execute/ResourceUsage/get_usages 1 646 0 0
+/org/864/voucher/6H2EPCQUR 1 5537 0 0
+/cpsess0935162374/frontend/jupiter/ 1 52562 0 0
+/cpsess9684696267/execute/Themes/list 2 214 0 0
+/cpsess0354563854/execute/Resellers/list_accounts 2 310 0 0
+/cpsess3528188837/frontend/jupiter/ 1 52565 0 0
+/cpsess1273118399/3rdparty/phpMyAdmin/js/messages.php 1 9004 0 0
+/cpsess8615465375/execute/Notifications/get_notifications_count 2 82 0 0
+/cpsess3962335966/frontend/jupiter/filemanager/editit.html 3 34854 0 0
+/cpsess0405802465/execute/Notifications/get_notifications_count 1 82 0 0
+/cpsess3528188837/execute/SSL/installed_host 1 706 0 0
+/cpsess8621236300/frontend/jupiter/sql/PhpMyAdmin.html 1 28340 0 0
+/cpsess1804149751/frontend/jupiter/filemanager/editit.html 2 27915 0 0
+/cpsess1933428523/frontend/jupiter/softaculous/index.live.php 3 8568 0 0
+/cpsess4246259904/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess1804149751/execute/SSL/installed_host 1 704 0 0
+/org/864/sectores/nuevo 1 8349 0 0
+/password/reset 1 3050 0 0
+/org/864/sectores 1 5842 0 0
+/servicios-por-sector/3 2 1118 0 0
+/org/864/pagos/servicios/5383227-K 2 12300 0 0
+/cpsess0354563854/execute/Themes/list 2 214 0 0
+/cpsess0895084681/execute/Themes/list 5 535 0 0
+/cpsess0354563854/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess3962335966/json-api/cpanel 22 23372 0 0
+/cpsess0156035368/frontend/jupiter/filemanager/editit.html 2 21132 0 0
+/cpsess0335818504/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpanel 2 26555 1 0
+/cpsess0156035368/frontend/jupiter/terminal/ 1 28720 0 0
+/cpsess0895084681/frontend/jupiter/filemanager/upload-ajax.html 3 7089 0 0
+/cpsess0895084681/execute/SSL/installed_host 5 3525 0 0
+/cpsess1273118399/3rdparty/phpMyAdmin/index.php 7 43664 0 0
+/cpsess1804149751/execute/Personalization/get 2 361 0 0
+/org/864/inventarios/nuevo 5 28421 0 0
+/cpsess9582390826/execute/Email/list_pops_with_disk 3 1136 0 0
+/cpsess1273118399/frontend/jupiter/version_control/ 3 118481 0 0
+/cpsess0156035368/frontend/jupiter/softaculous/index.live.php 1 2856 0 0
+/cpsess1273118399/execute/Backup/restore_files 1 324 0 0
+/cpsess1849243932/frontend/jupiter/filemanager/ 1 19018 0 0
+/cpsess1273118399/execute/SSL/installed_host 8 5637 0 0
+/cpsess1849243932/execute/Notifications/get_notifications_count 1 82 0 0
+/cpsess5093342720/3rdparty/phpMyAdmin/index.php 23 136260 0 0
+/cpsess3979785835/execute/VersionControl/retrieve 1 98 0 0
+/cpsess0335818504/execute/Resellers/list_accounts 1 155 0 0
+/cpsess9718933289/frontend/jupiter/tools/status.html 1 30640 0 0
+/cpsess3528188837/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/org/864/orders/CXF3I6YK1 1 5963 0 0
+/cpsess4846527004/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess0354563854/execute/ResourceUsage/get_usages 2 1310 0 1
+/cpsess3936246605/3rdparty/phpMyAdmin/index.php 14 353932 0 0
+/org/864/pagos/servicios/6546512-4 1 6236 0 0
+/cpsess1804149751/frontend/jupiter/ 1 52657 0 0
+/servicios-por-sector/13 2 1597 0 0
+/cpsess9718933289/frontend/jupiter/terminal/ 1 28742 0 0
+/cpsess3979785835/frontend/jupiter/filemanager/ 1 19004 0 0
+/org/864/pagos/servicios/15997797-8 1 6712 0 0
+/cpsess8621236300/frontend/jupiter/ 4 210603 0 0
+/cpsess9582390826/execute/ResourceUsage/get_usages 7 3609 0 0
+/cpsess3962335966/execute/SSL/installed_host 5 3522 0 0
+/org/864/orders/LSASOOK28 1 5787 0 0
+/cpsess3962335966/frontend/jupiter/ 5 263311 0 0
+/cpsess4246259904/execute/Themes/list 5 535 0 0
+/cpsess3979785835/frontend/jupiter/backup/fullbackup.html 1 30528 0 0
+/cpsess8573744946/webmail/jupiter/ 1 16574 0 0
+/cpsess0354563854/frontend/jupiter/softaculous/index.live.php 2 5712 0 0
+/cpsess5093342720/frontend/jupiter/calendar-contact-management/ 1 29658 0 0
+/cpsess0156035368/frontend/jupiter/sql/PhpMyAdmin.html 1 28238 0 0
+/cpsess3209824803/frontend/jupiter/backup/ 1 31305 0 0
+/org/864/lecturas/2/dte/boleta 1 9381 0 0
+/cpsess3209824803/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess0935162374/backend/passwordstrength.cgi 6 118 0 0
+/cpsess1933428523/execute/Notifications/get_notifications_count 7 574 0 0
+/org/864/contable 12 183853 0 2
+/cpsess8615465375/execute/Personalization/get 2 361 0 0
+/cpsess3209824803/execute/SSL/installed_host 1 697 0 0
+/public/theme/nice/assets/vendor/bootstrap-icons/fonts/bootstrap-icons.woff2 25 3048233 6 0
+/unprotected/loader.html 2 1810 0 0
+/public/theme/resi/assets/vendor/bootstrap-icons/fonts/bootstrap-icons.woff2 8 1043168 0 1
+/cpsess3936246605/frontend/jupiter/ 2 105240 0 0
+/org/864/cuentas-iniciales 26 265849 0 0
+/cpsess8621236300/3rdparty/phpMyAdmin/js/messages.php 4 36016 0 0
+/cpsess0335818504/execute/Personalization/get 2 361 0 0
+/cpsess0405802465/json-api/cpanel 22 17674 0 0
+/cpsess1929331173/execute/Backup/restore_files 1 213 0 0
+/org/864/socios/273/editar 1 6668 0 0
+/cpsess3979785835/frontend/jupiter/version_control/views/listRepositoriesView.ptt 1 3816 0 0
+/cpsess1929331173/frontend/jupiter/softaculous/index.live.php 5 14280 0 0
+/org/864/orders/MUMTC5FIO 1 5787 0 0
+/cpsess3979785835/frontend/jupiter/sql/PhpMyAdmin.html 1 28244 0 0
+/org/864/pagos/servicios/8226740-9 4 25834 0 0
+/org/864/folios/nuevo 8 43474 0 0
+/cpsess9684696267/execute/ResourceUsage/get_usages 2 1288 0 0
+/cpsess0935162374/frontend/jupiter/passwd/changepass.html 1 120 0 0
+/cpsess3962335966/execute/UserManager/lookup_user 1 483 0 0
+/org/864/socios/256/editar 1 6820 0 0
+/cpsess0156035368/execute/Notifications/get_notifications_count 3 246 0 0
+/org/864/inventarios/categories/create 4 21021 0 0
+/cpsess9582390826/frontend/jupiter/filemanager/editit.html 9 102739 0 0
+/cpsess0335818504/execute/Themes/list 1 107 0 0
+/cpsess2185459792/execute/Themes/list 1 107 0 0
+/cpsess2185459792/execute/Personalization/get 2 361 0 0
+/theme/resi/assets/vendor/purecounter/purecounter_vanilla.js.map 1 24750 0 0
+/cpsess3528188837/3rdparty/phpMyAdmin/js/messages.php 4 36016 0 0
+/org/864/folios 6 48641 0 0
+/org/864/orders/Y94DCZC3H 2 11574 0 0
+/cpsess5093342720/execute/Personalization/get 4 722 0 0
+/cpsess2185459792/execute/Resellers/list_accounts 1 155 0 0
+/cPanel_magic_revision_1648610195/webmail/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-Regular-webfont.woff 1 22660 0 0
+/cpsess1933428523/frontend/jupiter/ 3 157907 0 0
+/cpsess0405802465/execute/Resellers/list_accounts 1 155 0 0
+/org/864/orders/6H2EPCQUR 1 5788 0 0
+/cPanel_magic_revision_1648609965/frontend/jupiter/libraries/bootstrap/optimized/fonts/glyphicons-halflings-regular.woff 4 93280 0 0
+/cpsess4246259904/execute/Fileman/upload_files 4 1789 0 0
+/cpsess4846527004/frontend/jupiter/ 1 52556 0 0
+/cpsess1273118399/frontend/jupiter/libraries/cjt2/directives/pagination.phtml 1 416 0 0
+/cpsess3936246605/execute/Personalization/get 4 722 0 0
+/cPanel_magic_revision_1648610195/webmail/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-Italic-webfont.woff 1 23188 0 0
+/cpsess0895084681/frontend/jupiter/backup/ 1 31297 0 0
+/cpsess1849243932/execute/Personalization/get 2 361 0 0
+/cpsess1929331173/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess1273118399/execute/Themes/list 8 856 0 0
+/cPanel_magic_revision_1688574316/webmail/jupiter/styles/jupiter-styles/dist/scss/fonts/open-sans-500-normal.woff2 1 56668 0 0
+/cpsess5093342720/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess3962335966/download 1 1218 0 0
+/public/org/864/cuentas-iniciales 1 10106 0 0
+/cpsess4246259904/frontend/jupiter/filemanager/editit.html 9 132548 0 0
+/cPanel_magic_revision_1648609965/webmail/jupiter/libraries/bootstrap/optimized/fonts/glyphicons-halflings-regular.woff 1 23320 0 0
+/cPanel_magic_revision_1656537159/webmail/jupiter/libraries/fontawesome/webfonts/fa-solid-900.woff2 1 78260 0 0
+/precios 6 19981 1 1
+/cpsess3936246605/execute/Resellers/list_accounts 2 310 0 0
+/cpsess9684696267/frontend/jupiter/filemanager/editit.html 1 11123 0 0
+/cpsess8615465375/frontend/jupiter/ 1 52574 0 0
+/org/864/aguapotable/macromedidor/listar 10 2150 0 0
+/cpsess3962335966/frontend/jupiter/mail/webmailform.html 1 28611 0 0
+/cpsess9718933289/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/org/864/lecturas/historial 11 79164 0 1
+/cpsess3528188837/frontend/jupiter/terminal/ 1 28659 0 0
+/cPanel_magic_revision_1688574318/frontend/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-Regular-webfont.woff 7 158620 0 0
+/cpsess5093342720/json-api/cpanel 6 9006 0 0
+/cpsess3528188837/frontend/jupiter/sql/PhpMyAdmin.html 1 28269 0 0
+/cpsess9718933289/execute/SSL/installed_host 2 1403 0 0
+/cpsess3962335966/frontend/jupiter/softaculous/index.live.php 5 14280 0 0
+/cpsess3936246605/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+/cpsess0156035368/3rdparty/phpMyAdmin/js/messages.php 1 9004 0 0
+/org/864/lecturas/80/dte/boleta 1 9397 0 0
+/cpsess9582390826/frontend/jupiter/softaculous/index.live.php 5 14280 0 0
+/cpsess3962335966/frontend/jupiter/mail/clientconf.html 1 33660 0 0
+/cPanel_magic_revision_1688574318/frontend/jupiter/libraries/ui-fonts/open_sans/optimized/OpenSans-Semibold-webfont.woff 7 160356 0 0
+/cpsess8621236300/execute/Notifications/get_notifications_count 9 738 0 0
+/cpsess0935162374/frontend/jupiter/softaculous/themes/default/fonts/fa-solid-900.woff2 1 78196 0 0
+END_SIDER
+
+# Payload Range - Payload Frequency
+BEGIN_FILESIZE 7
+5K+ 5142
+2K-5K 1931
+100-500 1657
+1K-2K 1463
+0-44 405
+44-100 203
+500-1K 1287
+END_FILESIZE
